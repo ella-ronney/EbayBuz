@@ -27,5 +27,12 @@ namespace SampleProject.DB
         {
             return db.IncomingInventory.ToList();
         }
+
+        public bool AddIncomingInventory(IncomingInventory inv)
+        {
+            db.IncomingInventory.Add(inv);
+            db.SaveChanges();
+            return true;
+        }
     }
 }

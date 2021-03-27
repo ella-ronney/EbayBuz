@@ -21,3 +21,29 @@ $.ajax({
         $('#incominginvTable').append(trHTML);
     }
 });
+
+$('#addingcominginv').on('click', function () {
+    var inputData = $('input').serialize();
+    $.ajax({
+        url: serviceUrl + '/AddIncomingInventory',
+        method: 'POST',
+        data: JSON.stringify(inputData),
+        success: function (data) {
+
+            /*Clear out the form after submitting the info to db*/
+            $("#name").val('');
+            $("#qty").val('');
+            $("#price").val('');
+            $("#vendor").val('');
+            $("#purchasedate").val('');
+            $("#warranty").val('');
+            $("#serialnumbers").val('');
+            $("#trackingnumber").val('');
+
+            /*Display the newly added item in the table */
+            var trHTML = '<tr><td>' + data.name + '</td><td>' + data.qty + '</td><td>' + data.price + '</td><td>' + data.vendor + '</td><td>' + data.purchaseDate + '</td><td>' + data.warranty + '</td><td>' + data.serialNumbers + '</td><td>' + data.trackingNumber + '</td></tr>';
+            $('#incominginvTable').append(trHTML);
+        }
+    });
+});
+

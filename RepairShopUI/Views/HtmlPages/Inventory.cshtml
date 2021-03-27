@@ -8,7 +8,7 @@
 <div class="container-fluid" style="margin-top:20px;">
     <h2>Current Inventory</h2>
     <div>
-        <table id="currentinvTable" class="table table-bordered text-center">
+        <table id="currentinvTable" class="table table-responsive table-bordered text-center">
             <thread>
                 <tr>
                     <th scope="col">Name</th>
@@ -25,7 +25,7 @@
 
     <h2>Incoming Inventory</h2>
     <div class="table-editable">
-        <table id ="incominginvTable" class="table table-bordered table-responsive-md table-striped text-center">
+        <table id="incominginvTable" class="table table-bordered table-responsive table-striped text-center">
             <thread>
                 <tr>
                     <th class="text-center">Name</th>
@@ -38,7 +38,23 @@
                     <th class="text-center">Tracking #</th>
                 </tr>
             </thread>
+            <tbody>
+                <tr>
+                    <td hidden><input type="text" name="idincominginventory" id="idincominginventory" hidden /></td>
+                    <td><input type="text" name="name" id="name" /></td>
+                    <td><input type="text" name="qty" id="qty" /></td>
+                    <td><input type="text" name="price" id="price" /></td>
+                    <td><input type="text" name="vendor" id="vendor" /></td>
+                    <td><input type="text" name="purchasedate" id="purchasedate" /></td>
+                    <td><input type="text" name="warranty" id="warranty" /></td>
+                    <td><input type="text" name="serialnumbers" id="serialnumbers" /></td>
+                    <td><input type="text" name="trackingnumber" id="trackingnumber" /></td>
+                </tr>
+            </tbody>
         </table>
+        <div class="text-right">
+            <button type="button" id="addingcominginv" class="btn btn-success">Add Item</button>
+        </div>
     </div>
     <h2 id="Test"></h2>
 

@@ -42,7 +42,12 @@ namespace EbayBusiness.Controllers
         [Route("AddIncomingInventory")]
         public ActionResult<IncomingInventory> AddIncomingInventory([FromForm] IncomingInventory inv)
         {
-
+            if (ebayDBRecords.AddIncomingInventory(inv))
+            {
+                return inv;
+            }
+            return null;
+           
         }
     }
 }

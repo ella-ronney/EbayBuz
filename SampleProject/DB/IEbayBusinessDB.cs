@@ -7,7 +7,8 @@ namespace SampleProject.DB
 {
     public interface IEbayBusinessDB
     {
-        List<CurrentInventory> GetAllCurrentInventory();
+        public List<CurrentInventory> GetAllCurrentInventory();
         public List<IncomingInventory> GetAllIncomingInventory();
+        public bool AddIncomingInventory(IncomingInventory inv);
     }
 }
