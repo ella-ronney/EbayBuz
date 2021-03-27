@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Inventory";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Inventory Manager</h1>
+</div>
+<div class="container-fluid" style="margin-top:20px;">
+    <h2>Current Inventory</h2>
+    <div>
+        <table id="currentinvTable" class="table table-bordered text-center">
+            <thread>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Qty</th>
+                    <th scope="col">Price/piece</th>
+                    <th scope="col">Vendor</th>
+                    <th scope="col">Date purchased</th>
+                    <th scope="col">Warranty</th>
+                    <th scope="col">Serial #s</th>
+                </tr>
+            </thread>
+        </table>
+    </div>
+
+    <h2>Incoming Inventory</h2>
+    <div class="table-editable">
+        <table id ="incominginvTable" class="table table-bordered table-responsive-md table-striped text-center">
+            <thread>
+                <tr>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Qty</th>
+                    <th class="text-center">Price/piece</th>
+                    <th class="text-center">Vendor</th>
+                    <th class="text-center">Date Purchased</th>
+                    <th class="text-center">Warranty</th>
+                    <th class="text-center">Serial #s</th>
+                    <th class="text-center">Tracking #</th>
+                </tr>
+            </thread>
+        </table>
+    </div>
+    <h2 id="Test"></h2>
+
+</div>
