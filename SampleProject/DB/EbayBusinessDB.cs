@@ -34,5 +34,28 @@ namespace SampleProject.DB
             db.SaveChanges();
             return true;
         }
+
+        public bool DeleteIncomingInventory(IdList idList)
+        {
+            try
+            {
+                int[] incomingInventoryIds = idList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+               foreach(int id in incomingInventoryIds)
+                {
+                    var item = db.IncomingInventory.Where(x => x.idIncomingInventory == id).FirstOrDefault();
+                    if (item == null)
+                    {
+                        return false;
+                    }
+                    db.IncomingInventory.Remove(item);
+                    db.SaveChanges();
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return true;
+        }
     }
 }

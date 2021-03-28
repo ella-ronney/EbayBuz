@@ -10,5 +10,6 @@ namespace SampleProject.DB
         public List<CurrentInventory> GetAllCurrentInventory();
         public List<IncomingInventory> GetAllIncomingInventory();
         public bool AddIncomingInventory(IncomingInventory inv);
+        public bool DeleteIncomingInventory(IdList idList);
     }
 }

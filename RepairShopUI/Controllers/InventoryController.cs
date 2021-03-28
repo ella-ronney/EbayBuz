@@ -10,7 +10,7 @@ namespace EbayBusiness.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class InventoryController : Controller { 
+    public class InventoryController : Controller {
         private IEbayBusinessDB ebayDBRecords;
 
         public InventoryController(IEbayBusinessDB ebayDBRecords)
@@ -47,7 +47,18 @@ namespace EbayBusiness.Controllers
                 return inv;
             }
             return null;
-           
+
+        }
+
+        [HttpPost]
+        [Route("DeleteIncomingInventory")]
+        public bool DeleteIncomingInventory(IdList idList)
+        {
+           if (ebayDBRecords.DeleteIncomingInventory(idList))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
