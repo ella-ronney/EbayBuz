@@ -30,6 +30,24 @@ namespace EbayBusiness.Controllers
             return ebayDBRecords.GetAllCurrentInventory();
         }
 
+        [HttpPost]
+        [Route("DeleteCurrentInventory")]
+        public bool DeleteCurrentInventory(IdList idList)
+        {
+            if (ebayDBRecords.DeleteCurrentInventory(idList))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        [HttpPost]
+        [Route("MoveToCurrentInventory")]
+        public ActionResult<List<CurrentInventory>> MoveIncomingInvToCurrentInv(IdList incomingInvIdList)
+        {
+            return ebayDBRecords.MoveIncomingInvToCurrentInv(incomingInvIdList);
+        }
+
         // Incoming Inventory Requests
         [HttpGet]
         [Route("IncomingInventory")]

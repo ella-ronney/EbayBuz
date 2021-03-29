@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EbayBusiness.Model.Items;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,5 +15,7 @@ namespace SampleProject.Model
 
         public virtual DbSet<CurrentInventory> Currentinventory { get; set; }
         public virtual DbSet<IncomingInventory> IncomingInventory { get; set; }
+
+        public virtual DbSet<TopSellers> TopSellers { get; set; }
     }
 }

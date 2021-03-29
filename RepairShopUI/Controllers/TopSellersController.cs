@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EbayBusiness.Model.Items;
+using Microsoft.AspNetCore.Mvc;
 using SampleProject.DB;
 using System;
 using System.Collections.Generic;
@@ -21,5 +22,13 @@ namespace EbayBusinessUI.Controllers
         {
             return View("~/Views/HtmlPages/TopSellers.cshtml");
         }
+
+        [HttpGet]
+        [Route("GetTopSellers")]
+        public ActionResult<List<TopSellers>> GetAllTopSellers()
+        {
+            return ebayDBRecords.GetAllTopSellers();
+        }
+
     }
 }
