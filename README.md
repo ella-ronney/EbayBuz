@@ -1,5 +1,5 @@
 # EbayBusiness
-Purpose : Internal software application developed to help manage my ebay business including keeping track of current inventory, top sellering items, business expenses, and warranty information. 
+Purpose : Internal software application developed to help manage my ebay business including keeping track of current inventory, top selling items, business expenses, and warranty information. 
 My application is meant to help me manage all relevent information for my business and as such I will continue to add additional functionality as I use it. 
 
 # Inventory Manager
