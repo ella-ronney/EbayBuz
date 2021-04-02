@@ -6,21 +6,28 @@ My application is meant to help me manage all relevent information for my busine
 Current Inventory Table 
 Purpose : Displays all my current inventory from my MySQL DB
 Implemented Functionality
-```Move an item to top seller database (purpose : move items that are out of stock that are good sellers to my top seller database for reference for future purchases)
-```Delete an item/s (purpose: remove an item from the database once it is out of stock if it isn't considered a top seller)
+```bash 
+Move an item to top seller database (purpose : move items that are out of stock that are good sellers to my top seller database for reference for future purchases)
+Delete an item/s (purpose: remove an item from the database once it is out of stock if it isn't considered a top seller)
+```
 Coming Functionality 
-```Search for a particular item/s in the database and display it
-```Update a displayed item/s information i.e. Qty, price, etc. 
+```bash
+Search for a particular item/s in the database and display it
+Update a displayed item/s information i.e. Qty, price, etc. 
+```
 
 Incoming Inventory Table Options
 Purpose : Displays all my incoming inventory from my MySQL DB
 Implemented Functionality
-```Add an item
-```Delete an item/s
-```Move to Current Inventory (in the future I want to automate this to when the tracking number shows as delivered)
+```bash
+Add an item
+Delete an item/s
+Move to Current Inventory (in the future I want to automate this to when the tracking number shows as delivered)
+```
 Coming Functionality
-```Search for a particular item/s in the database and display it. Possible search fields i.e. name/purchase date 
-
+```bash
+Search for a particular item/s in the database and display it. Possible search fields i.e. name/purchase date 
+```
 # Top Seller Manager
 Purpose : Display past inventory that sold well.
 
@@ -30,8 +37,9 @@ Purpose : Display all my business related expenses.
 # Warranty Manager **Implement**
 Purpose : Keep track of the serial numbers for each item with the warranty lengh. Automatically delete an item from the MySQL database once the warranty has expired. 
 Coming
-```Search for a particular item/s with the name / serial number and display the warranty information in a table
-
+```bash
+Search for a particular item/s with the name / serial number and display the warranty information in a table
+```
 # Vendor ** Implement **
 Purpose : Table with total purchases to date from each vendor 
 
