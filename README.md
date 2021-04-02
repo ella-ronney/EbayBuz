@@ -1,10 +1,13 @@
 # EbayBusiness
 Purpose : Internal software application developed to help manage my ebay business including keeping track of current inventory, top selling items, business expenses, and warranty information. 
+
 My application is meant to help me manage all relevent information for my business and as such I will continue to add additional functionality as I use it. 
 
 # Inventory Manager
 Current Inventory Table 
+
 Purpose : Displays all my current inventory from my MySQL DB
+
 Implemented Functionality
 ```bash 
 Move an item to top seller database (purpose : move items that are out of stock that are good sellers to my top seller database for reference for future purchases)
@@ -17,7 +20,9 @@ Update a displayed item/s information i.e. Qty, price, etc.
 ```
 
 Incoming Inventory Table Options
+
 Purpose : Displays all my incoming inventory from my MySQL DB
+
 Implemented Functionality
 ```bash
 Add an item
@@ -34,7 +39,7 @@ Purpose : Display past inventory that sold well.
 # Business Expenses Manager
 Purpose : Display all my business related expenses.
 
-# Warranty Manager **Implement**
+# Warranty Manager ** Implement **
 Purpose : Keep track of the serial numbers for each item with the warranty lengh. Automatically delete an item from the MySQL database once the warranty has expired. 
 Coming
 ```bash
