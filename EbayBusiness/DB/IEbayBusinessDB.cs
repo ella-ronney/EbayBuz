@@ -1,10 +1,11 @@
-﻿using EbayBusiness.Model.Items;
-using SampleProject.Model;
+﻿using EbayBusiness.Model;
+using EbayBusiness.Model.Items;
+using EbayBusiness.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SampleProject.DB
+namespace EbayBusiness.DB
 {
     public interface IEbayBusinessDB
     {
@@ -15,5 +16,6 @@ namespace SampleProject.DB
         public bool AddIncomingInventory(IncomingInventory inv);
         public bool DeleteIncomingInventory(IdList idList);
         public List<TopSellers> GetAllTopSellers();
+        public bool AddExpense(BusinessExpenses expense);
     }
 }

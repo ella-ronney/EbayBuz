@@ -144,3 +144,23 @@ $.ajax({
         $('#topSellerTable').append(trHTML);
     }
 });
+$('#addExpense').on('click', function () {
+    var dataType = 'application/x-www-form-urlencoded; charset=utf-8';
+    var inputData = $('input').serialize();
+    var category = $('#expenseCategory').val();
+    var paymentInfo = $('#paymentInfo').val();
+    inputData += '&expenseCategory=' + category + '&paymentInfo=' + paymentInfo;
+    $.ajax({
+        url: serviceUrl + 'BusinessExpenses/AddExpense',
+        method: 'POST',
+        contentType: dataType,
+        data: JSON.stringify(inputData),
+        success: function (data) {
+            // clear the text box fields
+            $("#expenseName").val('');
+            $("#cost").val('');
+            $("#purchaseDate").val('');
+            $("#percentTowardTaxReturn").val('');
+        }
+    });
+});

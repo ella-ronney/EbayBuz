@@ -5,3 +5,53 @@
 <div class="text-center">
     <h1 class="display-4">Business Expense Manager</h1>
 </div>
+
+<div>
+    <h1>Graphics</h1>
+</div>
+
+<div>
+    <h1>Add Expense</h1>
+        <div class="form-group">
+            <div hidden class="form-group">
+                <input type="text" class="form-control" id="idBusinessExpenses" name="idBusinessExpenses" />
+            </div>
+            <label>Expense Name</label>
+            <input type="text" class="form-control" id="expenseName" name="expenseName" />
+        </div>
+        <div class="form-group">
+            <label>Expense Category</label>
+            <select class="form-control" id="expenseCategory" name="expenseCategory">
+                <option>Car</option>
+                <option>Travel</option>
+                <option>Supplies</option>
+                <option>Subscriptions</option>
+                <option>Courses</option>
+                <option>Rent</option>
+                <option>Utilites</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Expense Cost</label>
+            <input type="number" class="form-control" id="cost" name="cost" />
+        </div>
+        <div class="form-group">
+            <label>Payment Info</label>
+            <select class="form-control" id="paymentInfo" name="paymentInfo">
+                <option>Wells Fargo</option>
+                <option>Chase</option>
+                <option>American Express</option>
+                <option>Paypal</option>
+                <option>Adorama Edge</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Purchase Date</label>
+            <input type="date" class="form-control" id="purchaseDate" name="purchaseDate" />
+        </div>
+        <div class="form-group">
+            <label>Percentage Applicable for Tax Return</label>
+            <input type="number" class="form-control" id="percentTowardTaxReturn" name="percentTowardTaxReturn" />
+        </div>
+        <button type="submit" class="btn btn-primary" id="addExpense">Add Expense</button>
+</div>

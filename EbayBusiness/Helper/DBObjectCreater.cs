@@ -1,9 +1,9 @@
-﻿using SampleProject.Model;
+﻿using EbayBusiness.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SampleProject.Helper
+namespace EbayBusiness.Helper
 {
     public class DBObjectCreater
     {

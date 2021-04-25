@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SampleProject
+namespace EbayBusiness
 {
     public abstract class Item
     {

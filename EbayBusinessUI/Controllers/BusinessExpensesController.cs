@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SampleProject.DB;
+﻿using EbayBusiness.DB;
+using EbayBusiness.Model;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,17 @@ namespace EbayBusinessUI.Controllers
         public IActionResult BusinessExpenses()
         {
             return View("~/Views/HtmlPages/BusinessExpenses.cshtml");
+        }
+
+        [HttpPost]
+        [Route("AddExpense")]
+        public bool AddExpense ([FromForm] BusinessExpenses expense)
+        {
+            if (ebayDBRecords.AddExpense(expense))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

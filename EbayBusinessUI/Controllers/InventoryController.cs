@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SampleProject.DB;
-using SampleProject.Model;
+using EbayBusiness.DB;
+using EbayBusiness.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

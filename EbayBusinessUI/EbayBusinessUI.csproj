@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SampleProject\EbayBusiness.csproj" />
+    <ProjectReference Include="..\EbayBusiness\EbayBusiness.csproj" />
+    <ProjectReference Include="..\EbayBusiness\EbayBusiness.csproj" />
   </ItemGroup>
 
 </Project>

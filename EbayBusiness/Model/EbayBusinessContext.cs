@@ -1,10 +1,11 @@
-﻿using EbayBusiness.Model.Items;
+﻿using EbayBusiness.Model;
+using EbayBusiness.Model.Items;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SampleProject.Model
+namespace EbayBusiness.Model
 {
     public class EbayBusinessContext : DbContext
     {
@@ -17,5 +18,8 @@ namespace SampleProject.Model
         public virtual DbSet<IncomingInventory> IncomingInventory { get; set; }
 
         public virtual DbSet<TopSellers> TopSellers { get; set; }
+        public virtual DbSet<BusinessExpenses> BusinessExpenses { get; set; }
+
+
     }
 }

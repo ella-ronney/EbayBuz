@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SampleProject.DB;
+using EbayBusiness.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;

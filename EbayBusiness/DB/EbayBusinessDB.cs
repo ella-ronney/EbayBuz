@@ -1,13 +1,12 @@
 ﻿using EbayBusiness.Helper;
+using EbayBusiness.Model;
 using EbayBusiness.Model.Items;
-using SampleProject.Helper;
-using SampleProject.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SampleProject.DB
+namespace EbayBusiness.DB
 {
     public class EbayBusinessDB : IEbayBusinessDB
     {
@@ -114,6 +113,14 @@ namespace SampleProject.DB
         public List<TopSellers> GetAllTopSellers()
         {
             return db.TopSellers.ToList();
+        }
+
+        // Business Expenses
+        public bool AddExpense(BusinessExpenses expense)
+        {
+            db.BusinessExpenses.Add(expense);
+            db.SaveChanges();
+            return true;
         }
     }
 }
