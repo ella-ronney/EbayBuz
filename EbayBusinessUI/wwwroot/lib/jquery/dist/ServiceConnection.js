@@ -164,3 +164,39 @@ $('#addExpense').on('click', function () {
         }
     });
 });
+$('#addReturn').on('click', function () {
+    var inputData = $('input').serialize();
+    var paymentMethod = $('#paymentMethod').val();
+    inputData += '&paymentMethod=' + paymentMethod;
+    $.ajax({
+        url: serviceUrl + 'ResolutionCenter/AddReturn',
+        method: 'POST',
+        data: JSON.stringify(inputData),
+        success: function (data) {
+            /*Clear out the form after submitting the info to db*/
+            $("#returnName").val('');
+            $("#quantity").val('');
+            $("#totalPrice").val('');
+            $("#returnVendor").val('');
+            $("#deliveryDate").val('');
+            $("#returnDate").val('');
+            $("#estimatedRefundTime").val('');
+            $("#trackingNum").val('');
+
+            /*Display the newly added item in the table */
+            var trHTML = '<tr><td hidden>' + data.idreturns + '</td><td>' + data.returnName + '</td><td>' + data.quantity + '</td><td>' + data.totalPrice + '</td><td>' + data.paymentMethod + '</td><td>' + data.returnVendor + '</td><td>' + data.returnDate + '</td><td>' + data.deliveryDate + '</td><td>' + data.trackingNum + '</td><td>' + data.estimatedRefundTime + '</td></tr>';
+            $('#returnTable').append(trHTML);
+        }
+    });
+});
+$.ajax({
+    url: serviceUrl + 'ResolutionCenter/Returns',
+    method: 'GET',
+    success: function (data) {
+        var trHTML = '';
+        $.each(data, function (i, data) {
+            trHTML = '<tr><td hidden>' + data.idreturns + '</td><td>' + data.returnName + '</td><td>' + data.quantity + '</td><td>' + data.totalPrice + '</td><td>' + data.paymentMethod + '</td><td>' + data.returnVendor + '</td><td>' + data.returnDate + '</td><td>' + data.deliveryDate + '</td><td>' + data.trackingNum + '</td><td>' + data.estimatedRefundTime + '</td></tr>';
+        });
+        $('#returnTable').append(trHTML);
+    }
+});

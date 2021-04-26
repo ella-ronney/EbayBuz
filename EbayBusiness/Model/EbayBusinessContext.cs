@@ -19,6 +19,7 @@ namespace EbayBusiness.Model
 
         public virtual DbSet<TopSellers> TopSellers { get; set; }
         public virtual DbSet<BusinessExpenses> BusinessExpenses { get; set; }
+        public virtual DbSet<Returns> Returns { get; set; }
 
 
     }

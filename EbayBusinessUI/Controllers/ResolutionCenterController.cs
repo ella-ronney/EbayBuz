@@ -1,4 +1,5 @@
 ﻿using EbayBusiness.DB;
+using EbayBusiness.Model;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,22 @@ namespace EbayBusinessUI.Controllers
         public IActionResult ResolutionCenter()
         {
             return View("~/Views/HtmlPages/ResolutionCenter.cshtml");
+        }
+        [HttpPost]
+        [Route("AddReturn")]
+        public bool AddReturn([FromForm] Returns ret)
+        {
+            if (ebayDBRecords.AddReturns(ret)){
+                return true;
+            }
+            return false;
+        }
+
+        [HttpGet]
+        [Route("Returns")]
+        public ActionResult<List<Returns>> GetAllReturns()
+        {
+            return ebayDBRecords.GetAllReturns();
         }
     }
 }

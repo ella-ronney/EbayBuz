@@ -122,5 +122,17 @@ namespace EbayBusiness.DB
             db.SaveChanges();
             return true;
         }
+
+        // Resolution center
+        public bool AddReturns(Returns ret)
+        {
+            db.Returns.Add(ret);
+            db.SaveChanges();
+            return true;
+        }
+        public List<Returns> GetAllReturns()
+        {
+            return db.Returns.ToList();
+        }
     }
 }
