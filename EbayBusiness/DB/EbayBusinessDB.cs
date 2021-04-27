@@ -134,5 +134,16 @@ namespace EbayBusiness.DB
         {
             return db.Returns.ToList();
         }
+
+        public InsuranceClaims AddInsuranceClaim(InsuranceClaims claim)
+        {
+            db.InsuranceClaims.Add(claim);
+            db.SaveChanges();
+            return claim;
+        }
+        public List<InsuranceClaims> GetAllInsuranceClaims()
+        {
+            return db.InsuranceClaims.ToList();
+        }
     }
 }

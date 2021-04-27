@@ -50,5 +50,76 @@
         </div>
     </div>
     <h2>Open Insurance Claims</h2>
+    <table id="insuranceClaims" class="table table-responsive table-bordered text-center">
+        <thread>
+            <tr>
+                <th hidden class="text-center">Id</th>
+                <th scope="col">Item Name</th>
+                <th scope="col">Ebay Order #</th>
+                <th scope="col">Sell Price</th>
+                <th scope="col">Insured For</th>
+                <th scope="col">Shipping Carrier</th>
+                <th scope="col">Shipping Cost</th>
+                <th scope="col">Tracking #</th>
+                <th scope="col">Claim #</th>
+                <th scope="col">Claim Status</th>
+                <th scope="col">Claim File Date</th>
+                <th scope="col">Customer Resolution Preference</th>
+                <th scope="col">Customer Resolution Status</th>
+                <th scope="col">Replacement Tracking Number</th>
+                <th scope="col">Notes</th>
+            </tr>
+        </thread>
+        <tbody>
+            <tr>
+                <td hidden><input type="text" name="idinsuranceclaims" id="idinsuranceclaims" hidden /></td>
+                <td><input type="text" name="itemName" id="itemName" /></td>
+                <td><input type="text" name="ebayOrderNumber" id="ebayOrderNumber" /></td>
+                <td><input type="number" name="sellPrice" id="sellPrice" /></td>
+                <td><input type="number" name="insuredFor" id="insuredFor" /></td>
+                <td>
+                    <select id="shippingCarrier" name="shippingCarrier">
+                        <option>USPS</option>
+                        <option>UPS</option>
+                        <option>Fedex</option>
+                    </select>
+                </td>
+                <td><input type="number" name="shippingCost" id="shippingCost" /></td>
+                <td><input type="text" name="tracking" id="tracking" /></td>
+                <td><input type="text" name="claimNumber" id="claimNumber" /></td>
+                <td>
+                    <select id="claimStatus" name="claimStatus">
+                        <option>Filed awaiting decision</option>
+                        <option>Need additional documents</option>
+                        <option>Approved awaiting check</option>
+                        <option>Check cashed</option>
+                        <option>Denied</option>
+                        <option>Appealed awaiting decision</option>
+                    </select>
+                </td>
+                <td><input type="date" name="claimFileDate" id="claimFileDate" /></td>
+                <td>
+                    <select id="customerPreference" name="customerPreference">
+                        <option>Replacement</option>
+                        <option>Refund</option>
+                        <option>Not Specified</option>
+                    </select>
+                </td>
+                <td>
+                    <select id="customerResolutionStatus" name="customerResolutionStatus">
+                        <option>Awaiting Insurance Check</option>
+                        <option>Refunded</option>
+                        <option>Replacement Sent</option>
+                    </select>
+                </td>
+                <td><input type="text" name="replacementTrackingNum" id="replacementTrackingNum" /></td>
+                <td><input type="text" name="notes" id="notes" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="text-right">
+        <button type="button" id="addInsuranceClaim" class="btn btn-success">Add Insurance Claim</button>
+    </div>
     <h2>Packages delayed in Transit </h2>
+
 </div>

@@ -195,8 +195,65 @@ $.ajax({
     success: function (data) {
         var trHTML = '';
         $.each(data, function (i, data) {
-            trHTML = '<tr><td hidden>' + data.idreturns + '</td><td>' + data.returnName + '</td><td>' + data.quantity + '</td><td>' + data.totalPrice + '</td><td>' + data.paymentMethod + '</td><td>' + data.returnVendor + '</td><td>' + data.returnDate + '</td><td>' + data.deliveryDate + '</td><td>' + data.trackingNum + '</td><td>' + data.estimatedRefundTime + '</td></tr>';
+            trHTML += '<tr><td hidden>' + data.idreturns + '</td><td>' + data.returnName + '</td><td>' + data.quantity + '</td><td>' + data.totalPrice + '</td><td>' + data.paymentMethod + '</td><td>' + data.returnVendor + '</td><td>' + data.returnDate + '</td><td>' + data.deliveryDate + '</td><td>' + data.trackingNum + '</td><td>' + data.estimatedRefundTime + '</td></tr>';
         });
         $('#returnTable').append(trHTML);
+    }
+});
+$('#addInsuranceClaim').on('click', function () {
+    var itemName = $('#itemName').val();
+    var ebayOrderNumber = $('#ebayOrderNumber').val();
+    var sellPrice = $('#sellPrice').val();
+    var insuredFor = $('#insuredFor').val();
+    var claimNumber = $('#claimNumber').val();
+    var claimFileDate = $('#claimFileDate').val();
+    var tracking = $('#tracking').val();
+    var replacementTrackingNum = $('#replacementTrackingNum').val();
+    var notes = $('#notes').val();
+    var shippingCarrier = $('#shippingCarrier').val();
+    var claimStatus = $('#claimStatus').val();
+    var customerPreference = $('#customerPreference').val();
+    var customerResolutionStatus = $('#customerResolutionStatus').val();
+    var shippingCost = $('#shippingCost').val();
+    // FIXME clean this up - refactor to a function or find a better solution
+    var inputData = '&shippingCarrier=' + shippingCarrier + '&claimStatus=' + claimStatus + '&customerPreference=' + customerPreference + '&customerResolutionStatus=' + customerResolutionStatus
+        + '&itemName=' + itemName + '&ebayOrderNumber=' + ebayOrderNumber + '&sellPrice=' + sellPrice + '&insuredFor=' + insuredFor + '&claimNumber=' + claimNumber + '&claimFileDate=' + claimFileDate
+        + '&tracking=' + tracking + '&replacementTrackingNum=' + replacementTrackingNum + '&shippingCost=' + shippingCost +'&notes=' + notes;
+    $.ajax({
+        url: serviceUrl + 'ResolutionCenter/AddInsuranceClaim',
+        method: 'POST',
+        data: JSON.stringify(inputData),
+        success: function (data) {
+            /*Clear out the form after submitting the info to db*/
+            $("#itemName").val('');
+            $("#ebayOrderNumber").val('');
+            $("#sellPrice").val('');
+            $("#insuredFor").val('');
+            $("#claimNumber").val('');
+            $("#claimFileDate").val('');
+            $("#tracking").val('');
+            $("#replacementTrackingNum").val('');
+            $("#notes").val('');
+            $("#shippingCost").val('');
+
+            /*Display the newly added item in the table */
+            var trHTML = '<tr><td hidden>' + data.idinsuranceclaims + '</td><td>' + data.itemName + '</td><td>' + data.ebayOrderNumber + '</td><td>' +
+                data.sellPrice + '</td><td>' + data.insuredFor + '</td><td>' + data.shippingCarrier + '</td><td>' + data.shippingCost + '</td><td>' + data.tracking + '</td><td>' + data.claimNumber +
+                '</td><td>' + data.claimFileDate + '</td><td>' + data.claimStatus + '</td><td>' + data.customerPreference + '</td><td>' + data.customerResolutionStatus + '</td><td>' + data.replacementTrackingNum + '</td><td>' + data.notes + '</td></tr>';
+            $('#insuranceClaims').append(trHTML);
+        }
+    });
+});
+$.ajax({
+    url: serviceUrl + 'ResolutionCenter/InsuranceClaims',
+    method: 'GET',
+    success: function (data) {
+        var trHTML = '';
+        $.each(data, function (i, data) {
+            trHTML += '<tr><td hidden>' + data.idinsuranceclaims + '</td><td>' + data.itemName + '</td><td>' + data.ebayOrderNumber + '</td><td>' +
+                data.sellPrice + '</td><td>' + data.insuredFor + '</td><td>' + data.shippingCarrier + '</td><td>' + data.shippingCost + '</td><td>' + data.tracking + '</td><td>' + data.claimNumber +
+                '</td><td>' + data.claimFileDate + '</td><td>' + data.claimStatus + '</td><td>' + data.customerPreference + '</td><td>' + data.customerResolutionStatus + '</td><td>' + data.replacementTrackingNum + '</td><td>' + data.notes + '</td></tr>';
+        });
+        $('#insuranceClaims').append(trHTML);
     }
 });

@@ -26,7 +26,7 @@ namespace EbayBusinessUI.Controllers
         [Route("AddReturn")]
         public bool AddReturn([FromForm] Returns ret)
         {
-            if (ebayDBRecords.AddReturns(ret)){
+            if (ebayDBRecords.AddReturns(ret)) {
                 return true;
             }
             return false;
@@ -37,6 +37,20 @@ namespace EbayBusinessUI.Controllers
         public ActionResult<List<Returns>> GetAllReturns()
         {
             return ebayDBRecords.GetAllReturns();
+        }
+
+        [HttpPost]
+        [Route("AddInsuranceClaim")]
+        public InsuranceClaims AddInsuranceClaim([FromForm] InsuranceClaims claim)
+        {
+            return ebayDBRecords.AddInsuranceClaim(claim);
+        }
+
+        [HttpGet]
+        [Route("InsuranceClaims")]
+        public ActionResult<List<InsuranceClaims>> GetAllInsuranceClaims()
+        {
+            return ebayDBRecords.GetAllInsuranceClaims();
         }
     }
 }

@@ -19,5 +19,7 @@ namespace EbayBusiness.DB
         public bool AddExpense(BusinessExpenses expense);
         public bool AddReturns(Returns ret);
         public List<Returns> GetAllReturns();
+        public InsuranceClaims AddInsuranceClaim(InsuranceClaims claim);
+        public List<InsuranceClaims> GetAllInsuranceClaims();
     }
 }
