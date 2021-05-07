@@ -15,10 +15,15 @@
                     <th scope="col">Name</th>
                     <th scope="col">Qty</th>
                     <th scope="col">Price/piece</th>
+                    <th scope="col">Total Price</th>
+                    <th scope="col">Discount Type</th>
+                    <th scope="col">Discount</th>
                     <th scope="col">Vendor</th>
-                    <th scope="col">Date purchased</th>
+                    <th scope="col">Date Purchased</th>
+                    <th scope="col">Payment Method</th>
+                    <th scope="col">Return by</th>
                     <th scope="col">Warranty</th>
-                    <th scope="col">Serial #s</th>
+                    <th scope="col">Classification</th>
                     <th class="text-center">Edit</th>
                 </tr>
             </thread>
@@ -34,13 +39,18 @@
                 <thread>
                     <tr>
                         <th hidden class="text-center">Id</th>
-                        <th class="text-center">Name</th>
-                        <th class="text-center">Qty</th>
-                        <th class="text-center">Price/piece</th>
-                        <th class="text-center">Vendor</th>
-                        <th class="text-center">Date Purchased</th>
-                        <th class="text-center">Warranty</th>
-                        <th class="text-center">Serial #s</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Qty</th>
+                        <th scope="col">Price/piece</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Discount Type</th>
+                        <th scope="col">Discount</th>
+                        <th scope="col">Vendor</th>
+                        <th scope="col">Date Purchased</th>
+                        <th scope="col">Payment Method</th>
+                        <th scope="col">Warranty</th>
+                        <th scope="col">Classification</th>
+                        <th scope="col">Estimated Delivery Date</th>
                         <th class="text-center">Tracking #</th>
                         <th class="text-center">Edit</th>
                     </tr>
@@ -49,13 +59,37 @@
                     <tr>
                         <td hidden><input type="text" name="idincominginventory" id="idincominginventory" hidden /></td>
                         <td><input type="text" name="name" id="name" /></td>
-                        <td><input type="text" name="qty" id="qty" /></td>
-                        <td><input type="text" name="price" id="price" /></td>
+                        <td><input type="number" name="qty" id="qty" /></td>
+                        <td><input type="number" name="pricePerPiece" id="pricePerPiece" /></td>
+                        <td><input type="number" name="totalPrice" id="totalPrice" /></td>
+                        <td>
+                            <select name="discountType" id="discountType">
+                                <option>Rakuten</option>
+                                <option>Amazon</option>
+                                <option>Retail me not</option>
+                            </select>
+                        </td>
+                        <td><input type="number" name="discount" id="discount" /></td>
                         <td><input type="text" name="vendor" id="vendor" /></td>
-                        <td><input type="text" name="purchasedate" id="purchasedate" /></td>
+                        <td><input type="date" name="datePurchased" id="datePurchased" /></td>
+                        <td><select id="payment" name="payment">
+                            <option>Wells Fargo</option>
+                            <option>Chase</option>
+                            <option>American Express</option>
+                            <option>Paypal</option>
+                            <option>Adorama Edge</option>
+                        </select>
+                        </td>
                         <td><input type="text" name="warranty" id="warranty" /></td>
-                        <td><input type="text" name="serialnumbers" id="serialnumbers" /></td>
-                        <td><input type="text" name="trackingnumber" id="trackingnumber" /></td>
+                        <td>
+                            <select id="classification" name="classification">
+                                <option>Fast seller</option>
+                                <option>Slow seller</option>
+                                <option>Possible return</option>
+                            </select>
+                        </td>
+                        <td><input type="date" name="estimatedDelivery" id="estimatedDelivery" /></td>
+                        <td><input type="text" name="trackingNumber" id="trackingNumber" /></td>
                     </tr>
                 </tbody>
             </table>

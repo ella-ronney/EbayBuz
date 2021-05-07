@@ -14,13 +14,13 @@ namespace EbayBusiness.Model
 
         }
 
-        public virtual DbSet<CurrentInventory> Currentinventory { get; set; }
-        public virtual DbSet<IncomingInventory> IncomingInventory { get; set; }
+        public virtual DbSet<Inventory> Inventory { get; set; }
 
         public virtual DbSet<TopSellers> TopSellers { get; set; }
         public virtual DbSet<BusinessExpenses> BusinessExpenses { get; set; }
         public virtual DbSet<Returns> Returns { get; set; }
         public virtual DbSet<InsuranceClaims> InsuranceClaims { get; set; }
+        public virtual DbSet<ShippingDelayedPackages> ShippingDelayedPackages { get; set; }
 
 
     }

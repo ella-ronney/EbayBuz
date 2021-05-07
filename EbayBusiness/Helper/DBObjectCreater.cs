@@ -7,7 +7,7 @@ namespace EbayBusiness.Helper
 {
     public class DBObjectCreater
     {
-        public CurrentInventory CreateCurInvObj(string name, int qty, float price, string vendor, DateTime purchaseDate, string warranty, string serialnum)
+        /*public CurrentInventory CreateCurInvObj(string name, int qty, float price, string vendor, DateTime purchaseDate, string warranty, string serialnum)
         {
             return new CurrentInventory()
             {
@@ -19,6 +19,6 @@ namespace EbayBusiness.Helper
                 warranty = warranty, 
                 serialNumbers = serialnum
             };
-        }
+        }*/
     }
 }

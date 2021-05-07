@@ -22,14 +22,13 @@ namespace EbayBusinessUI.Controllers
         {
             return View("~/Views/HtmlPages/ResolutionCenter.cshtml");
         }
+
+        //Returns
         [HttpPost]
         [Route("AddReturn")]
-        public bool AddReturn([FromForm] Returns ret)
+        public Returns AddReturn([FromForm] Returns ret)
         {
-            if (ebayDBRecords.AddReturns(ret)) {
-                return true;
-            }
-            return false;
+            return ebayDBRecords.AddReturns(ret);
         }
 
         [HttpGet]
@@ -39,6 +38,14 @@ namespace EbayBusinessUI.Controllers
             return ebayDBRecords.GetAllReturns();
         }
 
+        [HttpPost]
+        [Route("DeleteReturn")]
+        public bool DeleteReturn(IdList returnIdList)
+        {
+            return ebayDBRecords.DeleteReturn(returnIdList);
+        }
+
+        // Insurance Claims
         [HttpPost]
         [Route("AddInsuranceClaim")]
         public InsuranceClaims AddInsuranceClaim([FromForm] InsuranceClaims claim)
@@ -51,6 +58,34 @@ namespace EbayBusinessUI.Controllers
         public ActionResult<List<InsuranceClaims>> GetAllInsuranceClaims()
         {
             return ebayDBRecords.GetAllInsuranceClaims();
+        }
+
+        [HttpPost]
+        [Route("DeleteInsuranceClaim")]
+        public bool DeleteInsuranceClaim(IdList claimIdList)
+        {
+            return ebayDBRecords.DeleteInsuranceClaim(claimIdList);
+        }
+
+        // Delayed packages
+        [HttpPost]
+        [Route("AddDelayedPackage")]
+        public ShippingDelayedPackages AddShippingDelayedPackage([FromForm]ShippingDelayedPackages delayedPackage)
+        {
+            return ebayDBRecords.shippingDelayedPackage(delayedPackage);
+        }
+        [HttpGet]
+        [Route("DelayedPackages")]
+        public ActionResult<List<ShippingDelayedPackages>> GetAllDelayedPackages()
+        {
+            return ebayDBRecords.GetShippingDelayedPackages();
+        }
+
+        [HttpPost]
+        [Route("DeleteDelayedPackage")]
+        public bool DeleteDelayedPackage(IdList delayedPackageIdList)
+        {
+            return ebayDBRecords.DeleteDelayedPackage(delayedPackageIdList);
         }
     }
 }

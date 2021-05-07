@@ -20,6 +20,7 @@
                     <th scope="col">Delivery Date</th>
                     <th scope="col">Tracking #</th>
                     <th scope="col">Estimated Refund Time</th>
+                    <th class="text-center">Edit</th>
                 </tr>
             </thread>
             <tbody>
@@ -47,6 +48,7 @@
         </table>
         <div class="text-right">
             <button type="button" id="addReturn" class="btn btn-success">Add Return</button>
+            <button type="button" id="deleteReturn" class="btn btn-danger">Delete Return/s</button>
         </div>
     </div>
     <h2>Open Insurance Claims</h2>
@@ -68,6 +70,7 @@
                 <th scope="col">Customer Resolution Status</th>
                 <th scope="col">Replacement Tracking Number</th>
                 <th scope="col">Notes</th>
+                <th class="text-center">Edit</th>
             </tr>
         </thread>
         <tbody>
@@ -119,7 +122,51 @@
     </table>
     <div class="text-right">
         <button type="button" id="addInsuranceClaim" class="btn btn-success">Add Insurance Claim</button>
+        <button type="button" id="deleteInsuranceClaim" class="btn btn-danger">Delete Insurance Claim/s</button>
     </div>
     <h2>Packages delayed in Transit </h2>
-
+    <table id="delayedPackages" class="table table-responsive table-bordered text-center">
+        <thread>
+            <tr>
+                <th hidden class="text-center">Id</th>
+                <th scope="col">Item Name</th>
+                <th scope="col">Ebay Order #</th>
+                <th scope="col">Shipping Carrier</th>
+                <th scope="col">Insured For</th>
+                <th scope="col">Tracking #</th>
+                <th scope="col">Last Scan Date</th>
+                <th scope="col">Current Location</th>
+                <th scope="col">Destination</th>
+                <th scope="col">Service Request #</th>
+                <th scope="col">Last Contact Date with Customer</th>
+                <th scope="col">Notes</th>
+                <th class="text-center">Edit</th>
+            </tr>
+        </thread>
+        <tbody>
+            <tr>
+                <td hidden><input type="text" name="idshippingdelayedpackages" id="idshippingdelayedpackages" hidden /></td>
+                <td><input type="text" name="packageName" id="packageName" /></td>
+                <td><input type="text" name="ebayOrderNum" id="ebayOrderNum" /></td>
+                <td><select id="carrier" name="carrier">
+                    <option>USPS</option>
+                    <option>UPS</option>
+                    <option>Fedex</option>
+                    </select>
+                </td>
+                <td><input type="number" name="insuranceVal" id="insuranceVal" /></td>
+                <td><input type="text" name="trackingId" id="trackingId" /></td>
+                <td><input type="date" name="lastScanDate" id="lastScanDate" /></td>
+                <td><input type="text" name="currentLoc" id="currentLoc" /></td>
+                <td><input type="text" name="destination" id="destination" /></td>
+                <td><input type="text" name="serviceReqNum" id="serviceReqNum" /></td>
+                <td><input type="date" name="lastCustomerContactDate" id="lastCustomerContactDate" /></td>
+                <td><input type="text" name="note" id="note" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="text-right">
+        <button type="button" id="addDelayedPackage" class="btn btn-success">Add Delayed Package</button>
+        <button type="button" id="deleteDelayedPackage" class="btn btn-danger">Delete Delayed Package/s</button>
+    </div>
 </div>

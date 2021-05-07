@@ -18,9 +18,9 @@ namespace EbayBusiness.DB
         }
 
         // Current Inventory Requests
-        public List<CurrentInventory> GetAllCurrentInventory()
+        public List<Inventory> GetAllCurrentInventory()
         {
-            return db.Currentinventory.ToList();
+            return HelperMethods.GetCurrentorIncomingInventory(db.Inventory.ToList(),1);
         }
 
         public bool DeleteCurrentInventory(IdList idList)
@@ -30,12 +30,12 @@ namespace EbayBusiness.DB
                 int[] currentInventoryIds = idList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
                 foreach (int id in currentInventoryIds)
                 {
-                    var item = db.Currentinventory.Where(x => x.idCurrentInventory == id).FirstOrDefault();
+                    var item = db.Inventory.Where(x => x.idInventory == id).FirstOrDefault();
                     if (item == null)
                     {
                         return false;
                     }
-                    db.Currentinventory.Remove(item);
+                    db.Inventory.Remove(item);
                     db.SaveChanges();
                 }
             }
@@ -46,24 +46,23 @@ namespace EbayBusiness.DB
             return true;
         }
 
-        public List<CurrentInventory> MoveIncomingInvToCurrentInv(IdList incomingInvIdList)
+        public List<Inventory> MoveIncomingInvToCurrentInv(IdList incomingInvIdList)
         {
-            List<CurrentInventory> currInvList = new List<CurrentInventory>();
+            List<Inventory> currInvList = new List<Inventory>();
             try
             {
                 int[] incomingInventoryIds = incomingInvIdList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
                 foreach (int id in incomingInventoryIds)
                 {
-                    var item = db.IncomingInventory.Where(x => x.idIncomingInventory == id).FirstOrDefault();
+                    var item = db.Inventory.Where(x => x.idInventory == id).FirstOrDefault();
                     if (item == null)
                     {
                         return null;
                     }
-                    var curInv = HelperMethods.ConvertIncomingInvtoCurrInv(item);
-                    db.Currentinventory.Add(curInv);
-                    db.IncomingInventory.Remove(item);
+                    item.currentInventory = 1;
+                    currInvList.Add(item);
+                    db.Inventory.Update(item);
                     db.SaveChanges();
-                    currInvList.Add(curInv);
                 }
             }
             catch (Exception ex)
@@ -74,14 +73,14 @@ namespace EbayBusiness.DB
         }
 
         // Incoming Inventory Requests
-        public List<IncomingInventory> GetAllIncomingInventory()
+        public List<Inventory> GetAllIncomingInventory()
         {
-            return db.IncomingInventory.ToList();
+            return HelperMethods.GetCurrentorIncomingInventory(db.Inventory.ToList(), 0);
         }
 
-        public bool AddIncomingInventory(IncomingInventory inv)
+        public bool AddIncomingInventory(Inventory inv)
         {
-            db.IncomingInventory.Add(inv);
+            db.Inventory.Add(inv);
             db.SaveChanges();
             return true;
         }
@@ -93,12 +92,12 @@ namespace EbayBusiness.DB
                 int[] incomingInventoryIds = idList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
                foreach(int id in incomingInventoryIds)
                 {
-                    var item = db.IncomingInventory.Where(x => x.idIncomingInventory == id).FirstOrDefault();
+                    var item = db.Inventory.Where(x => x.idInventory == id).FirstOrDefault();
                     if (item == null)
                     {
                         return false;
                     }
-                    db.IncomingInventory.Remove(item);
+                    db.Inventory.Remove(item);
                     db.SaveChanges();
                 }
             }
@@ -124,17 +123,41 @@ namespace EbayBusiness.DB
         }
 
         // Resolution center
-        public bool AddReturns(Returns ret)
+        // Returns
+        public Returns AddReturns(Returns ret)
         {
             db.Returns.Add(ret);
             db.SaveChanges();
-            return true;
+            return ret;
         }
         public List<Returns> GetAllReturns()
         {
             return db.Returns.ToList();
         }
 
+        public bool DeleteReturn(IdList returnIdList)
+        {
+            try
+            {
+                int[] returnIds = returnIdList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+                foreach(int id in returnIds)
+                {
+                    var ret = db.Returns.Where(x => x.idreturns == id).FirstOrDefault();
+                    if(ret == null)
+                    {
+                        return false;
+                    }
+                    db.Returns.Remove(ret);
+                    db.SaveChanges();
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return true;
+        }
+        // Insurance Claims
         public InsuranceClaims AddInsuranceClaim(InsuranceClaims claim)
         {
             db.InsuranceClaims.Add(claim);
@@ -144,6 +167,62 @@ namespace EbayBusiness.DB
         public List<InsuranceClaims> GetAllInsuranceClaims()
         {
             return db.InsuranceClaims.ToList();
+        }
+
+        public bool DeleteInsuranceClaim(IdList insuranceClaimIds)
+        {
+            try
+            {
+                int[] claimIds = insuranceClaimIds.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+                foreach (int id in claimIds)
+                {
+                    var claim = db.InsuranceClaims.Where(x => x.idinsuranceclaims == id).FirstOrDefault();
+                    if (claim == null)
+                    {
+                        return false;
+                    }
+                    db.InsuranceClaims.Remove(claim);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return true;
+        }
+        // Delayed shipping
+        public ShippingDelayedPackages shippingDelayedPackage(ShippingDelayedPackages delayedPackage)
+        {
+            db.ShippingDelayedPackages.Add(delayedPackage);
+            db.SaveChanges();
+            return delayedPackage;
+        }
+        public List<ShippingDelayedPackages> GetShippingDelayedPackages()
+        {
+            return db.ShippingDelayedPackages.ToList();
+        }
+        public bool DeleteDelayedPackage (IdList delayedPackageIdList)
+        {
+            try
+            {
+                int[] delayedPackageIds = delayedPackageIdList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+                foreach (int id in delayedPackageIds)
+                {
+                    var delayedPackage = db.ShippingDelayedPackages.Where(x => x.idshippingdelayedpackages == id).FirstOrDefault();
+                    if (delayedPackage == null)
+                    {
+                        return false;
+                    }
+                    db.ShippingDelayedPackages.Remove(delayedPackage);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return true;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace EbayBusiness.Helper
 {
     public static class HelperMethods
     {
-        public static CurrentInventory ConvertIncomingInvtoCurrInv(IncomingInventory inv)
+       /* public static CurrentInventory ConvertIncomingInvtoCurrInv(IncomingInventory inv)
         {
             return new CurrentInventory
             {
@@ -19,6 +19,19 @@ namespace EbayBusiness.Helper
                 warranty = inv.warranty,
                 serialNumbers = inv.serialNumbers
             };
+        }*/
+
+        public static List<Inventory> GetCurrentorIncomingInventory(List<Inventory> dbInventoryList, int currentInventoryFlag)
+        {
+            List<Inventory> targetedInventoryList = new List<Inventory>();
+            foreach (Inventory item in dbInventoryList)
+            {
+                if (item.currentInventory == currentInventoryFlag)
+                {
+                    targetedInventoryList.Add(item);
+                }
+            }
+            return targetedInventoryList;
         }
 
     }

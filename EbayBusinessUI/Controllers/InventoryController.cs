@@ -25,7 +25,7 @@ namespace EbayBusiness.Controllers
         // Current Inventory Requests
         [HttpGet]
         [Route("CurrentInventory")]
-        public ActionResult<List<CurrentInventory>> GetAllCurrentInventory()
+        public ActionResult<List<Inventory>> GetAllCurrentInventory()
         {
             return ebayDBRecords.GetAllCurrentInventory();
         }
@@ -41,9 +41,9 @@ namespace EbayBusiness.Controllers
             return false;
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("MoveToCurrentInventory")]
-        public ActionResult<List<CurrentInventory>> MoveIncomingInvToCurrentInv(IdList incomingInvIdList)
+        public ActionResult<List<Inventory>> MoveIncomingInvToCurrentInv(IdList incomingInvIdList)
         {
             return ebayDBRecords.MoveIncomingInvToCurrentInv(incomingInvIdList);
         }
@@ -51,14 +51,14 @@ namespace EbayBusiness.Controllers
         // Incoming Inventory Requests
         [HttpGet]
         [Route("IncomingInventory")]
-        public ActionResult<List<IncomingInventory>> GetAllIncomingInventory()
+        public ActionResult<List<Inventory>> GetAllIncomingInventory()
         {
             return ebayDBRecords.GetAllIncomingInventory();
         }
 
         [HttpPost]
         [Route("AddIncomingInventory")]
-        public ActionResult<IncomingInventory> AddIncomingInventory([FromForm] IncomingInventory inv)
+        public ActionResult<Inventory> AddIncomingInventory([FromForm] Inventory inv)
         {
             if (ebayDBRecords.AddIncomingInventory(inv))
             {

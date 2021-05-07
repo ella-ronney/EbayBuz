@@ -2,6 +2,9 @@
 var checkBoxes = 0;
 var checkBoxesCur = 0;
 var checkBoxesTop = 0; 
+var checkBoxesReturns = 0;
+var checkBoxesClaims = 0;
+var checkBoxesDelays = 0;
     $.ajax({
         url: serviceUrl + 'inventory/CurrentInventory',
         method: 'GET',
@@ -9,7 +12,8 @@ var checkBoxesTop = 0;
             var trHTML = '';
             var count = 1;
             $.each(data, function (i, item) {
-                trHTML += '<tr><td hidden>' + item.idCurrentInventory + '</td><td>'+ item.name + '</td><td>' + item.qty + '</td><td>' + item.price + '</td><td>' + item.vendor + '</td><td>' + item.purchaseDate + '</td><td>' + item.warranty + '</td><td>' + item.serialNumbers + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"</td></tr>';
+                trHTML += '<tr><td hidden>' + item.idInventory + '</td><td>' + item.name + '</td><td>' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td>' + item.totalPrice + '</td><td>' + item.discountType + '</td><td>' + item.discount
+                    + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment + '</td><td>' +item.returnBy +'</td><td>'+  item.warranty + '</td><td>' + item.classification + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"</td></tr>';
                 count++;
             });
             checkBoxesCur = count;
@@ -34,6 +38,7 @@ $('#deletecurrentinv').on('click', function () {
             document.querySelectorAll('#currentinvTable input:checked').forEach(e => {
                 e.parentNode.parentNode.remove()
             });
+            checkBoxesCur--;
         }
     });
 });
@@ -48,7 +53,7 @@ $('#movetocurrentinv').on('click', function () {
     var idList = { ids: incomingInventoryIds.toString() };
     $.ajax({
         url: serviceUrl + 'inventory/MoveToCurrentInventory',
-        method: 'POST',
+        method: 'PUT',
         contentType: "application/json",
         data: JSON.stringify(idList),
         success: function (data) {
@@ -58,7 +63,8 @@ $('#movetocurrentinv').on('click', function () {
                 e.parentNode.parentNode.remove()
             });
             $.each(data, function (i, item) {
-                trHTML += '<tr><td hidden>' + item.idCurrentInventory + '</td><td>' + item.name + '</td><td>' + item.qty + '</td><td>' + item.price + '</td><td>' + item.vendor + '</td><td>' + item.purchaseDate + '</td><td>' + item.warranty + '</td><td>' + item.serialNumbers + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"</td></tr>';
+                trHTML += '<tr><td hidden>' + item.idInventory + '</td><td>' + item.name + '</td><td>' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td>' + item.totalPrice + '</td><td>' + item.discountType + '</td><td>' + item.discount
+                    + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment + '</td><td>' + item.returnBy + '</td><td>' + item.warranty + '</td><td>' + item.classification + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"</td></tr>';
                 count++;
             });
             checkBoxesCur = count;
@@ -75,7 +81,8 @@ $.ajax({
         var trHTML = '';
         var count = 1;
         $.each(data, function (i, item) {
-            trHTML += '<tr><td hidden>' + item.idIncomingInventory + '</td><td>'+ item.name + '</td><td>' + item.qty + '</td><td>' + item.price + '</td><td>' + item.vendor + '</td><td>' + item.purchaseDate + '</td><td>' + item.warranty + '</td><td>' + item.serialNumbers + '</td><td>' + item.trackingNumber + '</td><td>' + '<input type="checkbox" name="check' + count + '"</td></tr>';
+            trHTML += '<tr><td hidden>' + item.idInventory + '</td><td>' + item.name + '</td><td>' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td>' + item.totalPrice + '</td><td>' + item.discountType
+                + '</td><td>' + item.discount + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment + '</td><td>' + item.warranty + '</td><td>' + item.classification + '</td><td>' + item.estimatedDelivery + '</td><td>' + item.trackingNumber+'</td><td>' + '<input type="checkbox" name="check' + count + '"</td></tr>';
             count ++;
         });
         checkBoxes = count;
@@ -85,24 +92,30 @@ $.ajax({
 
 $('#addingincominginv').on('click', function () {
     var inputData = $('input').serialize();
+    inputData += '&discountType=' + $('#discountType').val() + '&payment=' + $('#payment').val() + '&classification=' + $('#classification').val();
     $.ajax({
         url: serviceUrl + 'inventory/AddIncomingInventory',
         method: 'POST',
         data: JSON.stringify(inputData),
-        success: function (data) {
+        success: function (item) {
 
             /*Clear out the form after submitting the info to db*/
             $("#name").val('');
             $("#qty").val('');
-            $("#price").val('');
+            $("#pricePerPiece").val('');
+            $("#totalPrice").val('');
+            $("#discount").val('');
             $("#vendor").val('');
-            $("#purchasedate").val('');
+            $("#datePurchased").val('');
+            $("#payment").val('');
             $("#warranty").val('');
-            $("#serialnumbers").val('');
-            $("#trackingnumber").val('');
+            $("#classification").val('');
+            $("#estimatedDelivery").val('');
+            $("#trackingNumber").val('');
 
             /*Display the newly added item in the table */
-            var trHTML = '<tr><td hidden>' + data.idIncomingInventory + '</td><td>' + data.name + '</td><td>' + data.qty + '</td><td>' + data.price + '</td><td>' + data.vendor + '</td><td>' + data.purchaseDate + '</td><td>' + data.warranty + '</td><td>' + data.serialNumbers + '</td><td>' + data.trackingNumber + '</td><td>' + '<input type="checkbox" name="check' + checkBoxes + '"</td></tr>';
+            var trHTML = '<tr><td hidden>' + item.idInventory + '</td><td>' + item.name + '</td><td>' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td>' + item.totalPrice + '</td><td>' + item.discountType
+                + '</td><td>' + item.discount + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment + '</td><td>' + item.warranty + '</td><td>' + item.classification + '</td><td>' + item.estimatedDelivery + '</td><td>' + item.trackingNumber + '</td><td>' + '<input type="checkbox" name="check' + checkBoxes + '"</td></tr>';
             $('#incominginvTable').append(trHTML);
             checkBoxes++;
         }
@@ -126,10 +139,12 @@ $('#deleteincominginv').on('click', function () {
                 document.querySelectorAll('#incominginvTable input:checked').forEach(e => {
                     e.parentNode.parentNode.remove()
                 });
+                checkBoxes--;
             }
         });
     });
 
+// Top sellers
 $.ajax({
     url: serviceUrl + 'TopSellers/GetTopSellers',
     method: 'GET',
@@ -144,6 +159,8 @@ $.ajax({
         $('#topSellerTable').append(trHTML);
     }
 });
+
+// Business expense manager
 $('#addExpense').on('click', function () {
     var dataType = 'application/x-www-form-urlencoded; charset=utf-8';
     var inputData = $('input').serialize();
@@ -164,6 +181,7 @@ $('#addExpense').on('click', function () {
         }
     });
 });
+// Resolution Center - Returns
 $('#addReturn').on('click', function () {
     var inputData = $('input').serialize();
     var paymentMethod = $('#paymentMethod').val();
@@ -184,8 +202,11 @@ $('#addReturn').on('click', function () {
             $("#trackingNum").val('');
 
             /*Display the newly added item in the table */
-            var trHTML = '<tr><td hidden>' + data.idreturns + '</td><td>' + data.returnName + '</td><td>' + data.quantity + '</td><td>' + data.totalPrice + '</td><td>' + data.paymentMethod + '</td><td>' + data.returnVendor + '</td><td>' + data.returnDate + '</td><td>' + data.deliveryDate + '</td><td>' + data.trackingNum + '</td><td>' + data.estimatedRefundTime + '</td></tr>';
+            var trHTML = '<tr><td hidden>' + data.idreturns + '</td><td>' + data.returnName + '</td><td>' + data.quantity + '</td><td>' +
+                data.totalPrice + '</td><td>' + data.paymentMethod + '</td><td>' + data.returnVendor + '</td><td>' + data.returnDate + '</td><td>' + data.deliveryDate +
+                '</td><td>' + data.trackingNum + '</td><td>' + data.estimatedRefundTime + '</td><td>' +'<input type="checkbox" name="checkBoxesReturns' + checkBoxesReturns +'"</td></tr>';
             $('#returnTable').append(trHTML);
+            checkBoxesReturns++;
         }
     });
 });
@@ -194,31 +215,51 @@ $.ajax({
     method: 'GET',
     success: function (data) {
         var trHTML = '';
+        var count = 1;
         $.each(data, function (i, data) {
-            trHTML += '<tr><td hidden>' + data.idreturns + '</td><td>' + data.returnName + '</td><td>' + data.quantity + '</td><td>' + data.totalPrice + '</td><td>' + data.paymentMethod + '</td><td>' + data.returnVendor + '</td><td>' + data.returnDate + '</td><td>' + data.deliveryDate + '</td><td>' + data.trackingNum + '</td><td>' + data.estimatedRefundTime + '</td></tr>';
+            trHTML += '<tr><td hidden>' + data.idreturns + '</td><td contenteditable="true">' + data.returnName + '</td><td>' + data.quantity + '</td><td>' + data.totalPrice +
+                '</td><td>' + data.paymentMethod + '</td><td>' + data.returnVendor + '</td><td>' + data.returnDate + '</td><td>' + data.deliveryDate +
+                '</td><td>' + data.trackingNum + '</td><td>' + data.estimatedRefundTime + '</td><td>' + '<input type="checkbox" name="checkBoxesReturns' + count + '"</td></tr>';
+            count++;
         });
+        checkBoxesReturns = count;
         $('#returnTable').append(trHTML);
     }
 });
+
+$('#deleteReturn').on('click', function () {
+    var returnIds = [];
+    var selector = '#returnTable tr input:checked';
+    $.each($(selector), function (i, item) {
+        var returnId = $(this).parent().siblings(":first").text();
+        returnIds.push(returnId);
+    });
+    var idList = { ids: returnIds.toString() };
+    $.ajax({
+        url: serviceUrl + 'ResolutionCenter/DeleteReturn',
+        method: 'POST',
+        contentType: "application/json",
+        data: JSON.stringify(idList),
+        success: function (data) {
+            document.querySelectorAll('#returnTable input:checked').forEach(e => {
+                e.parentNode.parentNode.remove()
+            });
+            checkBoxesReturns--;
+        }
+    });
+});
+
+// Resolution center - insurance claims
 $('#addInsuranceClaim').on('click', function () {
-    var itemName = $('#itemName').val();
-    var ebayOrderNumber = $('#ebayOrderNumber').val();
-    var sellPrice = $('#sellPrice').val();
-    var insuredFor = $('#insuredFor').val();
-    var claimNumber = $('#claimNumber').val();
-    var claimFileDate = $('#claimFileDate').val();
-    var tracking = $('#tracking').val();
-    var replacementTrackingNum = $('#replacementTrackingNum').val();
-    var notes = $('#notes').val();
+    var formData = $('input').serialize();
+    var splitted = formData.split('idinsuranceclaims');
+    var inputData = 'idinsuranceclaims' + splitted[1];
     var shippingCarrier = $('#shippingCarrier').val();
     var claimStatus = $('#claimStatus').val();
     var customerPreference = $('#customerPreference').val();
     var customerResolutionStatus = $('#customerResolutionStatus').val();
-    var shippingCost = $('#shippingCost').val();
-    // FIXME clean this up - refactor to a function or find a better solution
-    var inputData = '&shippingCarrier=' + shippingCarrier + '&claimStatus=' + claimStatus + '&customerPreference=' + customerPreference + '&customerResolutionStatus=' + customerResolutionStatus
-        + '&itemName=' + itemName + '&ebayOrderNumber=' + ebayOrderNumber + '&sellPrice=' + sellPrice + '&insuredFor=' + insuredFor + '&claimNumber=' + claimNumber + '&claimFileDate=' + claimFileDate
-        + '&tracking=' + tracking + '&replacementTrackingNum=' + replacementTrackingNum + '&shippingCost=' + shippingCost +'&notes=' + notes;
+    inputData += '&shippingCarrier=' + shippingCarrier + '&claimStatus=' + claimStatus + '&customerPreference=' +
+        customerPreference + '&customerResolutionStatus=' + customerResolutionStatus;
     $.ajax({
         url: serviceUrl + 'ResolutionCenter/AddInsuranceClaim',
         method: 'POST',
@@ -239,8 +280,10 @@ $('#addInsuranceClaim').on('click', function () {
             /*Display the newly added item in the table */
             var trHTML = '<tr><td hidden>' + data.idinsuranceclaims + '</td><td>' + data.itemName + '</td><td>' + data.ebayOrderNumber + '</td><td>' +
                 data.sellPrice + '</td><td>' + data.insuredFor + '</td><td>' + data.shippingCarrier + '</td><td>' + data.shippingCost + '</td><td>' + data.tracking + '</td><td>' + data.claimNumber +
-                '</td><td>' + data.claimFileDate + '</td><td>' + data.claimStatus + '</td><td>' + data.customerPreference + '</td><td>' + data.customerResolutionStatus + '</td><td>' + data.replacementTrackingNum + '</td><td>' + data.notes + '</td></tr>';
+                '</td><td>' + data.claimStatus + '</td><td>' + data.claimFileDate + '</td><td>' + data.customerPreference + '</td><td>' +
+                data.customerResolutionStatus + '</td><td>' + data.replacementTrackingNum + '</td><td>' + data.notes + '</td><td>' + '<input type="checkbox" name="checkBoxesClaims' + checkBoxesClaims + '"</td></tr>';
             $('#insuranceClaims').append(trHTML);
+            checkBoxesClaims++;
         }
     });
 });
@@ -249,11 +292,108 @@ $.ajax({
     method: 'GET',
     success: function (data) {
         var trHTML = '';
+        var count = 1;
         $.each(data, function (i, data) {
             trHTML += '<tr><td hidden>' + data.idinsuranceclaims + '</td><td>' + data.itemName + '</td><td>' + data.ebayOrderNumber + '</td><td>' +
                 data.sellPrice + '</td><td>' + data.insuredFor + '</td><td>' + data.shippingCarrier + '</td><td>' + data.shippingCost + '</td><td>' + data.tracking + '</td><td>' + data.claimNumber +
-                '</td><td>' + data.claimFileDate + '</td><td>' + data.claimStatus + '</td><td>' + data.customerPreference + '</td><td>' + data.customerResolutionStatus + '</td><td>' + data.replacementTrackingNum + '</td><td>' + data.notes + '</td></tr>';
+                '</td><td>' + data.claimStatus + '</td><td>' + data.claimFileDate + '</td><td>' + data.customerPreference + '</td><td>' + data.customerResolutionStatus + '</td><td>' +
+                data.replacementTrackingNum + '</td><td>' + data.notes + '</td><td>' + '<input type="checkbox" name="checkBoxesClaims' + checkBoxesClaims + '"</td></tr>';
+            count++;
         });
+        checkBoxesClaims = count;
         $('#insuranceClaims').append(trHTML);
     }
+});
+
+$('#deleteInsuranceClaim').on('click', function () {
+    var claimIds = [];
+    var selector = '#insuranceClaims tr input:checked';
+    $.each($(selector), function (i, item) {
+        var claimId = $(this).parent().siblings(":first").text();
+        claimIds.push(claimId);
+    });
+    var idList = { ids: claimIds.toString() };
+    $.ajax({
+        url: serviceUrl + 'ResolutionCenter/DeleteInsuranceClaim',
+        method: 'POST',
+        contentType: "application/json",
+        data: JSON.stringify(idList),
+        success: function (data) {
+            document.querySelectorAll('#insuranceClaims input:checked').forEach(e => {
+                e.parentNode.parentNode.remove()
+            });
+            checkBoxesClaims--;
+        }
+    });
+});
+
+// Resolution center - Delayed packages
+$('#addDelayedPackage').on('click', function ()
+{
+    var formData = $('input').serialize();
+    var splitString = formData.split('idshippingdelayedpackages');
+    var inputData = 'idshippingdelayedpackages' + splitString[1];
+    inputData += '&carrier=' + $('#carrier').val(); 
+    $.ajax({
+        url: serviceUrl + 'ResolutionCenter/AddDelayedPackage',
+        method: 'POST',
+        data: JSON.stringify(inputData),
+        success: function (data) {
+            /*Clear out the form after submitting the info to db*/
+            $("#packageName").val('');
+            $("#ebayOrderNum").val('');
+            $("#insuranceVal").val('');
+            $("#trackingId").val('');
+            $("#lastScanDate").val('');
+            $("#currentLoc").val('');
+            $("#destination").val('');
+            $("#serviceReqNum").val('');
+            $("#lastCustomerContactDate").val('');
+            $("#note").val('');
+
+            /*Display the newly added item in the table */
+            var trHTML = '<tr><td hidden>' + data.idshippingdelayedpackages + '</td><td>' + data.packageName + '</td><td>' + data.ebayOrderNum + '</td><td>' +
+                data.carrier + '</td><td>' + data.insuranceVal + '</td><td>' + data.trackingId + '</td><td>' + data.lastScanDate + '</td><td>' + data.currentLoc + '</td><td>' + data.destination +
+                '</td><td>' + data.serviceReqNum + '</td><td>' + data.lastCustomerContactDate + '</td><td>' + data.note + '</td><td>' + '<input type="checkbox" name="checkBoxesDelays' + checkBoxesDelays + '"</td></tr>';
+            $('#delayedPackages').append(trHTML);
+            checkBoxesDelays++;
+        }
+    });
+});
+$.ajax({
+    url: serviceUrl + 'ResolutionCenter/DelayedPackages',
+    method: 'GET',
+    success: function (data) {
+        var trHTML = '';
+        var count = 1;
+        $.each(data, function (i, data) {
+            trHTML += '<tr><td hidden>' + data.idshippingdelayedpackages + '</td><td>' + data.packageName + '</td><td>' + data.ebayOrderNum + '</td><td>' +
+                data.carrier + '</td><td>' + data.insuranceVal + '</td><td>' + data.trackingId + '</td><td>' + data.lastScanDate + '</td><td>' + data.currentLoc + '</td><td>' + data.destination +
+                '</td><td>' + data.serviceReqNum + '</td><td>' + data.lastCustomerContactDate + '</td><td>' + data.note + '</td><td>' + '<input type="checkbox" name="checkBoxesDelays' + checkBoxesDelays + '"</td></tr>';
+            count++;
+        });
+        checkBoxesDelays = count;
+        $('#delayedPackages').append(trHTML);
+    }
+});
+$('#deleteDelayedPackage').on('click', function () {
+    var delayedPackageIdList = [];
+    var selector = '#delayedPackages tr input:checked';
+    $.each($(selector), function (i, item) {
+        var delayedPackageId = $(this).parent().siblings(":first").text();
+        delayedPackageIdList.push(delayedPackageId);
+    });
+    var idList = { ids: delayedPackageIdList.toString() };
+    $.ajax({
+        url: serviceUrl + 'ResolutionCenter/DeleteDelayedPackage',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(idList),
+        success: function (data) {
+            document.querySelectorAll('#delayedPackages input:checked').forEach(e => {
+                e.parentNode.parentNode.remove()
+            });
+            checkBoxesDelays--;
+        }
+    });
 });
