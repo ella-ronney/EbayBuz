@@ -48,6 +48,12 @@ namespace EbayBusiness.Controllers
             return ebayDBRecords.MoveIncomingInvToCurrentInv(incomingInvIdList);
         }
 
+        [HttpPut]
+        [Route("UpdateCurrentInv")]
+        public bool UpdateCurrentInventory([FromBody] List<Inventory> curInventory) {
+            return ebayDBRecords.UpdateCurrentInventory(curInventory);
+        }
+
         // Incoming Inventory Requests
         [HttpGet]
         [Route("IncomingInventory")]

@@ -12,6 +12,7 @@ namespace EbayBusiness.DB
         public List<Inventory> GetAllCurrentInventory();
         public bool DeleteCurrentInventory(IdList idList);
         public List<Inventory> MoveIncomingInvToCurrentInv(IdList incomingInvIdList);
+        public bool UpdateCurrentInventory(List<Inventory> curInventory);
         public List<Inventory> GetAllIncomingInventory();
         public bool AddIncomingInventory(Inventory inv);
         public bool DeleteIncomingInventory(IdList idList);

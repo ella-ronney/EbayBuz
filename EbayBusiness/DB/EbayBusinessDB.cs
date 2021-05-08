@@ -14,13 +14,13 @@ namespace EbayBusiness.DB
         private DBObjectCreater objGen = new DBObjectCreater();
         public EbayBusinessDB(EbayBusinessContext db)
         {
-           this.db = db;
+            this.db = db;
         }
 
         // Current Inventory Requests
         public List<Inventory> GetAllCurrentInventory()
         {
-            return HelperMethods.GetCurrentorIncomingInventory(db.Inventory.ToList(),1);
+            return HelperMethods.GetCurrentorIncomingInventory(db.Inventory.ToList(), 1);
         }
 
         public bool DeleteCurrentInventory(IdList idList)
@@ -70,6 +70,49 @@ namespace EbayBusiness.DB
 
             }
             return currInvList;
+        }
+        public void updateDbInventoryHelper(ref Inventory dbInventoryItem, Inventory item)
+        {
+            dbInventoryItem.name = item.name;
+            dbInventoryItem.qty = item.qty;
+            dbInventoryItem.pricePerPiece = item.pricePerPiece;
+            dbInventoryItem.totalPrice = item.totalPrice;
+            dbInventoryItem.discountType = item.discountType;
+            dbInventoryItem.discount = item.discount;
+            dbInventoryItem.vendor = item.vendor;
+            dbInventoryItem.datePurchased = item.datePurchased;
+            dbInventoryItem.payment = item.payment;
+            dbInventoryItem.returnBy = item.returnBy;
+            dbInventoryItem.warranty = item.warranty;
+            dbInventoryItem.classification = item.classification;
+        }
+
+        public bool UpdateCurrentInventory(List<Inventory> curInventory)
+        {
+            Inventory dbInventoryItem = null;
+            try
+            {
+                foreach (Inventory item in curInventory)
+                {
+                    dbInventoryItem = db.Inventory.Where(x => x.idInventory == item.idInventory).FirstOrDefault();
+                    if (dbInventoryItem != null)
+                    {
+                        updateDbInventoryHelper(ref dbInventoryItem, item);
+                        db.Inventory.Update(dbInventoryItem);
+                        db.SaveChanges();
+                    }
+                    // Error message popup if the update failed
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            // Save DB changes only if all items are successfuly updated
+            //db.SaveChanges();
+            return true;
         }
 
         // Incoming Inventory Requests

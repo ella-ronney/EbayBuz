@@ -5,6 +5,36 @@ var checkBoxesTop = 0;
 var checkBoxesReturns = 0;
 var checkBoxesClaims = 0;
 var checkBoxesDelays = 0;
+
+function inventoryHtmlTableData(item) {
+    var trHTML = '<tr><td hidden>' + item.idInventory + '</td><td contenteditable="true">' + item.name + '</td><td contenteditable="true">' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td>' + item.totalPrice + '</td><td>' + item.discountType + '</td><td contenteditable="true">' + item.discount
+        + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment + '</td><td>';
+    return trHTML;
+}
+
+function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, Vendor, DatePurchased, Payment, ReturnBy, Warranty, Classification) {
+    var Inventory = {
+        // FIXME - correct formating for dates
+            idInventory: Number(IdInventory),
+            name: Name,
+            qty: parseFloat(Qty),
+            pricePerPiece: parseFloat(PricePerPiece),
+            totalPrice: parseFloat(TotalPrice),
+            discountType: DiscountType,
+            discount: parseFloat(Discount),
+            vendor: Vendor,
+            //datePurchased: null,
+            payment: Payment,
+            //returnBy: null,
+            warranty: Warranty,
+            classification: Classification,
+            trackingNumber: null,
+            //estimatedDelivery: null,
+            ebayItemId: null,
+            currentInventory: 1
+    };
+    return Inventory;
+}
     $.ajax({
         url: serviceUrl + 'inventory/CurrentInventory',
         method: 'GET',
@@ -12,8 +42,7 @@ var checkBoxesDelays = 0;
             var trHTML = '';
             var count = 1;
             $.each(data, function (i, item) {
-                trHTML += '<tr><td hidden>' + item.idInventory + '</td><td>' + item.name + '</td><td>' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td>' + item.totalPrice + '</td><td>' + item.discountType + '</td><td>' + item.discount
-                    + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment + '</td><td>' +item.returnBy +'</td><td>'+  item.warranty + '</td><td>' + item.classification + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"</td></tr>';
+                trHTML += inventoryHtmlTableData(item) +item.returnBy +'</td><td>'+  item.warranty + '</td><td>' + item.classification + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"</td></tr>';
                 count++;
             });
             checkBoxesCur = count;
@@ -63,14 +92,39 @@ $('#movetocurrentinv').on('click', function () {
                 e.parentNode.parentNode.remove()
             });
             $.each(data, function (i, item) {
-                trHTML += '<tr><td hidden>' + item.idInventory + '</td><td>' + item.name + '</td><td>' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td>' + item.totalPrice + '</td><td>' + item.discountType + '</td><td>' + item.discount
-                    + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment + '</td><td>' + item.returnBy + '</td><td>' + item.warranty + '</td><td>' + item.classification + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"</td></tr>';
+                trHTML += inventoryHtmlTableData(item) + item.returnBy + '</td><td>' + item.warranty + '</td><td>' + item.classification + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"</td></tr>';
                 count++;
             });
             checkBoxesCur = count;
             $('#currentinvTable').append(trHTML);
 
         }
+    });
+});
+
+$('#updatecurrinv').on('click', function () {
+    var updatedCurrentInvData = [];
+    var curInventory = [];
+    var selector = '#currentinvTable tr input:checked';
+    $.each($(selector), function (i, item) {
+        var toUpdateCurrentInv = $(this).parent().siblings();
+        //Parameters (IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, Vendor, DatePurchased, Payment, ReturnBy, Warranty, Classification)
+       updatedCurrentInvData.push(createInventoryObject(toUpdateCurrentInv[0].innerHTML, toUpdateCurrentInv[1].innerHTML, toUpdateCurrentInv[2].innerHTML, toUpdateCurrentInv[3].innerHTML, toUpdateCurrentInv[4].innerHTML, toUpdateCurrentInv[5].innerHTML,
+            toUpdateCurrentInv[6].innerHTML, toUpdateCurrentInv[7].innerHTML, toUpdateCurrentInv[8].innerHTML, toUpdateCurrentInv[9].innerHTML, toUpdateCurrentInv[10].innerHTML,
+        toUpdateCurrentInv[11].innerHTML, toUpdateCurrentInv[12].innerHTML));
+    });
+    curInventory = { Inventory: updatedCurrentInvData };
+    $.ajax({
+        url: serviceUrl + 'inventory/UpdateCurrentInv',
+        method: 'PUT',
+        contentType: "application/json",
+        data: JSON.stringify(curInventory.Inventory),
+        success: function (data) {
+            if (data == true) {
+                // popup update was successful
+            }
+            // failed case - popup with when the updated failed 
+        }        
     });
 });
 
@@ -81,8 +135,7 @@ $.ajax({
         var trHTML = '';
         var count = 1;
         $.each(data, function (i, item) {
-            trHTML += '<tr><td hidden>' + item.idInventory + '</td><td>' + item.name + '</td><td>' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td>' + item.totalPrice + '</td><td>' + item.discountType
-                + '</td><td>' + item.discount + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment + '</td><td>' + item.warranty + '</td><td>' + item.classification + '</td><td>' + item.estimatedDelivery + '</td><td>' + item.trackingNumber+'</td><td>' + '<input type="checkbox" name="check' + count + '"</td></tr>';
+            trHTML += inventoryHtmlTableData(item) + item.warranty + '</td><td>' + item.classification + '</td><td>' + item.estimatedDelivery + '</td><td>' + item.trackingNumber+'</td><td>' + '<input type="checkbox" name="check' + count + '"</td></tr>';
             count ++;
         });
         checkBoxes = count;
@@ -107,15 +160,12 @@ $('#addingincominginv').on('click', function () {
             $("#discount").val('');
             $("#vendor").val('');
             $("#datePurchased").val('');
-            $("#payment").val('');
             $("#warranty").val('');
-            $("#classification").val('');
             $("#estimatedDelivery").val('');
             $("#trackingNumber").val('');
 
             /*Display the newly added item in the table */
-            var trHTML = '<tr><td hidden>' + item.idInventory + '</td><td>' + item.name + '</td><td>' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td>' + item.totalPrice + '</td><td>' + item.discountType
-                + '</td><td>' + item.discount + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment + '</td><td>' + item.warranty + '</td><td>' + item.classification + '</td><td>' + item.estimatedDelivery + '</td><td>' + item.trackingNumber + '</td><td>' + '<input type="checkbox" name="check' + checkBoxes + '"</td></tr>';
+            var trHTML = inventoryHtmlTableData(item) + item.warranty + '</td><td>' + item.classification + '</td><td>' + item.estimatedDelivery + '</td><td>' + item.trackingNumber + '</td><td>' + '<input type="checkbox" name="check' + checkBoxes + '"</td></tr>';
             $('#incominginvTable').append(trHTML);
             checkBoxes++;
         }
