@@ -84,5 +84,12 @@ namespace EbayBusiness.Controllers
             }
             return false;
         }
+
+        [HttpPut]
+        [Route("UpdateIncomingInv")]
+        public bool UpdateIncomingInventory([FromBody] List<Inventory> incInv)
+        {
+            return ebayDBRecords.UpdateIncomingInventory(incInv);
+        }
     }
 }

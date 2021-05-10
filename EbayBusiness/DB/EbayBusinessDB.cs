@@ -75,16 +75,17 @@ namespace EbayBusiness.DB
         {
             dbInventoryItem.name = item.name;
             dbInventoryItem.qty = item.qty;
-            dbInventoryItem.pricePerPiece = item.pricePerPiece;
             dbInventoryItem.totalPrice = item.totalPrice;
-            dbInventoryItem.discountType = item.discountType;
             dbInventoryItem.discount = item.discount;
-            dbInventoryItem.vendor = item.vendor;
-            dbInventoryItem.datePurchased = item.datePurchased;
-            dbInventoryItem.payment = item.payment;
-            dbInventoryItem.returnBy = item.returnBy;
-            dbInventoryItem.warranty = item.warranty;
             dbInventoryItem.classification = item.classification;
+
+            if (item.currentInventory == 1)
+            {
+                dbInventoryItem.returnBy = item.returnBy;
+            }
+
+            dbInventoryItem.estimatedDelivery = item.estimatedDelivery;
+            dbInventoryItem.trackingNumber = item.trackingNumber;
         }
 
         public bool UpdateCurrentInventory(List<Inventory> curInventory)
@@ -95,14 +96,14 @@ namespace EbayBusiness.DB
                 foreach (Inventory item in curInventory)
                 {
                     dbInventoryItem = db.Inventory.Where(x => x.idInventory == item.idInventory).FirstOrDefault();
-                    if (dbInventoryItem != null)
+                    if (dbInventoryItem == null)
                     {
-                        updateDbInventoryHelper(ref dbInventoryItem, item);
-                        db.Inventory.Update(dbInventoryItem);
-                        db.SaveChanges();
+                        // Error message popup if the update failed
+                        return false;
                     }
-                    // Error message popup if the update failed
-                    return false;
+                    updateDbInventoryHelper(ref dbInventoryItem, item);
+                    db.Inventory.Update(dbInventoryItem);
+                    db.SaveChanges();
                 }
             }
             catch (Exception ex)
@@ -147,6 +148,30 @@ namespace EbayBusiness.DB
             catch(Exception ex)
             {
 
+            }
+            return true;
+        }
+
+        public bool UpdateIncomingInventory(List<Inventory> incInv)
+        {
+            Inventory dbInventoryItem = null;
+            try
+            {
+                foreach(Inventory item in incInv)
+                {
+                    dbInventoryItem = db.Inventory.Where(x => x.idInventory == item.idInventory).FirstOrDefault();
+                    if (dbInventoryItem == null)
+                    {
+                        return false;
+                    }
+                    updateDbInventoryHelper(ref dbInventoryItem, item);
+                    db.Inventory.Update(dbInventoryItem);
+                    db.SaveChanges();
+                }
+            }
+            catch(Exception ex)
+            {
+                return false;
             }
             return true;
         }
