@@ -15,6 +15,7 @@ namespace EbayBusiness.Model
         public float totalPrice { get; set; }
         public string discountType { get; set; }
         public float discount { get; set; }
+        public string discountStatus { get; set; }
         public string vendor { get; set; }
         public DateTime datePurchased { get; set; }
         public string payment { get; set; }

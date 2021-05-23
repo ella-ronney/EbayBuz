@@ -45,6 +45,13 @@ namespace EbayBusinessUI.Controllers
             return ebayDBRecords.DeleteReturn(returnIdList);
         }
 
+        [HttpPut]
+        [Route("UpdateReturn")]
+        public bool UpdateReturn([FromBody] List<Returns> returns)
+        {
+            return ebayDBRecords.UpdateReturn(returns);
+        }
+
         // Insurance Claims
         [HttpPost]
         [Route("AddInsuranceClaim")]
@@ -67,6 +74,13 @@ namespace EbayBusinessUI.Controllers
             return ebayDBRecords.DeleteInsuranceClaim(claimIdList);
         }
 
+        [HttpPut]
+        [Route("UpdateInsuranceClaim")]
+        public bool UpdateInsuranceClaim([FromBody] List<InsuranceClaims> insuranceClaims)
+        {
+            return ebayDBRecords.UpdateInsuranceClaim(insuranceClaims);
+        }
+
         // Delayed packages
         [HttpPost]
         [Route("AddDelayedPackage")]
@@ -87,5 +101,10 @@ namespace EbayBusinessUI.Controllers
         {
             return ebayDBRecords.DeleteDelayedPackage(delayedPackageIdList);
         }
+
+        [HttpPut]
+        [Route("UpdateDelayedPackage")]
+        public bool UpdateDelayedPackage([FromBody] List<ShippingDelayedPackages> delayedPackage) {
+            return ebayDBRecords.UpdateDelayedPackage(delayedPackage); }
     }
 }

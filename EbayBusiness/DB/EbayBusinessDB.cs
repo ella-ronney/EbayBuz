@@ -71,12 +71,13 @@ namespace EbayBusiness.DB
             }
             return currInvList;
         }
-        public void updateDbInventoryHelper(ref Inventory dbInventoryItem, Inventory item)
+        private void updateDbInventoryHelper(ref Inventory dbInventoryItem, Inventory item)
         {
             dbInventoryItem.name = item.name;
             dbInventoryItem.qty = item.qty;
             dbInventoryItem.totalPrice = item.totalPrice;
             dbInventoryItem.discount = item.discount;
+            dbInventoryItem.discountStatus = item.discountStatus;
             dbInventoryItem.classification = item.classification;
 
             if (item.currentInventory == 1)
@@ -225,6 +226,46 @@ namespace EbayBusiness.DB
             }
             return true;
         }
+
+        private void updateDbReturnsHelper(ref Returns dbReturns, Returns updReturns)
+        {
+            dbReturns.returnName = updReturns.returnName;
+            //dbReturns.quantity = updReturns.quantity;
+            //dbReturns.totalPrice = updReturns.totalPrice;
+            //dbReturns.paymentMethod = updReturns.paymentMethod;
+            //dbReturns.returnVendor = updReturns.returnVendor;
+            dbReturns.returnDate = updReturns.returnDate;
+            dbReturns.estimatedRefundTime = updReturns.estimatedRefundTime;
+            dbReturns.deliveryDate = updReturns.deliveryDate;
+            //dbReturns.trackingNum = updReturns.trackingNum;
+        }
+        public bool UpdateReturn(List<Returns> updatedReturns)
+        {
+            Returns dbReturns = null;
+            try
+            {
+                foreach (Returns updRet in updatedReturns)
+                {
+                    dbReturns = db.Returns.Where(x => x.idreturns == updRet.idreturns).FirstOrDefault();
+                    if (dbReturns == null)
+                    {
+                        // Error message popup if the update failed
+                        return false;
+                    }
+                    updateDbReturnsHelper(ref dbReturns, updRet);
+                    db.Returns.Update(dbReturns);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            // Save DB changes only if all items are successfuly updated
+            //db.SaveChanges();
+            return true;
+        }
         // Insurance Claims
         public InsuranceClaims AddInsuranceClaim(InsuranceClaims claim)
         {
@@ -259,6 +300,40 @@ namespace EbayBusiness.DB
             }
             return true;
         }
+        private void updateDbInsuranceClaimHelper(ref InsuranceClaims dbInsuranceClaims, InsuranceClaims updatedClaim){
+            dbInsuranceClaims.itemName = updatedClaim.itemName;
+            dbInsuranceClaims.insuredFor = updatedClaim.insuredFor;
+            dbInsuranceClaims.claimStatus = updatedClaim.claimStatus;
+            dbInsuranceClaims.customerPreference = updatedClaim.customerPreference;
+            dbInsuranceClaims.customerResolutionStatus = updatedClaim.customerResolutionStatus;
+            dbInsuranceClaims.notes = updatedClaim.notes;
+            dbInsuranceClaims.replacementTrackingNum = updatedClaim.replacementTrackingNum;
+        }
+
+       public bool UpdateInsuranceClaim(List<InsuranceClaims> updatedClaims)
+        {
+            InsuranceClaims dbInsuranceClaims = null;
+            try
+            {
+                foreach(InsuranceClaims claim in updatedClaims)
+                {
+                    dbInsuranceClaims = db.InsuranceClaims.Where(x => x.idinsuranceclaims == claim.idinsuranceclaims).FirstOrDefault();
+                    if(dbInsuranceClaims == null)
+                    {
+                        return false;
+                    }
+                    updateDbInsuranceClaimHelper(ref dbInsuranceClaims, claim);
+                    db.InsuranceClaims.Update(dbInsuranceClaims);
+                    db.SaveChanges();
+                }
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
         // Delayed shipping
         public ShippingDelayedPackages shippingDelayedPackage(ShippingDelayedPackages delayedPackage)
         {
@@ -289,6 +364,38 @@ namespace EbayBusiness.DB
             catch (Exception ex)
             {
 
+            }
+            return true;
+        }
+        private void updateDbDelayedPackageHelper(ref ShippingDelayedPackages dbDelayedPackage, ShippingDelayedPackages updatedPackage)
+        {
+            dbDelayedPackage.packageName = updatedPackage.packageName;
+            dbDelayedPackage.lastScanDate = updatedPackage.lastScanDate;
+            dbDelayedPackage.currentLoc = updatedPackage.currentLoc;
+            dbDelayedPackage.serviceReqNum = updatedPackage.serviceReqNum;
+            dbDelayedPackage.lastCustomerContactDate = updatedPackage.lastCustomerContactDate;
+            dbDelayedPackage.note = updatedPackage.note;
+        }
+        public bool UpdateDelayedPackage(List<ShippingDelayedPackages> updatedPackages)
+        {
+            ShippingDelayedPackages dbDelayedPackages = null;
+            try
+            {
+                foreach(ShippingDelayedPackages package in updatedPackages)
+                {
+                    dbDelayedPackages = db.ShippingDelayedPackages.Where(x => x.idshippingdelayedpackages == package.idshippingdelayedpackages).FirstOrDefault();
+                    if(dbDelayedPackages == null)
+                    {
+                        return false;
+                    }
+                    updateDbDelayedPackageHelper(ref dbDelayedPackages, package);
+                    db.ShippingDelayedPackages.Update(dbDelayedPackages);
+                    db.SaveChanges();
+                }
+            }
+            catch(Exception ex)
+            {
+                return false;
             }
             return true;
         }

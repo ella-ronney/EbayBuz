@@ -8,11 +8,11 @@ var checkBoxesDelays = 0;
 
 function inventoryHtmlTableData(item) {
     var trHTML = '<tr><td hidden>' + item.idInventory + '</td><td contenteditable="true">' + item.name + '</td><td contenteditable="true">' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td contenteditable="true">' + item.totalPrice + '</td><td>' + item.discountType + '</td><td contenteditable="true">' + item.discount
-        + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment;
+        +'</td><td contenteditable="true">' + item.discountStatus + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment;
     return trHTML;
 }
 
-function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, Vendor, DatePurchased, Payment, ReturnBy, Warranty, Classification,EstimatedDelivery, TrackingNumber, CurrentInventory) {
+function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased, Payment, ReturnBy, Warranty, Classification,EstimatedDelivery, TrackingNumber, CurrentInventory) {
     var Inventory = {
         // FIXME - correct formating for dates
         idInventory: Number(IdInventory),
@@ -22,6 +22,7 @@ function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice
         totalPrice: parseFloat(TotalPrice),
         discountType: DiscountType,
         discount: parseFloat(Discount),
+        discountStatus: DiscountStatus,
         vendor: Vendor,
         //datePurchased: null,
         payment: Payment,
@@ -29,11 +30,36 @@ function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice
         warranty: Warranty,
         classification: Classification,
         trackingNumber: TrackingNumber,
-        //estimatedDelivery: null,
+        estimatedDelivery: new Date(EstimatedDelivery),
         ebayItemId: null,
         currentInventory: Number(CurrentInventory)
     };
     return Inventory;
+}
+
+function createReturnObject(IdReturns, ReturnName, ReturnDate, EstimatedRefundTime, DeliveryDate) {
+    var Returns = {
+        idReturns: Number(IdReturns),
+        returnName:ReturnName,
+        returnDate: new Date(ReturnDate),
+        estimatedRefundTime: EstimatedRefundTime,
+        deliveryDate: new Date(DeliveryDate)
+    };
+    return Returns;
+}
+
+function createInsuranceClaimObject(IDInsuranceClaims, ItemName, InsuredFor, ClaimStatus, CustomerPreference, CustomerResolutionStatus, Notes, ReplacementTrackingNum) {
+    var InsuranceClaims = {
+        idinsuranceclaims: Number(IDInsuranceClaims), 
+        itemName: ItemName, 
+        insuredFor: parseFloat(InsuredFor),
+        claimStatus: ClaimStatus, 
+        customerPreference: CustomerPreference, 
+        customerResolutionStatus: CustomerResolutionStatus,
+        notes: Notes, 
+        replacementTrackingNum: ReplacementTrackingNum
+    };
+    return InsuranceClaims;
 }
     $.ajax({
         url: serviceUrl + 'inventory/CurrentInventory',
@@ -108,10 +134,10 @@ $('#updatecurrinv').on('click', function () {
     var selector = '#currentinvTable tr input:checked';
     $.each($(selector), function (i, item) {
         var toUpdateCurrentInv = $(this).parent().siblings();
-        //Parameters (IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, Vendor, DatePurchased, Payment, ReturnBy, Warranty, Classification, EstimatedDelivery, TrackingNumber, CurrentInventory) 
+        // Parameters (IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased - not editable, Payment, ReturnBy, Warranty, Classification, EstimatedDelivery - null dne, TrackingNumber - null dne, CurrentInventory) 
        updatedCurrentInvData.push(createInventoryObject(toUpdateCurrentInv[0].innerHTML, toUpdateCurrentInv[1].innerHTML, toUpdateCurrentInv[2].innerHTML, toUpdateCurrentInv[3].innerHTML, toUpdateCurrentInv[4].innerHTML, toUpdateCurrentInv[5].innerHTML,
-            toUpdateCurrentInv[6].innerHTML, toUpdateCurrentInv[7].innerHTML, toUpdateCurrentInv[8].innerHTML, toUpdateCurrentInv[9].innerHTML, toUpdateCurrentInv[10].innerHTML,
-        toUpdateCurrentInv[11].innerHTML, toUpdateCurrentInv[12].innerHTML,null,null,1));
+           toUpdateCurrentInv[6].innerHTML, toUpdateCurrentInv[7].innerHTML, toUpdateCurrentInv[8].innerHTML, toUpdateCurrentInv[9].innerHTML, toUpdateCurrentInv[10].innerHTML,
+           toUpdateCurrentInv[11].innerHTML, toUpdateCurrentInv[12].innerHTML, toUpdateCurrentInv[13].innerHTML, null, null, 1));
     });
     curInventory = { Inventory: updatedCurrentInvData };
     $.ajax({
@@ -150,7 +176,7 @@ $.ajax({
 
 $('#addingincominginv').on('click', function () {
     var inputData = $('input').serialize();
-    inputData += '&discountType=' + $('#discountType').val() + '&payment=' + $('#payment').val() + '&classification=' + $('#classification').val();
+    inputData += '&discountType=' + $('#discountType').val() + '&discountStatus='+ $('#discountStatus').val() +'&payment=' + $('#payment').val() + '&classification=' + $('#classification').val();
     $.ajax({
         url: serviceUrl + 'inventory/AddIncomingInventory',
         method: 'POST',
@@ -206,10 +232,10 @@ $('#updateincominginv').on('click', function () {
     $.each($(selector), function (i, item) {
         var toUpdateIncomingInv = $(this).parent().siblings();
 
-         //Parameters (IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, Vendor, DatePurchased, Payment, ReturnBy, Warranty, Classification, EstimatedDelivery, TrackingNumber, CurrentInventory) 
+         //Parameters (IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased - null bc not editable, Payment, ReturnBy - null dne for incoming inv, Warranty, Classification, EstimatedDelivery, TrackingNumber, CurrentInventory) 
         updatedIncomingInvData.push(createInventoryObject(toUpdateIncomingInv[0].innerHTML, toUpdateIncomingInv[1].innerHTML, toUpdateIncomingInv[2].innerHTML, toUpdateIncomingInv[3].innerHTML, toUpdateIncomingInv[4].innerHTML, toUpdateIncomingInv[5].innerHTML,
-            toUpdateIncomingInv[6].innerHTML, toUpdateIncomingInv[7].innerHTML, toUpdateIncomingInv[8].innerHTML, toUpdateIncomingInv[9].innerHTML, null, toUpdateIncomingInv[10].innerHTML,
-            toUpdateIncomingInv[11].innerHTML, toUpdateIncomingInv[12].innerHTML, toUpdateIncomingInv[13].innerHTML,0))
+            toUpdateIncomingInv[6].innerHTML, toUpdateIncomingInv[7].innerHTML, toUpdateIncomingInv[8].innerHTML, null, toUpdateIncomingInv[10].innerHTML, null,
+            toUpdateIncomingInv[11].innerHTML, toUpdateIncomingInv[12].innerHTML, toUpdateIncomingInv[13].innerHTML, toUpdateIncomingInv[14].innerHTML, 0))
     });
     incomingInv = { Inventory: updatedIncomingInvData };
     $.ajax({
@@ -256,6 +282,7 @@ $('#addExpense').on('click', function () {
         contentType: dataType,
         data: JSON.stringify(inputData),
         success: function (data) {
+
             // clear the text box fields
             $("#expenseName").val('');
             $("#cost").val('');
@@ -264,7 +291,15 @@ $('#addExpense').on('click', function () {
         }
     });
 });
+
 // Resolution Center - Returns
+function returnHtmlTableData(data) {
+    var trHTML = '<tr><td hidden>' + data.idreturns + '</td><td contenteditable="true">' + data.returnName + '</td><td>' + data.quantity + '</td><td>' + data.totalPrice +
+        '</td><td>' + data.paymentMethod + '</td><td>' + data.returnVendor + '</td><td contenteditable="true">' + data.returnDate + '</td><td contenteditable="true">' + data.deliveryDate +
+        '</td><td>' + data.trackingNum + '</td><td contenteditable="true">' + data.estimatedRefundTime + '</td><td>';
+    return trHTML;
+}
+
 $('#addReturn').on('click', function () {
     var inputData = $('input').serialize();
     var paymentMethod = $('#paymentMethod').val();
@@ -285,9 +320,7 @@ $('#addReturn').on('click', function () {
             $("#trackingNum").val('');
 
             /*Display the newly added item in the table */
-            var trHTML = '<tr><td hidden>' + data.idreturns + '</td><td>' + data.returnName + '</td><td>' + data.quantity + '</td><td>' +
-                data.totalPrice + '</td><td>' + data.paymentMethod + '</td><td>' + data.returnVendor + '</td><td>' + data.returnDate + '</td><td>' + data.deliveryDate +
-                '</td><td>' + data.trackingNum + '</td><td>' + data.estimatedRefundTime + '</td><td>' +'<input type="checkbox" name="checkBoxesReturns' + checkBoxesReturns +'"</td></tr>';
+            var trHTML = returnHtmlTableData(data) +'<input type="checkbox" name="checkBoxesReturns' + checkBoxesReturns +'"</td></tr>';
             $('#returnTable').append(trHTML);
             checkBoxesReturns++;
         }
@@ -300,9 +333,7 @@ $.ajax({
         var trHTML = '';
         var count = 1;
         $.each(data, function (i, data) {
-            trHTML += '<tr><td hidden>' + data.idreturns + '</td><td contenteditable="true">' + data.returnName + '</td><td>' + data.quantity + '</td><td>' + data.totalPrice +
-                '</td><td>' + data.paymentMethod + '</td><td>' + data.returnVendor + '</td><td>' + data.returnDate + '</td><td>' + data.deliveryDate +
-                '</td><td>' + data.trackingNum + '</td><td>' + data.estimatedRefundTime + '</td><td>' + '<input type="checkbox" name="checkBoxesReturns' + count + '"</td></tr>';
+            trHTML += returnHtmlTableData(data) + '<input type="checkbox" name="checkBoxesReturns' + count + '"</td></tr>';
             count++;
         });
         checkBoxesReturns = count;
@@ -332,7 +363,41 @@ $('#deleteReturn').on('click', function () {
     });
 });
 
+$('#updateReturn').on('click', function () {
+    var updatedReturnsData = [];
+    var returns = [];
+    var selector = '#returnTable tr input:checked';
+    $.each($(selector), function (i, ret) {
+        var toUpdateReturn = $(this).parent().siblings();
+        // parameters (IdReturns, ReturnName, ReturnDate, EstimatedRefundTime, DeliveryDate)
+        updatedReturnsData.push(createReturnObject(toUpdateReturn[0].innerHTML, toUpdateReturn[1].innerHTML, toUpdateReturn[6].innerHTML, toUpdateReturn[9].innerHTML,
+            toUpdateReturn[7].innerHTML));
+    });
+    returns = { Returns: updatedReturnsData };
+    $.ajax({
+        url: serviceUrl + 'ResolutionCenter/UpdateReturn',
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(returns.Returns),
+        success: function (data) {
+            $.each($(selector), function (i, checkbox) {
+                if (checkbox.checked) {
+                    checkbox.checked = false;
+                }
+            });
+        }
+    });
+});
+
 // Resolution center - insurance claims
+function InsuranceClaimHTMLData(data) {
+    var trHTML = '<tr><td hidden>' + data.idinsuranceclaims + '</td><td contenteditable="true">' + data.itemName + '</td><td>' + data.ebayOrderNumber + '</td><td>' +
+        data.sellPrice + '</td><td contenteditable="true">' + data.insuredFor + '</td><td>' + data.shippingCarrier + '</td><td>' + data.shippingCost + '</td><td>' + data.tracking + '</td><td>' + data.claimNumber +
+        '</td><td contenteditable="true">' + data.claimStatus + '</td><td>' + data.claimFileDate + '</td><td contenteditable="true">' + data.customerPreference + '</td><td contenteditable="true">' +
+        data.customerResolutionStatus + '</td><td contenteditable="true">' + data.replacementTrackingNum + '</td><td contenteditable="true">' + data.notes + '</td><td>';
+    return trHTML;
+}
+
 $('#addInsuranceClaim').on('click', function () {
     var formData = $('input').serialize();
     var splitted = formData.split('idinsuranceclaims');
@@ -361,10 +426,7 @@ $('#addInsuranceClaim').on('click', function () {
             $("#shippingCost").val('');
 
             /*Display the newly added item in the table */
-            var trHTML = '<tr><td hidden>' + data.idinsuranceclaims + '</td><td>' + data.itemName + '</td><td>' + data.ebayOrderNumber + '</td><td>' +
-                data.sellPrice + '</td><td>' + data.insuredFor + '</td><td>' + data.shippingCarrier + '</td><td>' + data.shippingCost + '</td><td>' + data.tracking + '</td><td>' + data.claimNumber +
-                '</td><td>' + data.claimStatus + '</td><td>' + data.claimFileDate + '</td><td>' + data.customerPreference + '</td><td>' +
-                data.customerResolutionStatus + '</td><td>' + data.replacementTrackingNum + '</td><td>' + data.notes + '</td><td>' + '<input type="checkbox" name="checkBoxesClaims' + checkBoxesClaims + '"</td></tr>';
+            var trHTML = InsuranceClaimHTMLData(data) + '<input type="checkbox" name="checkBoxesClaims' + checkBoxesClaims + '"</td></tr>';
             $('#insuranceClaims').append(trHTML);
             checkBoxesClaims++;
         }
@@ -377,10 +439,7 @@ $.ajax({
         var trHTML = '';
         var count = 1;
         $.each(data, function (i, data) {
-            trHTML += '<tr><td hidden>' + data.idinsuranceclaims + '</td><td>' + data.itemName + '</td><td>' + data.ebayOrderNumber + '</td><td>' +
-                data.sellPrice + '</td><td>' + data.insuredFor + '</td><td>' + data.shippingCarrier + '</td><td>' + data.shippingCost + '</td><td>' + data.tracking + '</td><td>' + data.claimNumber +
-                '</td><td>' + data.claimStatus + '</td><td>' + data.claimFileDate + '</td><td>' + data.customerPreference + '</td><td>' + data.customerResolutionStatus + '</td><td>' +
-                data.replacementTrackingNum + '</td><td>' + data.notes + '</td><td>' + '<input type="checkbox" name="checkBoxesClaims' + checkBoxesClaims + '"</td></tr>';
+            trHTML += InsuranceClaimHTMLData(data) + '<input type="checkbox" name="checkBoxesClaims' + checkBoxesClaims + '"</td></tr>';
             count++;
         });
         checkBoxesClaims = count;
@@ -410,7 +469,55 @@ $('#deleteInsuranceClaim').on('click', function () {
     });
 });
 
+$('#updateInsuranceClaim').on('click', function () {
+    var updatedInsuranceClaimData = [];
+    var insuranceClaims = [];
+    var selector = '#insuranceClaims tr input:checked';
+    $.each($(selector), function (i, item) {
+        var toUpdateInsuranceClaimData = $(this).parent().siblings();
+        // Parameters (IDInsuranceClaims, ItemName, InsuredFor, ClaimStatus, CustomerPreference, CustomerResolutionStatus, Notes, ReplacementTrackingNum) 
+        updatedInsuranceClaimData.push(createInsuranceClaimObject(toUpdateInsuranceClaimData[0].innerHTML, toUpdateInsuranceClaimData[1].innerHTML, toUpdateInsuranceClaimData[4].innerHTML, toUpdateInsuranceClaimData[9].innerHTML, toUpdateInsuranceClaimData[11].innerHTML,
+            toUpdateInsuranceClaimData[12].innerHTML, toUpdateInsuranceClaimData[14].innerHTML, toUpdateInsuranceClaimData[13].innerHTML));
+    });
+    insuranceClaims = { InsuranceClaims: updatedInsuranceClaimData };
+    $.ajax({
+        url: serviceUrl + 'ResolutionCenter/UpdateInsuranceClaim',
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(insuranceClaims.InsuranceClaims),
+        success: function(data) {
+            if (data) {
+                $.each($(selector), function (i, checkbox) {
+                    if (checkbox.checked) {
+                        checkbox.checked = false;
+                    }
+                });
+            }
+        }
+    });
+});
+
 // Resolution center - Delayed packages
+function createDelayedPackageObject(IdShippingDelayedPackages, PackageName, LastScanDate, CurrentLoc, ServiceReqNum, LastCustomerContactDate,Note) {
+    var delayedPackage = {
+        idshippingdelayedpackages : Number(IdShippingDelayedPackages),
+        packageName : PackageName,
+        lastScanDate : new Date(LastScanDate),
+        currentLoc : CurrentLoc, 
+        serviceReqNum : ServiceReqNum, 
+        lastCustomerContactDate : new Date(LastCustomerContactDate), 
+        note : Note
+    };
+    return delayedPackage;
+}
+
+function delayedPackageHTMLTableData(data) {
+    var trHTML = '<tr><td hidden>' + data.idshippingdelayedpackages + '</td><td contenteditable="true">' + data.packageName + '</td><td>' + data.ebayOrderNum + '</td><td>' +
+        data.carrier + '</td><td>' + data.insuranceVal + '</td><td>' + data.trackingId + '</td><td contenteditable="true">' + data.lastScanDate + '</td><td contenteditable="true">' + data.currentLoc + '</td><td>' + data.destination +
+        '</td><td contenteditable="true">' + data.serviceReqNum + '</td><td contenteditable="true">' + data.lastCustomerContactDate + '</td><td contenteditable="true">' + data.note + '</td><td>';
+    return trHTML;
+}
+
 $('#addDelayedPackage').on('click', function ()
 {
     var formData = $('input').serialize();
@@ -435,9 +542,7 @@ $('#addDelayedPackage').on('click', function ()
             $("#note").val('');
 
             /*Display the newly added item in the table */
-            var trHTML = '<tr><td hidden>' + data.idshippingdelayedpackages + '</td><td>' + data.packageName + '</td><td>' + data.ebayOrderNum + '</td><td>' +
-                data.carrier + '</td><td>' + data.insuranceVal + '</td><td>' + data.trackingId + '</td><td>' + data.lastScanDate + '</td><td>' + data.currentLoc + '</td><td>' + data.destination +
-                '</td><td>' + data.serviceReqNum + '</td><td>' + data.lastCustomerContactDate + '</td><td>' + data.note + '</td><td>' + '<input type="checkbox" name="checkBoxesDelays' + checkBoxesDelays + '"</td></tr>';
+            var trHTML = delayedPackageHTMLTableData(data) + '<input type="checkbox" name="checkBoxesDelays' + checkBoxesDelays + '"</td></tr>';
             $('#delayedPackages').append(trHTML);
             checkBoxesDelays++;
         }
@@ -450,9 +555,7 @@ $.ajax({
         var trHTML = '';
         var count = 1;
         $.each(data, function (i, data) {
-            trHTML += '<tr><td hidden>' + data.idshippingdelayedpackages + '</td><td>' + data.packageName + '</td><td>' + data.ebayOrderNum + '</td><td>' +
-                data.carrier + '</td><td>' + data.insuranceVal + '</td><td>' + data.trackingId + '</td><td>' + data.lastScanDate + '</td><td>' + data.currentLoc + '</td><td>' + data.destination +
-                '</td><td>' + data.serviceReqNum + '</td><td>' + data.lastCustomerContactDate + '</td><td>' + data.note + '</td><td>' + '<input type="checkbox" name="checkBoxesDelays' + checkBoxesDelays + '"</td></tr>';
+            trHTML += delayedPackageHTMLTableData(data) + '<input type="checkbox" name="checkBoxesDelays' + checkBoxesDelays + '"</td></tr>';
             count++;
         });
         checkBoxesDelays = count;
@@ -478,5 +581,33 @@ $('#deleteDelayedPackage').on('click', function () {
             });
             checkBoxesDelays--;
         }
+    });
+});
+
+$('#updateDelayedPackage').on('click', function () {
+    var updatedDelayedPackageData = [];
+    var delayedPackages = [];
+    var selector = '#delayedPackages tr input:checked';
+    $.each($(selector), function (i, item) {
+        var toUpdateDelayedPackage = $(this).parent().siblings();
+        // Parameters (IdShippingDelayedPackages, PackageName, LastScanDate, CurrentLoc, ServiceReqNum, LastCustomerContactDate,Note) 
+        updatedDelayedPackageData.push(createDelayedPackageObject(toUpdateDelayedPackage[0].innerHTML, toUpdateDelayedPackage[1].innerHTML, toUpdateDelayedPackage[6].innerHTML, toUpdateDelayedPackage[7].innerHTML,
+            toUpdateDelayedPackage[9].innerHTML, toUpdateDelayedPackage[10].innerHTML, toUpdateDelayedPackage[11].innerHTML));
+        delayedPackages = { ShippingDelayedPackages: updatedDelayedPackageData };
+        $.ajax({
+            url: serviceUrl + 'ResolutionCenter/UpdateDelayedPackage',
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(delayedPackages.ShippingDelayedPackages),
+            success: function (data) {
+                if (data) {
+                    $.each($(selector), function (i, checkbox) {
+                        if (checkbox.checked) {
+                            checkbox.checked = false;
+                        }
+                    });
+                }
+            }
+        });
     });
 });

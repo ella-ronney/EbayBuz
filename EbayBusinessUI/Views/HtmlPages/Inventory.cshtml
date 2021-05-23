@@ -18,6 +18,7 @@
                     <th scope="col">Total Price</th>
                     <th scope="col">Discount Type</th>
                     <th scope="col">Discount</th>
+                    <th scope="col">Discount Status</th>
                     <th scope="col">Vendor</th>
                     <th scope="col">Date Purchased</th>
                     <th scope="col">Payment Method</th>
@@ -45,6 +46,7 @@
                         <th scope="col">Total Price</th>
                         <th scope="col">Discount Type</th>
                         <th scope="col">Discount</th>
+                        <th scope="col">Discount Status</th>
                         <th scope="col">Vendor</th>
                         <th scope="col">Date Purchased</th>
                         <th scope="col">Payment Method</th>
@@ -70,6 +72,13 @@
                             </select>
                         </td>
                         <td><input type="number" name="discount" id="discount" /></td>
+                        <td>
+                            <select name="discountStatus" id="discountStatus">
+                                <option>Pending</option>
+                                <option>Approved</option>
+                                <option>Email Appeal</option>
+                            </select>
+                        </td>
                         <td><input type="text" name="vendor" id="vendor" /></td>
                         <td><input type="date" name="datePurchased" id="datePurchased" /></td>
                         <td><select id="payment" name="payment">

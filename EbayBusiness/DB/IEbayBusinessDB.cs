@@ -22,11 +22,14 @@ namespace EbayBusiness.DB
         public Returns AddReturns(Returns ret);
         public List<Returns> GetAllReturns();
         public bool DeleteReturn(IdList idList);
+        public bool UpdateReturn(List<Returns> updatedReturns);
         public InsuranceClaims AddInsuranceClaim(InsuranceClaims claim);
         public List<InsuranceClaims> GetAllInsuranceClaims();
         public bool DeleteInsuranceClaim(IdList idList);
+        public bool UpdateInsuranceClaim(List<InsuranceClaims> updatedClaims);
         public ShippingDelayedPackages shippingDelayedPackage(ShippingDelayedPackages delayedPackage);
         public List<ShippingDelayedPackages> GetShippingDelayedPackages();
         public bool DeleteDelayedPackage(IdList idList);
+        public bool UpdateDelayedPackage(List<ShippingDelayedPackages> updatedPackages);
     }
 }
