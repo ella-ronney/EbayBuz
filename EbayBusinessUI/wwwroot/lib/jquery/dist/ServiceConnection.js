@@ -8,7 +8,20 @@ var checkBoxesDelays = 0;
 
 function inventoryHtmlTableData(item) {
     var trHTML = '<tr><td hidden>' + item.idInventory + '</td><td contenteditable="true">' + item.name + '</td><td contenteditable="true">' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td contenteditable="true">' + item.totalPrice + '</td><td>' + item.discountType + '</td><td contenteditable="true">' + item.discount
-        +'</td><td contenteditable="true">' + item.discountStatus + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment;
+        + '</td><td contenteditable="true"><select>';
+    switch (item.discountStatus) {
+        case "Approved":
+            trHTML += '<option selected>Approved</option><option>Email Appeal</option><option>Pending</option></select ></td><td>';
+            break;
+        case "Pending":
+            trHTML += '<option>Approved</option><option>Email Appeal</option><option selected>Pending</option></select ></td><td>';
+            break;
+        default:
+            // last option - email appeal
+            trHTML += '<option>Approved</option><option selected>Email Appeal</option><option>Pending</option></select ></td><td>';
+    }
+        trHTML += item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment;
+       // + item.discountStatus + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment;
     return trHTML;
 }
 
@@ -128,6 +141,13 @@ $('#movetocurrentinv').on('click', function () {
     });
 });
 
+function stringParser(discountStatus) {
+    var discountStatSplit = discountStatus.split('selected');
+    var discountStatSplit2 = discountStatSplit[1].split('<');
+    var discountStatVal = discountStatSplit2[0].split('>');
+    return discountStatVal[1];
+}
+
 $('#updatecurrinv').on('click', function () {
     var updatedCurrentInvData = [];
     var curInventory = [];
@@ -136,7 +156,7 @@ $('#updatecurrinv').on('click', function () {
         var toUpdateCurrentInv = $(this).parent().siblings();
         // Parameters (IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased - not editable, Payment, ReturnBy, Warranty, Classification, EstimatedDelivery - null dne, TrackingNumber - null dne, CurrentInventory) 
        updatedCurrentInvData.push(createInventoryObject(toUpdateCurrentInv[0].innerHTML, toUpdateCurrentInv[1].innerHTML, toUpdateCurrentInv[2].innerHTML, toUpdateCurrentInv[3].innerHTML, toUpdateCurrentInv[4].innerHTML, toUpdateCurrentInv[5].innerHTML,
-           toUpdateCurrentInv[6].innerHTML, toUpdateCurrentInv[7].innerHTML, toUpdateCurrentInv[8].innerHTML, toUpdateCurrentInv[9].innerHTML, toUpdateCurrentInv[10].innerHTML,
+           toUpdateCurrentInv[6].innerHTML, toUpdateCurrentInv[7].children[0].value, toUpdateCurrentInv[8].innerHTML, toUpdateCurrentInv[9].innerHTML, toUpdateCurrentInv[10].innerHTML,
            toUpdateCurrentInv[11].innerHTML, toUpdateCurrentInv[12].innerHTML, toUpdateCurrentInv[13].innerHTML, null, null, 1));
     });
     curInventory = { Inventory: updatedCurrentInvData };
