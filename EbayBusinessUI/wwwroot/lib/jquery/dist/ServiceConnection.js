@@ -335,7 +335,7 @@ $('#addBadSeller').on('click', function () {
         method: 'POST',
         contentType: "application/json",
         data: JSON.stringify(SoldItem),
-        sucess: function (data) {
+        success: function (data) {
             $('#itemName').val('');
             var trHTML = '<tr><td hidden>' + data.idsolditems + '</td><td>' + data.itemName + '</td><td>' + '<input type="checkbox" name="checkbad' + checkBoxesBadSellers + '"</td></tr>';
             $('#badSellerTable').append(trHTML);
@@ -344,10 +344,33 @@ $('#addBadSeller').on('click', function () {
     });
 });
 
+$('#deleteBadSeller').on('click', function () {
+    var badSellerIds = [];
+    var selector = '#badSellerTable tr input:checked';
+    $.each($(selector), function (i, badSeller) {
+        var badSellerId = $(this).parent().siblings(":first").text();
+        badSellerIds.push(badSellerId);
+    });
+    var idList = { ids: badSellerIds.toString() };
+    $.ajax({
+        url: serviceUrl + 'SellingStats/DeleteBadSeller',
+        method: 'DELETE',
+        contentType: "application/json",
+        data: JSON.stringify(idList),
+        success: function (data) {
+            document.querySelectorAll('#badSellerTable input:checked').forEach(x => {
+                x.parentNode.parentNode.remove();
+                // FIXME implement for the rest
+                checkBoxesBadSellers--;
+            });
+        }
+    });
+});
+
 $.ajax({
     url: serviceUrl + 'SellingStats/GetBadSellers',
     method: 'GET',
-    sucess: function (data) {
+    success: function (data) {
         var trHTML = '';
         var count = 1;
         $.each(data, function (i, item) {

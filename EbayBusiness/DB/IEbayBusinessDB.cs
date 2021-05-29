@@ -20,6 +20,7 @@ namespace EbayBusiness.DB
         public List<TopSellers> GetAllTopSellers();
         public List<SoldItems> GetAllBadSellers();
         public bool AddBadSeller(SoldItems badSeller);
+        public bool DeleteBadSeller(IdList idList);
         public bool AddExpense(BusinessExpenses expense);
         public Returns AddReturns(Returns ret);
         public List<Returns> GetAllReturns();

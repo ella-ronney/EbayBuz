@@ -48,6 +48,17 @@ namespace EbayBusinessUI.Controllers
             }
             return null;
         }
+        
+        [HttpDelete]
+        [Route("DeleteBadSeller")]
+        public bool DeleteBadSeller(IdList idList)
+        {
+            if (ebayDBRecords.DeleteBadSeller(idList))
+            {
+                return true;
+            }
+            return false;
+        }
 
     }
 }

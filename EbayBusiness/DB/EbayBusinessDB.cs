@@ -196,6 +196,29 @@ namespace EbayBusiness.DB
             return true;
         }
 
+        public bool DeleteBadSeller(IdList idList)
+        {
+            try
+            {
+                int[] badSellerIds = idList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+                foreach(int id in badSellerIds)
+                {
+                    var badSeller = db.SoldItems.Where(x => x.idsolditems == id).FirstOrDefault();
+                    if(badSeller == null)
+                    {
+                        return false;
+                    }
+                    db.SoldItems.Remove(badSeller);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            return true;
+        }
+
         // Business Expenses
         public bool AddExpense(BusinessExpenses expense)
         {
