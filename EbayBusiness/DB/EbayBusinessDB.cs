@@ -183,6 +183,19 @@ namespace EbayBusiness.DB
             return db.TopSellers.ToList();
         }
 
+        public List<SoldItems> GetAllBadSellers()
+        {
+            return db.SoldItems.ToList();
+        }
+
+        // FIXME - error handling
+        public bool AddBadSeller(SoldItems badSeller)
+        {
+            db.SoldItems.Add(badSeller);
+            db.SaveChanges();
+            return true;
+        }
+
         // Business Expenses
         public bool AddExpense(BusinessExpenses expense)
         {

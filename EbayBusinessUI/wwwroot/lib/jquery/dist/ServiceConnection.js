@@ -5,6 +5,7 @@ var checkBoxesTop = 0;
 var checkBoxesReturns = 0;
 var checkBoxesClaims = 0;
 var checkBoxesDelays = 0;
+var checkBoxesBadSellers = 0;
 
 function inventoryHtmlTableData(item) {
     var trHTML = '<tr><td hidden>' + item.idInventory + '</td><td contenteditable="true">' + item.name + '</td><td contenteditable="true">' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td contenteditable="true">' + item.totalPrice + '</td><td>' + item.discountType + '</td><td contenteditable="true">' + item.discount
@@ -123,16 +124,19 @@ function formatClassificationsHTMLTag(classification) {
     var htmlClassificationTag = null;
     switch (classification) {
         case "Fast seller":
-            htmlClassificationTag = '<select><option selected> Fast seller</option><option>Slow seller</option><option>Possible return</option></select >';
+            htmlClassificationTag = '<select><option selected> Fast seller</option><option>Slow seller</option><option>Possible return</option><option>Bad seller</option></select >';
             break;
         case "Slow seller":
-            htmlClassificationTag = '<select><option> Fast seller</option><option selected>Slow seller</option><option>Possible return</option></select >';
+            htmlClassificationTag = '<select><option> Fast seller</option><option selected>Slow seller</option><option>Possible return</option><option>Bad seller</option></select >';
             break;
         case "Possible return":
-            htmlClassificationTag = '<select><option selected> Fast seller</option><option>Slow seller</option><option selected>Possible return</option></select >';
+            htmlClassificationTag = '<select><option> Fast seller</option><option>Slow seller</option><option selected>Possible return</option><option>Bad seller</option></select >';
+            break;
+        case "Bad seller":
+            htmlClassificationTag = '<select><option> Fast seller</option><option>Slow seller</option><option>Possible return</option><option selected>Bad seller</option></select >';
             break;
         default:
-            htmlClassificationTag = '<select><option> Fast seller</option><option>Slow seller</option><option>Possible return</option></select >';
+            htmlClassificationTag = '<select><option> Fast seller</option><option>Slow seller</option><option>Possible return</option><option>Bad seller</option></select >';
     }
     return htmlClassificationTag;
 }
@@ -306,8 +310,8 @@ $('#updateincominginv').on('click', function () {
 });
 
 // Top sellers
-$.ajax({
-    url: serviceUrl + 'TopSellers/GetTopSellers',
+/*$.ajax({
+    url: serviceUrl + 'SellingStats/GetTopSellers',
     method: 'GET',
     success: function (data) {
         var trHTML = '';
@@ -318,6 +322,40 @@ $.ajax({
         });
         checkBoxesTop = count;
         $('#topSellerTable').append(trHTML);
+    }
+});*/
+
+$('#addBadSeller').on('click', function () {
+    var SoldItem = {
+        itemName: $('#itemName').val(),
+        category: 'bad seller'
+    };
+    $.ajax({
+        url: serviceUrl + 'SellingStats/AddBadSeller',
+        method: 'POST',
+        contentType: "application/json",
+        data: JSON.stringify(SoldItem),
+        sucess: function (data) {
+            $('#itemName').val('');
+            var trHTML = '<tr><td hidden>' + data.idsolditems + '</td><td>' + data.itemName + '</td><td>' + '<input type="checkbox" name="checkbad' + checkBoxesBadSellers + '"</td></tr>';
+            $('#badSellerTable').append(trHTML);
+            checkBoxesBadSellers++;
+        }
+    });
+});
+
+$.ajax({
+    url: serviceUrl + 'SellingStats/GetBadSellers',
+    method: 'GET',
+    sucess: function (data) {
+        var trHTML = '';
+        var count = 1;
+        $.each(data, function (i, item) {
+            trHTML += '<tr><td hidden>' + item.idsolditems + '</td><td>' + item.itemName + '</td><td>' + '<input type="checkbox" name="checkbad' + count + '"</td></tr>';
+            count++;
+        });
+        checkBoxesBadSellers = count;
+        $('#badSellerTable').append(trHTML);
     }
 });
 

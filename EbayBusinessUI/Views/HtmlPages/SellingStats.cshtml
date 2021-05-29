@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "SellingStats";
+}
+<div class="text-center">
+    <h1 class="display-4">Selling Statistics</h1>
+</div>
+
+<div class="container-fluid" style="margin-top:20px;">
+<h2>Top Sellers</h2>
+<div>
+    <table id="topSellerTable" class="table table-responsive table-bordered text-center">
+        <thread>
+            <tr>
+                <th hidden class="text-center">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Price Sold</th>
+                <th scope="col">Purchase Price</th>
+                <th scope="col">Vendors</th>
+                <th class="text-center">Edit</th>
+            </tr>
+        </thread>
+    </table>
+</div>
+    <h2>Bad Sellers</h2>
+    <div>
+    <table id="badSellerTable" class="table table-responsive table-bordered text-center">
+        <thread>
+            <tr>
+                <th hidden class="text-center">Id</th>
+                <th scope="col">Name</th>
+            </tr>
+        </thread>
+        <tbody>
+            <tr>
+                <td hidden><input type="text" name="idsolditems" id="idsolditems" hidden /></td>
+                <td><input type="text" id="itemName" name="itemName" /></td>
+            </tr>
+        </tbody>
+    </table>
+        <button type="button" id="addBadSeller" name="addBadSeller" class="btn btn-success">Add Bad Seller</button>
+        </div>
+</div>

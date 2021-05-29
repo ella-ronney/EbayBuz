@@ -18,6 +18,8 @@ namespace EbayBusiness.DB
         public bool DeleteIncomingInventory(IdList idList);
         public bool UpdateIncomingInventory(List<Inventory> incInv);
         public List<TopSellers> GetAllTopSellers();
+        public List<SoldItems> GetAllBadSellers();
+        public bool AddBadSeller(SoldItems badSeller);
         public bool AddExpense(BusinessExpenses expense);
         public Returns AddReturns(Returns ret);
         public List<Returns> GetAllReturns();
