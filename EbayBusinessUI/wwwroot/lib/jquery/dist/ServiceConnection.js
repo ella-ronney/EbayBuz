@@ -6,6 +6,7 @@ var checkBoxesReturns = 0;
 var checkBoxesClaims = 0;
 var checkBoxesDelays = 0;
 var checkBoxesBadSellers = 0;
+var adoramaCheckBox = 0;
 
 function inventoryHtmlTableData(item) {
     var trHTML = '<tr><td hidden>' + item.idInventory + '</td><td contenteditable="true">' + item.name + '</td><td contenteditable="true">' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td contenteditable="true">' + item.totalPrice + '</td><td>' + item.discountType + '</td><td contenteditable="true">' + item.discount
@@ -552,7 +553,7 @@ $.ajax({
         var trHTML = '';
         var count = 1;
         $.each(data, function (i, data) {
-            trHTML += InsuranceClaimHTMLData(data) + '<input type="checkbox" name="checkBoxesClaims' + checkBoxesClaims + '"</td></tr>';
+            trHTML += InsuranceClaimHTMLData(data) + '<input type="checkbox" name="checkBoxesClaims' + count + '"</td></tr>';
             count++;
         });
         checkBoxesClaims = count;
@@ -668,7 +669,7 @@ $.ajax({
         var trHTML = '';
         var count = 1;
         $.each(data, function (i, data) {
-            trHTML += delayedPackageHTMLTableData(data) + '<input type="checkbox" name="checkBoxesDelays' + checkBoxesDelays + '"</td></tr>';
+            trHTML += delayedPackageHTMLTableData(data) + '<input type="checkbox" name="checkBoxesDelays' + count + '"</td></tr>';
             count++;
         });
         checkBoxesDelays = count;
@@ -723,4 +724,41 @@ $('#updateDelayedPackage').on('click', function () {
             }
         });
     });
+});
+
+$('#addAdoramaListing').on('click', function () {
+    var inputData = $('input').serialize();
+    $.ajax({
+        url: serviceUrl + 'AdoramaListings/AddAdoramaListing',
+        method: 'POST',
+        data: JSON.stringify(inputData),
+        success: function (data) {
+        /* Clear all the form data */
+            $('#listingName').val('');
+            $('#specialPrice').val('');
+            $('#url').val('');
+
+        /* Append the new data to the table*/
+            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice + '</td><td>' + data.url + '</td><td>'
+                + '<input type="checkbox" name="check' + adoramaCheckBox + '"</td></tr>';
+            $('#adoramaListingsTable').append(trHTML);
+            adoramaCheckBox++;
+        }
+    });
+});
+
+$.ajax({
+    url: serviceUrl + 'AdoramaListings/AdoramaListings',
+    method: 'PUT',
+    sucess: function (data) {
+        var trHTML = '';
+        count = 1;
+        $.each(data, function (i, item) {
+            trHTML += '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice + '</td><td>' + data.url + '</td><td>'
+                + '<input type="checkbox" name="check' + count + '"</td></tr>';
+                count++;
+        });
+        adoramaCheckBox = count;
+        $('#adoramaListingsTable').append(trHTML);
+    }
 });

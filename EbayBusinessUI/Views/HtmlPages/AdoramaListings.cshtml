@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "AdoramaListings";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Adorama Listing Manager</h1>
+</div>
+
+<div>
+    <table class="table table-bordered table-responsive table-striped text-center" id="adoramaListingsTable">
+        <thead>
+            <tr>
+                <th hidden>Id</th> 
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Url</th>
+                <th scope="col">Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td hidden><input type="text" id="idadoramalistings" name="idadoramalistings" hidden/></td>
+                <td><input type="text" id="listingName" name="listingName"></td>
+                <td><input type="number" id="specialPrice" name="specialPrice"/></td>
+                <td><input type="text" id="url" name="url"/></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="text-right">
+    <button type="button" class="btn btn-success" id="addAdoramaListing">Add</button>
+    </div>
+</div>

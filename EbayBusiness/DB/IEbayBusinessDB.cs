@@ -34,5 +34,7 @@ namespace EbayBusiness.DB
         public List<ShippingDelayedPackages> GetShippingDelayedPackages();
         public bool DeleteDelayedPackage(IdList idList);
         public bool UpdateDelayedPackage(List<ShippingDelayedPackages> updatedPackages);
+        public AdoramaListings AddAdoramaListing(AdoramaListings adoramaListing);
+        public List<AdoramaListings> GetAllAdoramaListings();
     }
 }

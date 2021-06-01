@@ -435,5 +435,18 @@ namespace EbayBusiness.DB
             }
             return true;
         }
+
+        // Adorama Controller
+        public AdoramaListings AddAdoramaListing(AdoramaListings adoramaListing)
+        {
+            db.AdoramaListings.Add(adoramaListing);
+            db.SaveChanges();
+            return adoramaListing;
+        }
+
+        public List<AdoramaListings> GetAllAdoramaListings()
+        {
+            return db.AdoramaListings.ToList();
+        }
     }
 }
