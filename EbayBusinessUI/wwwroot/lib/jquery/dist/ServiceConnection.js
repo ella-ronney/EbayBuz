@@ -92,7 +92,7 @@ function createInsuranceClaimObject(IDInsuranceClaims, ItemName, InsuredFor, Cla
             $.each(data, function (i, item) {
                 var date = formatDateString(item.returnBy);
                 var classification = formatClassificationsHTMLTag(item.classification);
-                trHTML += inventoryHtmlTableData(item) + '</td><td contenteditable="true">' + '<input type="date" value="' + date + '"/>' + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"</td></tr>';
+                trHTML += inventoryHtmlTableData(item) + '</td><td contenteditable="true">' + '<input type="date" value="' + date + '"/>' + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"/></td></tr>';
                 count++;
             });
             checkBoxesCur = count;
@@ -165,7 +165,7 @@ $('#movetocurrentinv').on('click', function () {
             $.each(data, function (i, item) {
                 var date = formatDateString(item.returnBy);
                 var classification = formatClassificationsHTMLTag(item.classification);
-                trHTML += inventoryHtmlTableData(item) + '</td><td contenteditable="true">' + '<input type="date" value="' + date + '"/>' + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"</td></tr>';
+                trHTML += inventoryHtmlTableData(item) + '</td><td contenteditable="true">' + '<input type="date" value="' + date + '"/>' + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"/></td></tr>';
                 count++;
             });
             checkBoxesCur = count;
@@ -222,7 +222,7 @@ $.ajax({
         $.each(data, function (i, item) {
             var classification = formatClassificationsHTMLTag(item.classification);
             var estimatedDelivery = formatDateString(item.estimatedDelivery);
-            trHTML += inventoryHtmlTableData(item) + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td contenteditable="true">' + '<input type="date" value="' + estimatedDelivery + '"/>' + '</td><td contenteditable="true">' + item.trackingNumber + '</td><td>' + '<input type="checkbox" name="check' + count + '"</td></tr>';
+            trHTML += inventoryHtmlTableData(item) + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td contenteditable="true">' + '<input type="date" value="' + estimatedDelivery + '"/>' + '</td><td contenteditable="true">' + item.trackingNumber + '</td><td>' + '<input type="checkbox" name="check' + count + '"/></td></tr>';
             count ++;
         });
         checkBoxes = count;
@@ -254,7 +254,7 @@ $('#addingincominginv').on('click', function () {
         /*Display the newly added item in the table */
             var classification = formatClassificationsHTMLTag(item.classification);
             var estimatedDelivery = formatDateString(item.estimatedDelivery);
-            var trHTML = inventoryHtmlTableData(item) + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td contenteditable="true">' + '<input type="date" value="' + estimatedDelivery + '"/>' + '</td><td contenteditable="true">' + item.trackingNumber + '</td><td>' + '<input type="checkbox" name="check' + checkBoxes + '"</td></tr>';
+            var trHTML = inventoryHtmlTableData(item) + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td contenteditable="true">' + '<input type="date" value="' + estimatedDelivery + '"/>' + '</td><td contenteditable="true">' + item.trackingNumber + '</td><td>' + '<input type="checkbox" name="check' + checkBoxes + '"/></td></tr>';
             $('#incominginvTable').append(trHTML);
             checkBoxes++;
         }
@@ -339,7 +339,7 @@ $('#addBadSeller').on('click', function () {
         data: JSON.stringify(SoldItem),
         success: function (data) {
             $('#itemName').val('');
-            var trHTML = '<tr><td hidden>' + data.idsolditems + '</td><td>' + data.itemName + '</td><td>' + '<input type="checkbox" name="checkbad' + checkBoxesBadSellers + '"</td></tr>';
+            var trHTML = '<tr><td hidden>' + data.idsolditems + '</td><td>' + data.itemName + '</td><td>' + '<input type="checkbox" name="checkbad' + checkBoxesBadSellers + '"/></td></tr>';
             $('#badSellerTable').append(trHTML);
             checkBoxesBadSellers++;
         }
@@ -376,7 +376,7 @@ $.ajax({
         var trHTML = '';
         var count = 1;
         $.each(data, function (i, item) {
-            trHTML += '<tr><td hidden>' + item.idsolditems + '</td><td>' + item.itemName + '</td><td>' + '<input type="checkbox" name="checkbad' + count + '"</td></tr>';
+            trHTML += '<tr><td hidden>' + item.idsolditems + '</td><td>' + item.itemName + '</td><td>' + '<input type="checkbox" name="checkbad' + count + '"/></td></tr>';
             count++;
         });
         checkBoxesBadSellers = count;
@@ -435,7 +435,7 @@ $('#addReturn').on('click', function () {
             $("#trackingNum").val('');
 
             /*Display the newly added item in the table */
-            var trHTML = returnHtmlTableData(data) +'<input type="checkbox" name="checkBoxesReturns' + checkBoxesReturns +'"</td></tr>';
+            var trHTML = returnHtmlTableData(data) + '<input type="checkbox" name="checkBoxesReturns' + checkBoxesReturns +'"/></td></tr>';
             $('#returnTable').append(trHTML);
             checkBoxesReturns++;
         }
@@ -448,7 +448,7 @@ $.ajax({
         var trHTML = '';
         var count = 1;
         $.each(data, function (i, data) {
-            trHTML += returnHtmlTableData(data) + '<input type="checkbox" name="checkBoxesReturns' + count + '"</td></tr>';
+            trHTML += returnHtmlTableData(data) + '<input type="checkbox" name="checkBoxesReturns' + count + '"/></td></tr>';
             count++;
         });
         checkBoxesReturns = count;
@@ -541,7 +541,7 @@ $('#addInsuranceClaim').on('click', function () {
             $("#shippingCost").val('');
 
             /*Display the newly added item in the table */
-            var trHTML = InsuranceClaimHTMLData(data) + '<input type="checkbox" name="checkBoxesClaims' + checkBoxesClaims + '"</td></tr>';
+            var trHTML = InsuranceClaimHTMLData(data) + '<input type="checkbox" name="checkBoxesClaims' + checkBoxesClaims + '"/></td></tr>';
             $('#insuranceClaims').append(trHTML);
             checkBoxesClaims++;
         }
@@ -554,7 +554,7 @@ $.ajax({
         var trHTML = '';
         var count = 1;
         $.each(data, function (i, data) {
-            trHTML += InsuranceClaimHTMLData(data) + '<input type="checkbox" name="checkBoxesClaims' + count + '"</td></tr>';
+            trHTML += InsuranceClaimHTMLData(data) + '<input type="checkbox" name="checkBoxesClaims' + count + '"/></td></tr>';
             count++;
         });
         checkBoxesClaims = count;
@@ -657,7 +657,7 @@ $('#addDelayedPackage').on('click', function ()
             $("#note").val('');
 
             /*Display the newly added item in the table */
-            var trHTML = delayedPackageHTMLTableData(data) + '<input type="checkbox" name="checkBoxesDelays' + checkBoxesDelays + '"</td></tr>';
+            var trHTML = delayedPackageHTMLTableData(data) + '<input type="checkbox" name="checkBoxesDelays' + checkBoxesDelays + '"/></td></tr>';
             $('#delayedPackages').append(trHTML);
             checkBoxesDelays++;
         }
@@ -670,7 +670,7 @@ $.ajax({
         var trHTML = '';
         var count = 1;
         $.each(data, function (i, data) {
-            trHTML += delayedPackageHTMLTableData(data) + '<input type="checkbox" name="checkBoxesDelays' + count + '"</td></tr>';
+            trHTML += delayedPackageHTMLTableData(data) + '<input type="checkbox" name="checkBoxesDelays' + count + '"/></td></tr>';
             count++;
         });
         checkBoxesDelays = count;
@@ -748,8 +748,8 @@ $('#addJamoListing').on('click', function () {
 
         /* Append the new data to the table*/
             var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td> <a href="' + data.specialPrice + '">click me</a></td><td>' + data.url + '</td><td>'
-                + '<input type="checkbox" name="jamoCheckBox' + jamoCheckBox + '"</td></tr>';
-            $('#jamoListingsTable').append(trHTML);
+                + '<input type="checkbox" name="jamoCheckBox' + jamoCheckBox + '"/></td></tr>';
+            $('#jamoListingTable').append(trHTML);
             jamoCheckBox++;
         }
     });
@@ -757,7 +757,7 @@ $('#addJamoListing').on('click', function () {
 
 $('#deleteJamoListing').on('click', function () {
     var jamoListingIds = [];
-    var selector = '#jamoListingsTable tr input:checked';
+    var selector = '#jamoListingTable tr input:checked';
     $.each($(selector), function (i, listing) {
         var jamoListingId = $(this).parent().siblings(":first").text();
         jamoListingIds.push(jamoListingId);
@@ -770,7 +770,7 @@ $('#deleteJamoListing').on('click', function () {
         contentType: 'application/json',
         data: JSON.stringify(idList),
         success: function (data) {
-            document.querySelectorAll('#jamoListingsTable input:checked').forEach(e => {
+            document.querySelectorAll('#jamoListingTable input:checked').forEach(e => {
                 e.parentNode.parentNode.remove();
                 jamoCheckBox--;
             });
@@ -784,6 +784,8 @@ $.ajax({
     success: function (data) {
         var jamoTrHTML = '';
         var klipschTrHTML = '';
+        var miscTrHTML = '';
+        var inactiveTrHTML = '';
         jamoCount = 1;
         klipschCount = 1; 
         $.each(data, function (i, item) {
@@ -791,23 +793,33 @@ $.ajax({
                 switch (item.manufacture) {
                     case "Jamo":
                         jamoTrHTML += '<tr><td hidden>' + item.idadoramalistings + '</td><td>' + item.listingName + '</td><td>' + item.specialPrice + '</td><td><a href="' + item.url + '">click me</a></td><td>'
-                            + '<input type="checkbox" name="jamoCheckBox' + jamoCount + '"</td></tr>';
+                            + '<input type="checkbox" name="jamoCheckBox' + jamoCount + '"/></td></tr>';
                         jamoCount++;
                         break;
                     case "Klipsch":
                         klipschTrHTML += '<tr><td hidden>' + item.idadoramalistings + '</td><td>' + item.listingName + '</td><td>' + item.specialPrice + '</td><td><a href="' + item.url + '">click me</a></td><td>'
-                            + '<input type="checkbox" name="klipschCheckBox' + klipschCount + '"</td></tr>';
+                            + '<input type="checkbox" name="klipschCheckBox' + klipschCount + '"/></td></tr>';
                         klipschCount++;
+                        break;
+                    case "Misc":
+                        miscTrHTML += '<tr><td hidden>' + item.idadoramalistings + '</td><td>' + item.listingName + '</td><td>' + item.specialPrice + '</td><td><a href="' + item.url + '">click me</a></td><td>'
+                            + '<input type="checkbox"/></td></tr>';
                         break;
                     default:
                         break;
                 }
             }
+            else {
+                inactiveTrHTML += '<tr><td hidden>' + item.idadoramalistings + '</td><td>' + item.listingName + '</td><td>' + item.specialPrice + '</td><td><a href="' + item.url + '">click me</a></td><td>'
+                    + '<input type="checkbox"/></td></tr>';
+            }
         });
         jamoCheckBox = jamoCount;
         klipschCheckBox = klipschCount;
-        $('#jamoListingsTable').append(jamoTrHTML);
+        $('#jamoListingTable').append(jamoTrHTML);
         $('#klipschListingTable').append(klipschTrHTML);
+        $('#miscListingTable').append(miscTrHTML);
+        $('#inactiveListingTable').append(inactiveTrHTML);
     }
 });
 
@@ -831,7 +843,7 @@ $('#addKlipschListing').on('click', function () {
             $('#klipschUrl').val('');
 
             /* display the newly added data to the table */
-            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice + '</td><td><a href="' + data.url + '">click me</a></td><td>' + '<input type="checkbox" name="klipschCheckBox' + klipschCheckBox + '"</td></tr>';
+            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice + '</td><td><a href="' + data.url + '">click me</a></td><td>' + '<input type="checkbox" name="klipschCheckBox' + klipschCheckBox + '"/></td></tr>';
             $('#klipschListingTable').append(trHTML);
             klipschCheckBox++;
         }
@@ -861,3 +873,65 @@ $('#deleteKlipschListing').on('click', function () {
         }
     });
 });
+
+$('#makeListingActive').on('click', function () {
+    var adoramaListingIds = [];
+    var selector = '#inactiveListingTable tr input:checked';
+    $.each($(selector), function (i, item) {
+        var adoramaListingId = $(this).parent().siblings(":first").text();
+        adoramaListingIds.push(adoramaListingId);
+    });
+    var idList = { ids: adoramaListingIds.toString() };
+    $.ajax({
+        url: serviceUrl + 'AdoramaListings/ActivateAdoramaListing',
+        method: 'PUT',
+        contentType:'application/json',
+        data: JSON.stringify(idList),
+        success: function (adoramaListings) {
+            if (adoramaListings != null) {
+                $.each(adoramaListings, function (i, data) {
+                var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice + '</td><td><a href="' + data.url + '">click me</a></td><td>' + '<input type="checkbox"/></td></tr>';
+                switch (data.manufacture) {
+                    case "Jamo":
+                        $('#jamoListingTable').append(trHTML);
+                        break;
+                    case "Klipsch":
+                        $('#klipschListingTable').append(trHTML);
+                        break;
+                    case "Misc":
+                        $('#miscListingTable').append(trHTML);
+                        break;
+                    default:
+                        // throw an error
+                        break; 
+                    }
+                });
+                /* remove the activated listings from the inactive table */
+                document.querySelectorAll('#inactiveListingTable tr input:checked').forEach(x => { x.parentNode.parentNode.remove() });
+            }
+        }
+    });
+});
+
+$('#addMiscListing').on('click', function () {
+    var miscListing = {
+        listingName: $('#miscListingName').val(),
+        specialPrice: parseFloat($('#miscSpecialPrice').val()),
+        url: $('#miscUrl').val(),
+        manufacture: "Misc",
+        active: 1
+    }
+    $.ajax({
+        url: serviceUrl + 'AdoramaListings/AddMiscListing',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(miscListing),
+        success: function(data){
+            $('#miscListingName').val('');
+            $('#miscSpecialPrice').val('');
+            $('#miscUrl').val('');
+            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice + '</td><td><a href="' + data.url + '">click me</a></td><td><input type="checkbox"/></td></tr>';
+            $('#miscListingTable').append(trHTML);
+    }
+    });
+})

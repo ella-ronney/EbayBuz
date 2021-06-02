@@ -39,5 +39,7 @@ namespace EbayBusiness.DB
         public List<AdoramaListings> GetAllAdoramaListings();
         public AdoramaListings AddKlipschListing(AdoramaListings adoramaListing);
         public bool DeleteKlipschListing(IdList klipschIds);
+        public List<AdoramaListings> MakeAdoramaListingActive(IdList adoramaListingIds);
+        public AdoramaListings AddMiscListing(AdoramaListings miscListing);
     }
 }

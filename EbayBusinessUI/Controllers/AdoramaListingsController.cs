@@ -57,5 +57,19 @@ namespace EbayBusinessUI.Controllers
         {
             return ebayDBRecords.DeleteKlipschListing(klipschIds);
         }
+
+        [HttpPut]
+        [Route("ActivateAdoramaListing")]
+        public ActionResult<List<AdoramaListings>> MakeAdoramaListingActive(IdList adoramaListingIds)
+        {
+            return ebayDBRecords.MakeAdoramaListingActive(adoramaListingIds);
+        }
+
+        [HttpPost]
+        [Route("AddMiscListing")]
+        public ActionResult<AdoramaListings> AddMiscListing([FromBody] AdoramaListings miscListing)
+        {
+            return ebayDBRecords.AddMiscListing(miscListing);
+        }
     }
 }

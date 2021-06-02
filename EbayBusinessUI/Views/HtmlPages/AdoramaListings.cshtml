@@ -8,7 +8,7 @@
 
 <div class="container-fluid" style="margin-top:20px;">
     <h2>Jamo Listings</h2>
-    <table id="jamoListingsTable" class="table table-bordered table-responsive table-striped text-center">
+    <table id="jamoListingTable" class="table table-bordered table-responsive table-striped text-center">
         <thread>
             <tr>
                 <th hidden>Id</th> 
@@ -24,11 +24,11 @@
                 <td><input type="text" id="jamoListingName" name="listingName"></td>
                 <td><input type="number" id="jamoSpecialPrice" name="specialPrice"/></td>
                 <td><input type="text" id="jamoUrl" name="url"/></td>
+                <td> <button type="button" class="btn btn-success" id="addJamoListing">Add</button></td>
             </tr>
         </tbody>
     </table>
     <div class="text-right">
-        <button type="button" class="btn btn-success" id="addJamoListing">Add</button>
         <button type="button" class="btn btn-info" id="updateAdoramaListing">Update</button>
         <button type="button" class="btn btn-danger" id="deleteJamoListing">Delete</button>
     </div>
@@ -52,18 +52,18 @@
                 <td><input type="text" id="klipschListingName" name="listingName"></td>
                 <td><input type="number" id="klipschSpecialPrice" name="specialPrice" /></td>
                 <td><input type="text" id="klipschUrl" name="url" /></td>
+                <td> <button type="button" class="btn btn-success" id="addKlipschListing">Add</button></td>
             </tr>
         </tbody>
     </table>
     <div class="text-right">
-        <button type="button" class="btn btn-success" id="addKlipschListing">Add</button>
         <button type="button" class="btn btn-danger" id="deleteKlipschListing">Delete</button>
     </div>
 </div>
 
 <div>
     <h2>Misc. Listings</h2>
-    <table id="MiscListings" class="table table-bordered table-responsive table-striped text-center">
+    <table id="miscListingTable" class="table table-bordered table-responsive table-striped text-center">
         <thread>
             <tr>
                 <th hidden>Id</th>
@@ -79,8 +79,29 @@
                 <td><input type="text" id="miscListingName" name="listingName"></td>
                 <td><input type="number" id="miscSpecialPrice" name="specialPrice" /></td>
                 <td><input type="text" id="miscUrl" name="url" /></td>
+                <td><button type="button" class="btn btn-success" id="addMiscListing">Add</button></td>
             </tr>
         </tbody>
     </table>
-    <button type="button" class="btn btn-success" id="addMiscListing">Add</button>
+    <div class="text-right">
+        <button type="button" class="btn btn-danger" id="deleteMiscListing">Delete</button>
+    </div>
+</div>
+
+<div>
+    <h2>Inactive Listings</h2>
+    <table id="inactiveListingTable" class="table table-bordered table-responsive table-striped text-center">
+        <thread>
+            <tr>
+                <th hidden>Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Url</th>
+                <th scope="col">Edit</th>
+            </tr>
+        </thread>
+    </table>
+    <div class="text-right">
+        <button type="button" id="makeListingActive" class="btn btn-info">Make Listing Active</button>
+    </div>
 </div>

@@ -501,5 +501,31 @@ namespace EbayBusiness.DB
             }
             return true;
         }
+
+        public List<AdoramaListings> MakeAdoramaListingActive (IdList adoramaListingIds)
+        {
+            int[] adoramaIds = adoramaListingIds.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+            List<AdoramaListings> adoramaListings = new List<AdoramaListings>();
+            foreach(int adoramaId in adoramaIds)
+            {
+                AdoramaListings adoramaListing = db.AdoramaListings.Where(x => x.idadoramalistings == adoramaId).FirstOrDefault();
+                if(adoramaListing == null)
+                {
+                    return null;
+                }
+                adoramaListing.active = 1;
+                db.AdoramaListings.Update(adoramaListing);
+                db.SaveChanges();
+                adoramaListings.Add(adoramaListing);
+            }
+            return adoramaListings;
+        }
+
+        public AdoramaListings AddMiscListing(AdoramaListings miscListing)
+        {
+            db.AdoramaListings.Add(miscListing);
+            db.SaveChanges();
+            return miscListing;
+        }
     }
 }
