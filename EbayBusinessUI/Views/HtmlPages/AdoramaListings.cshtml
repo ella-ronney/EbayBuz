@@ -36,7 +36,7 @@
 
 <div>
     <h2>Klipsch Listings</h2>
-    <table>
+    <table id="klipschListingTable" class="table table-bordered table-responsive table-striped text-center">
         <thread>
             <tr>
                 <th hidden>Id</th>
@@ -49,18 +49,21 @@
         <tbody>
             <tr>
                 <td hidden><input type="text" id="idklipschlistings" name="idadoramalistings" hidden /></td>
-                <td><input type="text" id="klpischListingName" name="listingName"></td>
+                <td><input type="text" id="klipschListingName" name="listingName"></td>
                 <td><input type="number" id="klipschSpecialPrice" name="specialPrice" /></td>
                 <td><input type="text" id="klipschUrl" name="url" /></td>
             </tr>
         </tbody>
     </table>
-    <button type="button" class="btn btn-success" id="addKlipschListing">Add</button>
+    <div class="text-right">
+        <button type="button" class="btn btn-success" id="addKlipschListing">Add</button>
+        <button type="button" class="btn btn-danger" id="deleteKlipschListing">Delete</button>
+    </div>
 </div>
 
 <div>
     <h2>Misc. Listings</h2>
-    <table id="MiscListings">
+    <table id="MiscListings" class="table table-bordered table-responsive table-striped text-center">
         <thread>
             <tr>
                 <th hidden>Id</th>

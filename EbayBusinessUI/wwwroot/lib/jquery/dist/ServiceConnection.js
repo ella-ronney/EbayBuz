@@ -7,6 +7,7 @@ var checkBoxesClaims = 0;
 var checkBoxesDelays = 0;
 var checkBoxesBadSellers = 0;
 var jamoCheckBox = 0;
+var klipschCheckBox = 0;
 
 function inventoryHtmlTableData(item) {
     var trHTML = '<tr><td hidden>' + item.idInventory + '</td><td contenteditable="true">' + item.name + '</td><td contenteditable="true">' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td contenteditable="true">' + item.totalPrice + '</td><td>' + item.discountType + '</td><td contenteditable="true">' + item.discount
@@ -747,7 +748,7 @@ $('#addJamoListing').on('click', function () {
 
         /* Append the new data to the table*/
             var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td> <a href="' + data.specialPrice + '">click me</a></td><td>' + data.url + '</td><td>'
-                + '<input type="checkbox" name="check' + jamoCheckBox + '"</td></tr>';
+                + '<input type="checkbox" name="jamoCheckBox' + jamoCheckBox + '"</td></tr>';
             $('#jamoListingsTable').append(trHTML);
             jamoCheckBox++;
         }
@@ -778,19 +779,85 @@ $('#deleteJamoListing').on('click', function () {
 });
 
 $.ajax({
-    url: serviceUrl + 'AdoramaListings/JamoListings',
+    url: serviceUrl + 'AdoramaListings/AdoramaListings',
     method: 'GET',
     success: function (data) {
-        var trHTML = '';
-        count = 1;
+        var jamoTrHTML = '';
+        var klipschTrHTML = '';
+        jamoCount = 1;
+        klipschCount = 1; 
         $.each(data, function (i, item) {
-            if (item.manufacture == "Jamo" && item.active == 1) {
-                trHTML += '<tr><td hidden>' + item.idadoramalistings + '</td><td>' + item.listingName + '</td><td>' + item.specialPrice + '</td><td><a href="' + item.url + '">click me</a></td><td>'
-                    + '<input type="checkbox" name="check' + count + '"</td></tr>';
-                count++;
+            if (item.active == 1) {
+                switch (item.manufacture) {
+                    case "Jamo":
+                        jamoTrHTML += '<tr><td hidden>' + item.idadoramalistings + '</td><td>' + item.listingName + '</td><td>' + item.specialPrice + '</td><td><a href="' + item.url + '">click me</a></td><td>'
+                            + '<input type="checkbox" name="jamoCheckBox' + jamoCount + '"</td></tr>';
+                        jamoCount++;
+                        break;
+                    case "Klipsch":
+                        klipschTrHTML += '<tr><td hidden>' + item.idadoramalistings + '</td><td>' + item.listingName + '</td><td>' + item.specialPrice + '</td><td><a href="' + item.url + '">click me</a></td><td>'
+                            + '<input type="checkbox" name="klipschCheckBox' + klipschCount + '"</td></tr>';
+                        klipschCount++;
+                        break;
+                    default:
+                        break;
+                }
             }
         });
-        jamoCheckBox = count;
-        $('#jamoListingsTable').append(trHTML);
+        jamoCheckBox = jamoCount;
+        klipschCheckBox = klipschCount;
+        $('#jamoListingsTable').append(jamoTrHTML);
+        $('#klipschListingTable').append(klipschTrHTML);
     }
+});
+
+$('#addKlipschListing').on('click', function () {
+    var klipschListing = {
+        listingName: $('#klipschListingName').val(),
+        specialPrice: parseFloat($('#klipschSpecialPrice').val()),
+        url:$('#klipschUrl').val(),
+        manufacture: 'Klipsch',
+        active: 1
+    };
+    $.ajax({
+        url: serviceUrl + 'AdoramaListings/AddKlipschListing',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(klipschListing),
+        success: function (data) {
+        /* clear the input data forms */
+            $('#klipschListingName').val('');
+            $('#klipschSpecialPrice').val('');
+            $('#klipschUrl').val('');
+
+            /* display the newly added data to the table */
+            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice + '</td><td><a href="' + data.url + '">click me</a></td><td>' + '<input type="checkbox" name="klipschCheckBox' + klipschCheckBox + '"</td></tr>';
+            $('#klipschListingTable').append(trHTML);
+            klipschCheckBox++;
+        }
+    });
+});
+
+$('#deleteKlipschListing').on('click', function () {
+    var klipschIds = [];
+    var selector = '#klipschListingTable tr input:checked';
+    $.each($(selector), function (i, item) {
+        var klipschId = $(this).parent().siblings(":first").text();
+        klipschIds.push(klipschId);
+    });
+    var idList = { ids: klipschIds.toString() };
+    $.ajax({
+        url: serviceUrl + 'AdoramaListings/DeleteKlipschListing',
+        method: 'DELETE',
+        contentType: 'application/json',
+        data: JSON.stringify(idList),
+       success: function(data) {
+           if (data) {
+               document.querySelectorAll('#klipschListingTable tr input:checked').forEach(x => {
+                   x.parentNode.parentNode.remove();
+                   klipschCheckBox--;
+               });
+           }
+        }
+    });
 });

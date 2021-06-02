@@ -38,10 +38,24 @@ namespace EbayBusinessUI.Controllers
         }
 
         [HttpGet]
-        [Route("JamoListings")]
+        [Route("AdoramaListings")]
         public ActionResult<List<AdoramaListings>> GetAllAdoramaListings()
         {
             return ebayDBRecords.GetAllAdoramaListings();
+        }
+
+        [HttpPost]
+        [Route("AddKlipschListing")]
+        public ActionResult<AdoramaListings> AddKlipschListing([FromBody] AdoramaListings adoramaListing)
+        {
+            return ebayDBRecords.AddKlipschListing(adoramaListing);
+        }
+
+        [HttpDelete]
+        [Route("DeleteKlipschListing")]
+        public bool DeleteKlipschListing([FromBody] IdList klipschIds)
+        {
+            return ebayDBRecords.DeleteKlipschListing(klipschIds);
         }
     }
 }

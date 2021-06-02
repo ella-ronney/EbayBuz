@@ -471,5 +471,35 @@ namespace EbayBusiness.DB
         {
             return db.AdoramaListings.ToList();
         }
+
+        public AdoramaListings AddKlipschListing(AdoramaListings adoramaListing)
+        {
+            db.AdoramaListings.Add(adoramaListing);
+            db.SaveChanges();
+            return adoramaListing;
+        }
+
+        public bool DeleteKlipschListing(IdList klipschIds)
+        {
+            try
+            {
+                int[] klipschListingIds = klipschIds.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+                foreach (int klipschId in klipschListingIds)
+                {
+                    AdoramaListings klipschListing = db.AdoramaListings.Where(x => x.idadoramalistings == klipschId).FirstOrDefault();
+                    if(klipschListing == null)
+                    {
+                        return false;
+                    }
+                    db.Remove(klipschListing);
+                    db.SaveChanges();
+                }
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
