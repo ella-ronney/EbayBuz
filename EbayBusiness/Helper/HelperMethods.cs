@@ -21,5 +21,10 @@ namespace EbayBusiness.Helper
             return targetedInventoryList;
         }
 
+        public static string RemoveLastChar(string val)
+        {
+            return val.Substring(0, val.Length - 1);
+        }
+
     }
 }

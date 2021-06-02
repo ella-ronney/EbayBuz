@@ -12,6 +12,8 @@ namespace EbayBusiness.Model
         public string listingName { get; set; }
         public float specialPrice { get; set; }
         public string url { get; set; }
+        public string manufacture { get; set; }
+        public int active { get; set; }
 
     }
 }

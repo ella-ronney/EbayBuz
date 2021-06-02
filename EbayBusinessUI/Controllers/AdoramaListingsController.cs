@@ -24,14 +24,21 @@ namespace EbayBusinessUI.Controllers
         }
 
         [HttpPost]
-        [Route("AddAdoramaListing")]
-        public ActionResult<AdoramaListings> AddAdoramaListing([FromForm] AdoramaListings adoramaListing)
+        [Route("AddJamoListing")]
+        public ActionResult<AdoramaListings> AddJamoListing([FromBody] AdoramaListings adoramaListing)
         {
-            return ebayDBRecords.AddAdoramaListing(adoramaListing);
+            return ebayDBRecords.AddJamoListing(adoramaListing);
+        }
+
+        [HttpDelete]
+        [Route("DeleteJamoListing")]
+        public bool DeleteJamoListing([FromBody] IdList jamoIds)
+        {
+            return ebayDBRecords.DeleteJamoListing(jamoIds);
         }
 
         [HttpGet]
-        [Route("AdoramaListings")]
+        [Route("JamoListings")]
         public ActionResult<List<AdoramaListings>> GetAllAdoramaListings()
         {
             return ebayDBRecords.GetAllAdoramaListings();

@@ -437,11 +437,34 @@ namespace EbayBusiness.DB
         }
 
         // Adorama Controller
-        public AdoramaListings AddAdoramaListing(AdoramaListings adoramaListing)
+        public AdoramaListings AddJamoListing(AdoramaListings adoramaListing)
         {
             db.AdoramaListings.Add(adoramaListing);
             db.SaveChanges();
             return adoramaListing;
+        }
+
+        public bool DeleteJamoListing(IdList jamoIds)
+        {
+            try
+            {
+                int[] jamoListingIds = jamoIds.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+                foreach (int id in jamoListingIds)
+                {
+                    var jamoListing = db.AdoramaListings.Where(x => x.idadoramalistings == id).FirstOrDefault();
+                    if (jamoListing == null)
+                    {
+                        return false;
+                    }
+                    db.AdoramaListings.Remove(jamoListing);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return true;
         }
 
         public List<AdoramaListings> GetAllAdoramaListings()

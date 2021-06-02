@@ -6,7 +6,7 @@ var checkBoxesReturns = 0;
 var checkBoxesClaims = 0;
 var checkBoxesDelays = 0;
 var checkBoxesBadSellers = 0;
-var adoramaCheckBox = 0;
+var jamoCheckBox = 0;
 
 function inventoryHtmlTableData(item) {
     var trHTML = '<tr><td hidden>' + item.idInventory + '</td><td contenteditable="true">' + item.name + '</td><td contenteditable="true">' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td contenteditable="true">' + item.totalPrice + '</td><td>' + item.discountType + '</td><td contenteditable="true">' + item.discount
@@ -114,9 +114,9 @@ $('#deletecurrentinv').on('click', function () {
         data: JSON.stringify(idList),
         success: function (data) {
             document.querySelectorAll('#currentinvTable input:checked').forEach(e => {
-                e.parentNode.parentNode.remove()
+                e.parentNode.parentNode.remove();
+                checkBoxesCur--;
             });
-            checkBoxesCur--;
         }
     });
 });
@@ -275,9 +275,9 @@ $('#deleteincominginv').on('click', function () {
             data: JSON.stringify(idList),
             success: function (data) {
                 document.querySelectorAll('#incominginvTable input:checked').forEach(e => {
-                    e.parentNode.parentNode.remove()
+                    e.parentNode.parentNode.remove();
+                    checkBoxes--;
                 });
-                checkBoxes--;
             }
         });
 });
@@ -470,9 +470,9 @@ $('#deleteReturn').on('click', function () {
         data: JSON.stringify(idList),
         success: function (data) {
             document.querySelectorAll('#returnTable input:checked').forEach(e => {
-                e.parentNode.parentNode.remove()
+                e.parentNode.parentNode.remove();
+                checkBoxesReturns--;
             });
-            checkBoxesReturns--;
         }
     });
 });
@@ -576,9 +576,9 @@ $('#deleteInsuranceClaim').on('click', function () {
         data: JSON.stringify(idList),
         success: function (data) {
             document.querySelectorAll('#insuranceClaims input:checked').forEach(e => {
-                e.parentNode.parentNode.remove()
+                e.parentNode.parentNode.remove();
+                checkBoxesClaims--;
             });
-            checkBoxesClaims--;
         }
     });
 });
@@ -691,9 +691,9 @@ $('#deleteDelayedPackage').on('click', function () {
         data: JSON.stringify(idList),
         success: function (data) {
             document.querySelectorAll('#delayedPackages input:checked').forEach(e => {
-                e.parentNode.parentNode.remove()
+                e.parentNode.parentNode.remove();
+                checkBoxesDelays--;
             });
-            checkBoxesDelays--;
         }
     });
 });
@@ -726,39 +726,71 @@ $('#updateDelayedPackage').on('click', function () {
     });
 });
 
-$('#addAdoramaListing').on('click', function () {
-    var inputData = $('input').serialize();
+$('#addJamoListing').on('click', function () {
+    var adoramaListing = {
+        listingName: $('#jamoListingName').val(),
+        specialPrice: parseFloat($('#jamoSpecialPrice').val()),
+        url: $('#jamoUrl').val(),
+        manufacture: "Jamo",
+        active : 1
+        };
     $.ajax({
-        url: serviceUrl + 'AdoramaListings/AddAdoramaListing',
+        url: serviceUrl + 'AdoramaListings/AddJamoListing',
         method: 'POST',
-        data: JSON.stringify(inputData),
+        contentType: 'application/json',
+        data: JSON.stringify(adoramaListing),
         success: function (data) {
         /* Clear all the form data */
-            $('#listingName').val('');
-            $('#specialPrice').val('');
-            $('#url').val('');
+            $('#jamoListingName').val('');
+            $('#jamoSpecialPrice').val('');
+            $('#jamoUrl').val('');
 
         /* Append the new data to the table*/
-            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice + '</td><td>' + data.url + '</td><td>'
-                + '<input type="checkbox" name="check' + adoramaCheckBox + '"</td></tr>';
-            $('#adoramaListingsTable').append(trHTML);
-            adoramaCheckBox++;
+            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td> <a href="' + data.specialPrice + '">click me</a></td><td>' + data.url + '</td><td>'
+                + '<input type="checkbox" name="check' + jamoCheckBox + '"</td></tr>';
+            $('#jamoListingsTable').append(trHTML);
+            jamoCheckBox++;
+        }
+    });
+});
+
+$('#deleteJamoListing').on('click', function () {
+    var jamoListingIds = [];
+    var selector = '#jamoListingsTable tr input:checked';
+    $.each($(selector), function (i, listing) {
+        var jamoListingId = $(this).parent().siblings(":first").text();
+        jamoListingIds.push(jamoListingId);
+    });
+    var idList = { ids: jamoListingIds.toString() };
+    
+    $.ajax({
+        url: serviceUrl + 'AdoramaListings/DeleteJamoListing',
+        method: 'DELETE',
+        contentType: 'application/json',
+        data: JSON.stringify(idList),
+        success: function (data) {
+            document.querySelectorAll('#jamoListingsTable input:checked').forEach(e => {
+                e.parentNode.parentNode.remove();
+                jamoCheckBox--;
+            });
         }
     });
 });
 
 $.ajax({
-    url: serviceUrl + 'AdoramaListings/AdoramaListings',
-    method: 'PUT',
-    sucess: function (data) {
+    url: serviceUrl + 'AdoramaListings/JamoListings',
+    method: 'GET',
+    success: function (data) {
         var trHTML = '';
         count = 1;
         $.each(data, function (i, item) {
-            trHTML += '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice + '</td><td>' + data.url + '</td><td>'
-                + '<input type="checkbox" name="check' + count + '"</td></tr>';
+            if (item.manufacture == "Jamo" && item.active == 1) {
+                trHTML += '<tr><td hidden>' + item.idadoramalistings + '</td><td>' + item.listingName + '</td><td>' + item.specialPrice + '</td><td><a href="' + item.url + '">click me</a></td><td>'
+                    + '<input type="checkbox" name="check' + count + '"</td></tr>';
                 count++;
+            }
         });
-        adoramaCheckBox = count;
-        $('#adoramaListingsTable').append(trHTML);
+        jamoCheckBox = count;
+        $('#jamoListingsTable').append(trHTML);
     }
 });
