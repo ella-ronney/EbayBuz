@@ -71,5 +71,12 @@ namespace EbayBusinessUI.Controllers
         {
             return ebayDBRecords.AddMiscListing(miscListing);
         }
+
+        [HttpDelete]
+        [Route("DeleteMiscListing")]
+        public bool DeleteMiscListing([FromBody] IdList miscIds)
+        {
+            return ebayDBRecords.DeleteMiscListing(miscIds);
+        }
     }
 }

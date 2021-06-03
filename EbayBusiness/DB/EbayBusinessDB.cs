@@ -135,7 +135,7 @@ namespace EbayBusiness.DB
             try
             {
                 int[] incomingInventoryIds = idList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
-               foreach(int id in incomingInventoryIds)
+                foreach (int id in incomingInventoryIds)
                 {
                     var item = db.Inventory.Where(x => x.idInventory == id).FirstOrDefault();
                     if (item == null)
@@ -146,7 +146,7 @@ namespace EbayBusiness.DB
                     db.SaveChanges();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -158,7 +158,7 @@ namespace EbayBusiness.DB
             Inventory dbInventoryItem = null;
             try
             {
-                foreach(Inventory item in incInv)
+                foreach (Inventory item in incInv)
                 {
                     dbInventoryItem = db.Inventory.Where(x => x.idInventory == item.idInventory).FirstOrDefault();
                     if (dbInventoryItem == null)
@@ -170,7 +170,7 @@ namespace EbayBusiness.DB
                     db.SaveChanges();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -201,10 +201,10 @@ namespace EbayBusiness.DB
             try
             {
                 int[] badSellerIds = idList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
-                foreach(int id in badSellerIds)
+                foreach (int id in badSellerIds)
                 {
                     var badSeller = db.SoldItems.Where(x => x.idsolditems == id).FirstOrDefault();
-                    if(badSeller == null)
+                    if (badSeller == null)
                     {
                         return false;
                     }
@@ -245,10 +245,10 @@ namespace EbayBusiness.DB
             try
             {
                 int[] returnIds = returnIdList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
-                foreach(int id in returnIds)
+                foreach (int id in returnIds)
                 {
                     var ret = db.Returns.Where(x => x.idreturns == id).FirstOrDefault();
-                    if(ret == null)
+                    if (ret == null)
                     {
                         return false;
                     }
@@ -256,7 +256,7 @@ namespace EbayBusiness.DB
                     db.SaveChanges();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -336,7 +336,8 @@ namespace EbayBusiness.DB
             }
             return true;
         }
-        private void updateDbInsuranceClaimHelper(ref InsuranceClaims dbInsuranceClaims, InsuranceClaims updatedClaim){
+        private void updateDbInsuranceClaimHelper(ref InsuranceClaims dbInsuranceClaims, InsuranceClaims updatedClaim)
+        {
             dbInsuranceClaims.itemName = updatedClaim.itemName;
             dbInsuranceClaims.insuredFor = updatedClaim.insuredFor;
             dbInsuranceClaims.claimStatus = updatedClaim.claimStatus;
@@ -346,15 +347,15 @@ namespace EbayBusiness.DB
             dbInsuranceClaims.replacementTrackingNum = updatedClaim.replacementTrackingNum;
         }
 
-       public bool UpdateInsuranceClaim(List<InsuranceClaims> updatedClaims)
+        public bool UpdateInsuranceClaim(List<InsuranceClaims> updatedClaims)
         {
             InsuranceClaims dbInsuranceClaims = null;
             try
             {
-                foreach(InsuranceClaims claim in updatedClaims)
+                foreach (InsuranceClaims claim in updatedClaims)
                 {
                     dbInsuranceClaims = db.InsuranceClaims.Where(x => x.idinsuranceclaims == claim.idinsuranceclaims).FirstOrDefault();
-                    if(dbInsuranceClaims == null)
+                    if (dbInsuranceClaims == null)
                     {
                         return false;
                     }
@@ -363,7 +364,7 @@ namespace EbayBusiness.DB
                     db.SaveChanges();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -381,7 +382,7 @@ namespace EbayBusiness.DB
         {
             return db.ShippingDelayedPackages.ToList();
         }
-        public bool DeleteDelayedPackage (IdList delayedPackageIdList)
+        public bool DeleteDelayedPackage(IdList delayedPackageIdList)
         {
             try
             {
@@ -417,10 +418,10 @@ namespace EbayBusiness.DB
             ShippingDelayedPackages dbDelayedPackages = null;
             try
             {
-                foreach(ShippingDelayedPackages package in updatedPackages)
+                foreach (ShippingDelayedPackages package in updatedPackages)
                 {
                     dbDelayedPackages = db.ShippingDelayedPackages.Where(x => x.idshippingdelayedpackages == package.idshippingdelayedpackages).FirstOrDefault();
-                    if(dbDelayedPackages == null)
+                    if (dbDelayedPackages == null)
                     {
                         return false;
                     }
@@ -429,7 +430,7 @@ namespace EbayBusiness.DB
                     db.SaveChanges();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -487,7 +488,7 @@ namespace EbayBusiness.DB
                 foreach (int klipschId in klipschListingIds)
                 {
                     AdoramaListings klipschListing = db.AdoramaListings.Where(x => x.idadoramalistings == klipschId).FirstOrDefault();
-                    if(klipschListing == null)
+                    if (klipschListing == null)
                     {
                         return false;
                     }
@@ -495,21 +496,21 @@ namespace EbayBusiness.DB
                     db.SaveChanges();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
             return true;
         }
 
-        public List<AdoramaListings> MakeAdoramaListingActive (IdList adoramaListingIds)
+        public List<AdoramaListings> MakeAdoramaListingActive(IdList adoramaListingIds)
         {
             int[] adoramaIds = adoramaListingIds.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
             List<AdoramaListings> adoramaListings = new List<AdoramaListings>();
-            foreach(int adoramaId in adoramaIds)
+            foreach (int adoramaId in adoramaIds)
             {
                 AdoramaListings adoramaListing = db.AdoramaListings.Where(x => x.idadoramalistings == adoramaId).FirstOrDefault();
-                if(adoramaListing == null)
+                if (adoramaListing == null)
                 {
                     return null;
                 }
@@ -526,6 +527,30 @@ namespace EbayBusiness.DB
             db.AdoramaListings.Add(miscListing);
             db.SaveChanges();
             return miscListing;
+        }
+
+        public bool DeleteMiscListing(IdList miscIds)
+        {
+            try
+            {
+                int[] miscListingIds = miscIds.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+
+                foreach (int id in miscListingIds)
+                {
+                    var miscListing = db.AdoramaListings.Where(x => x.idadoramalistings == id).FirstOrDefault();
+                    if (miscListing == null)
+                    {
+                        return false;
+                    }
+                    db.AdoramaListings.Remove(miscListing);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

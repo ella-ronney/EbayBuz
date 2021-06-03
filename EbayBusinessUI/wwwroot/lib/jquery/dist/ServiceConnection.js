@@ -1,4 +1,5 @@
-﻿var serviceUrl = 'https://localhost:44388/';
+﻿/* Attributes */
+var serviceUrl = 'https://localhost:44388/';
 var checkBoxes = 0;
 var checkBoxesCur = 0;
 var checkBoxesTop = 0; 
@@ -9,6 +10,18 @@ var checkBoxesBadSellers = 0;
 var jamoCheckBox = 0;
 var klipschCheckBox = 0;
 
+/* General Helper Functions */
+function formatDateString(dateString) {
+    // Date format yyyy-mm-dd
+    var returnBy = dateString.substr(0, 10);
+    return returnBy;
+}
+
+/* End - General Helper Functions */
+
+// ---------------------------- Inventory Controller --------------------------------------------------------------------------------- //
+
+/* Helper Functions */
 function inventoryHtmlTableData(item) {
     var trHTML = '<tr><td hidden>' + item.idInventory + '</td><td contenteditable="true">' + item.name + '</td><td contenteditable="true">' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td contenteditable="true">' + item.totalPrice + '</td><td>' + item.discountType + '</td><td contenteditable="true">' + item.discount
         + '</td><td contenteditable="true"><select>';
@@ -23,12 +36,12 @@ function inventoryHtmlTableData(item) {
             // last option - email appeal
             trHTML += '<option>Approved</option><option selected>Email Appeal</option><option>Pending</option></select ></td><td>';
     }
-        trHTML += item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment;
-       // + item.discountStatus + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment;
+    trHTML += item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment;
+    // + item.discountStatus + '</td><td>' + item.vendor + '</td><td>' + item.datePurchased + '</td><td>' + item.payment;
     return trHTML;
 }
 
-function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased, Payment, ReturnBy, Warranty, Classification,EstimatedDelivery, TrackingNumber, CurrentInventory) {
+function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased, Payment, ReturnBy, Warranty, Classification, EstimatedDelivery, TrackingNumber, CurrentInventory) {
     var Inventory = {
         // FIXME - correct formating for dates
         idInventory: Number(IdInventory),
@@ -53,52 +66,46 @@ function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice
     return Inventory;
 }
 
-function createReturnObject(IdReturns, ReturnName, ReturnDate, EstimatedRefundTime, DeliveryDate) {
-    var Returns = {
-        idReturns: Number(IdReturns),
-        returnName:ReturnName,
-        returnDate: new Date(ReturnDate),
-        estimatedRefundTime: EstimatedRefundTime,
-        deliveryDate: new Date(DeliveryDate)
-    };
-    return Returns;
+function formatClassificationsHTMLTag(classification) {
+    var htmlClassificationTag = null;
+    switch (classification) {
+        case "Fast seller":
+            htmlClassificationTag = '<select><option selected> Fast seller</option><option>Slow seller</option><option>Possible return</option><option>Bad seller</option></select >';
+            break;
+        case "Slow seller":
+            htmlClassificationTag = '<select><option> Fast seller</option><option selected>Slow seller</option><option>Possible return</option><option>Bad seller</option></select >';
+            break;
+        case "Possible return":
+            htmlClassificationTag = '<select><option> Fast seller</option><option>Slow seller</option><option selected>Possible return</option><option>Bad seller</option></select >';
+            break;
+        case "Bad seller":
+            htmlClassificationTag = '<select><option> Fast seller</option><option>Slow seller</option><option>Possible return</option><option selected>Bad seller</option></select >';
+            break;
+        default:
+            htmlClassificationTag = '<select><option> Fast seller</option><option>Slow seller</option><option>Possible return</option><option>Bad seller</option></select >';
+    }
+    return htmlClassificationTag;
 }
 
-function formatDateString(dateString) {
-    // Date format yyyy-mm-dd
-    var returnBy = dateString.substr(0, 10);
-    return returnBy;
-}
+/* End - Helper Functions */
 
-function createInsuranceClaimObject(IDInsuranceClaims, ItemName, InsuredFor, ClaimStatus, CustomerPreference, CustomerResolutionStatus, Notes, ReplacementTrackingNum) {
-    var InsuranceClaims = {
-        idinsuranceclaims: Number(IDInsuranceClaims), 
-        itemName: ItemName, 
-        insuredFor: parseFloat(InsuredFor),
-        claimStatus: ClaimStatus, 
-        customerPreference: CustomerPreference, 
-        customerResolutionStatus: CustomerResolutionStatus,
-        notes: Notes, 
-        replacementTrackingNum: ReplacementTrackingNum
-    };
-    return InsuranceClaims;
-}
-    $.ajax({
-        url: serviceUrl + 'inventory/CurrentInventory',
-        method: 'GET',
-        success: function (data) {
-            var trHTML = '';
-            var count = 1;
-            $.each(data, function (i, item) {
-                var date = formatDateString(item.returnBy);
-                var classification = formatClassificationsHTMLTag(item.classification);
-                trHTML += inventoryHtmlTableData(item) + '</td><td contenteditable="true">' + '<input type="date" value="' + date + '"/>' + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"/></td></tr>';
-                count++;
-            });
-            checkBoxesCur = count;
-            $('#currentinvTable').append(trHTML);
-        }
-    });
+// Current Inventory
+$.ajax({
+    url: serviceUrl + 'inventory/CurrentInventory',
+    method: 'GET',
+    success: function (data) {
+        var trHTML = '';
+        var count = 1;
+        $.each(data, function (i, item) {
+            var date = formatDateString(item.returnBy);
+            var classification = formatClassificationsHTMLTag(item.classification);
+            trHTML += inventoryHtmlTableData(item) + '</td><td contenteditable="true">' + '<input type="date" value="' + date + '"/>' + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"/></td></tr>';
+            count++;
+        });
+        checkBoxesCur = count;
+        $('#currentinvTable').append(trHTML);
+    }
+});
 
 $('#deletecurrentinv').on('click', function () {
     var currentInventoryIds = [];
@@ -121,27 +128,6 @@ $('#deletecurrentinv').on('click', function () {
         }
     });
 });
-
-function formatClassificationsHTMLTag(classification) {
-    var htmlClassificationTag = null;
-    switch (classification) {
-        case "Fast seller":
-            htmlClassificationTag = '<select><option selected> Fast seller</option><option>Slow seller</option><option>Possible return</option><option>Bad seller</option></select >';
-            break;
-        case "Slow seller":
-            htmlClassificationTag = '<select><option> Fast seller</option><option selected>Slow seller</option><option>Possible return</option><option>Bad seller</option></select >';
-            break;
-        case "Possible return":
-            htmlClassificationTag = '<select><option> Fast seller</option><option>Slow seller</option><option selected>Possible return</option><option>Bad seller</option></select >';
-            break;
-        case "Bad seller":
-            htmlClassificationTag = '<select><option> Fast seller</option><option>Slow seller</option><option>Possible return</option><option selected>Bad seller</option></select >';
-            break;
-        default:
-            htmlClassificationTag = '<select><option> Fast seller</option><option>Slow seller</option><option>Possible return</option><option>Bad seller</option></select >';
-    }
-    return htmlClassificationTag;
-}
 
 $('#movetocurrentinv').on('click', function () {
     var incomingInventoryIds = [];
@@ -175,13 +161,6 @@ $('#movetocurrentinv').on('click', function () {
     });
 });
 
-function stringParser(discountStatus) {
-    var discountStatSplit = discountStatus.split('selected');
-    var discountStatSplit2 = discountStatSplit[1].split('<');
-    var discountStatVal = discountStatSplit2[0].split('>');
-    return discountStatVal[1];
-}
-
 $('#updatecurrinv').on('click', function () {
     var updatedCurrentInvData = [];
     var curInventory = [];
@@ -189,9 +168,9 @@ $('#updatecurrinv').on('click', function () {
     $.each($(selector), function (i, item) {
         var toUpdateCurrentInv = $(this).parent().siblings();
         // Parameters (IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased - not editable, Payment, ReturnBy, Warranty, Classification, EstimatedDelivery - null dne, TrackingNumber - null dne, CurrentInventory) 
-       updatedCurrentInvData.push(createInventoryObject(toUpdateCurrentInv[0].innerHTML, toUpdateCurrentInv[1].innerHTML, toUpdateCurrentInv[2].innerHTML, toUpdateCurrentInv[3].innerHTML, toUpdateCurrentInv[4].innerHTML, toUpdateCurrentInv[5].innerHTML,
-           toUpdateCurrentInv[6].innerHTML, toUpdateCurrentInv[7].children[0].value, toUpdateCurrentInv[8].innerHTML, toUpdateCurrentInv[9].innerHTML, toUpdateCurrentInv[10].innerHTML,
-           toUpdateCurrentInv[11].children[0].value, toUpdateCurrentInv[12].innerHTML, toUpdateCurrentInv[13].children[0].value, null, null, 1));
+        updatedCurrentInvData.push(createInventoryObject(toUpdateCurrentInv[0].innerHTML, toUpdateCurrentInv[1].innerHTML, toUpdateCurrentInv[2].innerHTML, toUpdateCurrentInv[3].innerHTML, toUpdateCurrentInv[4].innerHTML, toUpdateCurrentInv[5].innerHTML,
+            toUpdateCurrentInv[6].innerHTML, toUpdateCurrentInv[7].children[0].value, toUpdateCurrentInv[8].innerHTML, toUpdateCurrentInv[9].innerHTML, toUpdateCurrentInv[10].innerHTML,
+            toUpdateCurrentInv[11].children[0].value, toUpdateCurrentInv[12].innerHTML, toUpdateCurrentInv[13].children[0].value, null, null, 1));
     });
     curInventory = { Inventory: updatedCurrentInvData };
     $.ajax({
@@ -209,10 +188,11 @@ $('#updatecurrinv').on('click', function () {
                 });
             }
             // failed case - popup with when the updated failed 
-        }        
+        }
     });
 });
 
+// Incoming Inventory
 $.ajax({
     url: serviceUrl + 'inventory/IncomingInventory',
     method: 'GET',
@@ -223,7 +203,7 @@ $.ajax({
             var classification = formatClassificationsHTMLTag(item.classification);
             var estimatedDelivery = formatDateString(item.estimatedDelivery);
             trHTML += inventoryHtmlTableData(item) + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td contenteditable="true">' + '<input type="date" value="' + estimatedDelivery + '"/>' + '</td><td contenteditable="true">' + item.trackingNumber + '</td><td>' + '<input type="checkbox" name="check' + count + '"/></td></tr>';
-            count ++;
+            count++;
         });
         checkBoxes = count;
         $('#incominginvTable').append(trHTML);
@@ -232,7 +212,7 @@ $.ajax({
 
 $('#addingincominginv').on('click', function () {
     var inputData = $('input').serialize();
-    inputData += '&discountType=' + $('#discountType').val() + '&discountStatus='+ $('#discountStatus').val() +'&payment=' + $('#payment').val() + '&classification=' + $('#classification').val();
+    inputData += '&discountType=' + $('#discountType').val() + '&discountStatus=' + $('#discountStatus').val() + '&payment=' + $('#payment').val() + '&classification=' + $('#classification').val();
     $.ajax({
         url: serviceUrl + 'inventory/AddIncomingInventory',
         method: 'POST',
@@ -251,7 +231,7 @@ $('#addingincominginv').on('click', function () {
             $("#estimatedDelivery").val('');
             $("#trackingNumber").val('');
 
-        /*Display the newly added item in the table */
+            /*Display the newly added item in the table */
             var classification = formatClassificationsHTMLTag(item.classification);
             var estimatedDelivery = formatDateString(item.estimatedDelivery);
             var trHTML = inventoryHtmlTableData(item) + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td contenteditable="true">' + '<input type="date" value="' + estimatedDelivery + '"/>' + '</td><td contenteditable="true">' + item.trackingNumber + '</td><td>' + '<input type="checkbox" name="check' + checkBoxes + '"/></td></tr>';
@@ -269,18 +249,18 @@ $('#deleteincominginv').on('click', function () {
         incomingInventoryIds.push(incomingInventoryId);
     });
     var idList = { ids: incomingInventoryIds.toString() };
-        $.ajax({
-            url: serviceUrl + 'inventory/DeleteIncomingInventory', 
-            method: 'POST',
-            contentType: "application/json",
-            data: JSON.stringify(idList),
-            success: function (data) {
-                document.querySelectorAll('#incominginvTable input:checked').forEach(e => {
-                    e.parentNode.parentNode.remove();
-                    checkBoxes--;
-                });
-            }
-        });
+    $.ajax({
+        url: serviceUrl + 'inventory/DeleteIncomingInventory',
+        method: 'POST',
+        contentType: "application/json",
+        data: JSON.stringify(idList),
+        success: function (data) {
+            document.querySelectorAll('#incominginvTable input:checked').forEach(e => {
+                e.parentNode.parentNode.remove();
+                checkBoxes--;
+            });
+        }
+    });
 });
 
 $('#updateincominginv').on('click', function () {
@@ -290,7 +270,7 @@ $('#updateincominginv').on('click', function () {
     $.each($(selector), function (i, item) {
         var toUpdateIncomingInv = $(this).parent().siblings();
 
-         //Parameters (IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased - null bc not editable, Payment, ReturnBy - null dne for incoming inv, Warranty, Classification, EstimatedDelivery, TrackingNumber, CurrentInventory) 
+        //Parameters (IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased - null bc not editable, Payment, ReturnBy - null dne for incoming inv, Warranty, Classification, EstimatedDelivery, TrackingNumber, CurrentInventory) 
         updatedIncomingInvData.push(createInventoryObject(toUpdateIncomingInv[0].innerHTML, toUpdateIncomingInv[1].innerHTML, toUpdateIncomingInv[2].innerHTML, toUpdateIncomingInv[3].innerHTML, toUpdateIncomingInv[4].innerHTML, toUpdateIncomingInv[5].innerHTML,
             toUpdateIncomingInv[6].innerHTML, toUpdateIncomingInv[7].children[0].value, toUpdateIncomingInv[8].innerHTML, null, toUpdateIncomingInv[10].innerHTML, null,
             toUpdateIncomingInv[11].innerHTML, toUpdateIncomingInv[12].children[0].value, toUpdateIncomingInv[13].children[0].value, toUpdateIncomingInv[14].innerHTML, 0))
@@ -310,6 +290,13 @@ $('#updateincominginv').on('click', function () {
         }
     });
 });
+
+
+// ---------------------------- SellingStats Controller ------------------------------------------------------------------------------ //
+
+/* Helper Functions */
+
+/* End - Helper Functions */
 
 // Top sellers
 /*$.ajax({
@@ -384,7 +371,18 @@ $.ajax({
     }
 });
 
-// Business expense manager
+
+// ---------------------------- Warranty Controller ---------------------------------------------------------------------------------- //
+
+/* Helper Functions */
+
+/* End - Helper Functions */
+
+// ---------------------------- Business Expense Controller -------------------------------------------------------------------------- //
+
+/* Helper Functions */
+
+/* End - Helper Functions */
 $('#addExpense').on('click', function () {
     var dataType = 'application/x-www-form-urlencoded; charset=utf-8';
     var inputData = $('input').serialize();
@@ -407,14 +405,163 @@ $('#addExpense').on('click', function () {
     });
 });
 
-// Resolution Center - Returns
+// ---------------------------- Resolution Center Controller ------------------------------------------------------------------------- //
+
+/* Helper Functions */
+
+// Returns
+function createReturnObject(IdReturns, ReturnName, ReturnDate, EstimatedRefundTime, DeliveryDate) {
+    var Returns = {
+        idReturns: Number(IdReturns),
+        returnName: ReturnName,
+        returnDate: new Date(ReturnDate),
+        estimatedRefundTime: EstimatedRefundTime,
+        deliveryDate: new Date(DeliveryDate)
+    };
+    return Returns;
+}
+
 function returnHtmlTableData(data) {
+    var returnDate = formatDateString(data.returnDate);
+    var deliveryDate = formatDateString(data.deliveryDate);
     var trHTML = '<tr><td hidden>' + data.idreturns + '</td><td contenteditable="true">' + data.returnName + '</td><td>' + data.quantity + '</td><td>' + data.totalPrice +
-        '</td><td>' + data.paymentMethod + '</td><td>' + data.returnVendor + '</td><td contenteditable="true">' + data.returnDate + '</td><td contenteditable="true">' + data.deliveryDate +
-        '</td><td>' + data.trackingNum + '</td><td contenteditable="true">' + data.estimatedRefundTime + '</td><td>';
+        '</td><td>' + data.paymentMethod + '</td><td>' + data.returnVendor + '</td><td contenteditable="true">' + '<input type="date" value="' + returnDate + '"/>' + '</td><td contenteditable="true">' +'<input type="date" value="'+ deliveryDate +
+        '"/></td><td>' + data.trackingNum + '</td><td contenteditable="true">' + data.estimatedRefundTime + '</td><td>';
     return trHTML;
 }
 
+// Insurance Claims
+function createInsuranceClaimObject(IDInsuranceClaims, ItemName, InsuredFor, ClaimStatus, CustomerPreference, CustomerResolutionStatus, Notes, ReplacementTrackingNum) {
+    var InsuranceClaims = {
+        idinsuranceclaims: Number(IDInsuranceClaims),
+        itemName: ItemName,
+        insuredFor: parseFloat(InsuredFor),
+        claimStatus: ClaimStatus,
+        customerPreference: CustomerPreference,
+        customerResolutionStatus: CustomerResolutionStatus,
+        notes: Notes,
+        replacementTrackingNum: ReplacementTrackingNum
+    };
+    return InsuranceClaims;
+}
+
+function InsuranceClaimHTMLData(data) {
+    var claimStatus = formatInsuranceClaimStatusHTMLTag(data.claimStatus);
+    var customerPreference = formatInsuranceClaimCustomerPref(data.customerPreference);
+    var customerResolutionStatus = formatInsuranceClaimCustomerResStatus(data.customerResolutionStatus);
+    var trHTML = '<tr><td hidden>' + data.idinsuranceclaims + '</td><td contenteditable="true">' + data.itemName + '</td><td>' + data.ebayOrderNumber + '</td><td>' +
+        data.sellPrice + '</td><td contenteditable="true">' + data.insuredFor + '</td><td>' + data.shippingCarrier + '</td><td>' + data.shippingCost + '</td><td>' + data.tracking + '</td><td>' + data.claimNumber +
+        '</td><td contenteditable="true">' + claimStatus + '</td><td>' + data.claimFileDate + '</td><td contenteditable="true">' + customerPreference + '</td><td contenteditable="true">' +
+        customerResolutionStatus + '</td><td contenteditable="true">' + data.replacementTrackingNum + '</td><td contenteditable="true">' + data.notes + '</td><td>';
+    return trHTML;
+}               
+
+function formatInsuranceClaimStatusHTMLTag(claimStatus) {
+    var trHTML = '';
+    switch (claimStatus) {
+        case "Filed awaiting decision":
+           trHTML = '<select><option selected>Filed awaiting decision</option><option>Need additional documents</option><option>Approved awaiting check</option>' +
+                '<option>Check cashed</option><option>Denied</option><option>Appealed awaiting decision</option></select>'
+            break;
+        case "Need additional documents":
+            trHTML = '<select><option>Filed awaiting decision</option><option selected>Need additional documents</option><option>Approved awaiting check</option>' +
+                '<option>Check cashed</option><option>Denied</option><option>Appealed awaiting decision</option></select>'
+            break;
+        case "Approved awaiting check":
+            trHTML = '<select><option>Filed awaiting decision</option><option>Need additional documents</option><option selected>Approved awaiting check</option>' +
+                '<option>Check cashed</option><option>Denied</option><option>Appealed awaiting decision</option></select>'
+            break;
+        case "Check cashed":
+            trHTML = '<select><option>Filed awaiting decision</option><option>Need additional documents</option><option>Approved awaiting check</option>' +
+                '<option selected>Check cashed</option><option>Denied</option><option>Appealed awaiting decision</option></select>'
+            break;
+        case "Denied":
+            trHTML = '<select><option>Filed awaiting decision</option><option>Need additional documents</option><option>Approved awaiting check</option>' +
+                '<option>Check cashed</option><option selected>Denied</option><option>Appealed awaiting decision</option></select>'
+            break;
+        case "Appealed awaiting decision":
+            trHTML = '<select><option>Filed awaiting decision</option><option>Need additional documents</option><option>Approved awaiting check</option>' +
+                '<option>Check cashed</option><option>Denied</option><option selected>Appealed awaiting decision</option></select>'
+            break;
+        default:
+            trHTML = '<select><option>Filed awaiting decision</option><option>Need additional documents</option><option>Approved awaiting check</option>' +
+                '<option>Check cashed</option><option>Denied</option><option>Appealed awaiting decision</option></select>'
+            break;
+    }
+    return trHTML;
+}
+
+function formatInsuranceClaimCustomerResStatus(customerResolutionStatus) {
+    var trHTML = '';
+    switch (customerResolutionStatus) {
+        case "Awaiting Insurance Check":
+            trHTML = '<select><option selected>Awaiting Insurance Check</option><option>Refunded</option><option>Replacement Sent</option></select>';
+            break;
+        case "Refunded":
+            trHTML = '<select><option>Awaiting Insurance Check</option><option selected>Refunded</option><option>Replacement Sent</option></select>';
+            break;
+        case "Replacement Sent":
+            trHTML = '<select><option>Awaiting Insurance Check</option><option>Refunded</option><option selected>Replacement Sent</option></select>';
+            break;
+        default:
+            trHTML = '<select><option>Awaiting Insurance Check</option><option>Refunded</option><option>Replacement Sent</option></select>';
+            break;
+    }
+    return trHTML;
+}
+
+function formatInsuranceClaimCustomerPref(customerPreference) {
+    var trHTML = '';
+    switch(customerPreference){
+        case "Replacement":
+            trHTML = '<select><option selected>Replacement</option><option>Refund</option><option>Not Specified</option></select>';
+            break;
+        case "Refund":
+            trHTML = '<select><option>Replacement</option><option selected>Refund</option><option>Not Specified</option></select>';
+            break;
+        case "Not Specified":
+            trHTML = '<select><option>Replacement</option><option>Refund</option><option selected>Not Specified</option></select>';
+            break;
+        default:
+            trHTML = '<select><option>Replacement</option><option>Refund</option><option>Not Specified</option></select>';
+            break;
+    }
+    return trHTML;
+}
+
+// Delayed Packages
+function createDelayedPackageObject(IdShippingDelayedPackages, PackageName, LastScanDate, CurrentLoc, ServiceReqNum, LastCustomerContactDate, Note) {
+    var delayedPackage = {
+        idshippingdelayedpackages: Number(IdShippingDelayedPackages),
+        packageName: PackageName,
+        lastScanDate: new Date(LastScanDate),
+        currentLoc: CurrentLoc,
+        serviceReqNum: ServiceReqNum,
+        lastCustomerContactDate: new Date(LastCustomerContactDate),
+        note: Note
+    };
+    return delayedPackage;
+}
+
+function delayedPackageHTMLTableData(data) {
+    var lastCustomerContactDate = null;
+    var lastScanDate = null;
+    // FIXME NULL Check all variables 
+    if (data.lastScanDate != null) {
+        lastScanDate = formatDateString(data.lastScanDate);
+    }
+    if (data.LastCustomerContactDate != null) {
+        lastCustomerContactDate = formatDateString(data.LastCustomerContactDate);
+    }
+    var trHTML = '<tr><td hidden>' + data.idshippingdelayedpackages + '</td><td contenteditable="true">' + data.packageName + '</td><td>' + data.ebayOrderNum + '</td><td>' +
+        data.carrier + '</td><td>' + data.insuranceVal + '</td><td>' + data.trackingId + '</td><td contenteditable="true">' + '<input type="date" value="' + lastScanDate + '"/></td><td contenteditable="true">' + data.currentLoc + '</td><td>' + data.destination +
+        '</td><td contenteditable="true">' + data.serviceReqNum + '</td><td contenteditable="true">' + '<input type="date" value="' + lastCustomerContactDate + '"/></td><td contenteditable="true">' + data.note + '</td><td>';
+    return trHTML;
+}
+
+/* End - Helper Functions */
+
+// Returns
 $('#addReturn').on('click', function () {
     var inputData = $('input').serialize();
     var paymentMethod = $('#paymentMethod').val();
@@ -435,12 +582,13 @@ $('#addReturn').on('click', function () {
             $("#trackingNum").val('');
 
             /*Display the newly added item in the table */
-            var trHTML = returnHtmlTableData(data) + '<input type="checkbox" name="checkBoxesReturns' + checkBoxesReturns +'"/></td></tr>';
+            var trHTML = returnHtmlTableData(data) + '<input type="checkbox" name="checkBoxesReturns' + checkBoxesReturns + '"/></td></tr>';
             $('#returnTable').append(trHTML);
             checkBoxesReturns++;
         }
     });
 });
+
 $.ajax({
     url: serviceUrl + 'ResolutionCenter/Returns',
     method: 'GET',
@@ -504,15 +652,7 @@ $('#updateReturn').on('click', function () {
     });
 });
 
-// Resolution center - insurance claims
-function InsuranceClaimHTMLData(data) {
-    var trHTML = '<tr><td hidden>' + data.idinsuranceclaims + '</td><td contenteditable="true">' + data.itemName + '</td><td>' + data.ebayOrderNumber + '</td><td>' +
-        data.sellPrice + '</td><td contenteditable="true">' + data.insuredFor + '</td><td>' + data.shippingCarrier + '</td><td>' + data.shippingCost + '</td><td>' + data.tracking + '</td><td>' + data.claimNumber +
-        '</td><td contenteditable="true">' + data.claimStatus + '</td><td>' + data.claimFileDate + '</td><td contenteditable="true">' + data.customerPreference + '</td><td contenteditable="true">' +
-        data.customerResolutionStatus + '</td><td contenteditable="true">' + data.replacementTrackingNum + '</td><td contenteditable="true">' + data.notes + '</td><td>';
-    return trHTML;
-}
-
+// Insurance Claims
 $('#addInsuranceClaim').on('click', function () {
     var formData = $('input').serialize();
     var splitted = formData.split('idinsuranceclaims');
@@ -547,6 +687,7 @@ $('#addInsuranceClaim').on('click', function () {
         }
     });
 });
+
 $.ajax({
     url: serviceUrl + 'ResolutionCenter/InsuranceClaims',
     method: 'GET',
@@ -600,7 +741,7 @@ $('#updateInsuranceClaim').on('click', function () {
         method: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify(insuranceClaims.InsuranceClaims),
-        success: function(data) {
+        success: function (data) {
             if (data) {
                 $.each($(selector), function (i, checkbox) {
                     if (checkbox.checked) {
@@ -612,33 +753,12 @@ $('#updateInsuranceClaim').on('click', function () {
     });
 });
 
-// Resolution center - Delayed packages
-function createDelayedPackageObject(IdShippingDelayedPackages, PackageName, LastScanDate, CurrentLoc, ServiceReqNum, LastCustomerContactDate,Note) {
-    var delayedPackage = {
-        idshippingdelayedpackages : Number(IdShippingDelayedPackages),
-        packageName : PackageName,
-        lastScanDate : new Date(LastScanDate),
-        currentLoc : CurrentLoc, 
-        serviceReqNum : ServiceReqNum, 
-        lastCustomerContactDate : new Date(LastCustomerContactDate), 
-        note : Note
-    };
-    return delayedPackage;
-}
-
-function delayedPackageHTMLTableData(data) {
-    var trHTML = '<tr><td hidden>' + data.idshippingdelayedpackages + '</td><td contenteditable="true">' + data.packageName + '</td><td>' + data.ebayOrderNum + '</td><td>' +
-        data.carrier + '</td><td>' + data.insuranceVal + '</td><td>' + data.trackingId + '</td><td contenteditable="true">' + data.lastScanDate + '</td><td contenteditable="true">' + data.currentLoc + '</td><td>' + data.destination +
-        '</td><td contenteditable="true">' + data.serviceReqNum + '</td><td contenteditable="true">' + data.lastCustomerContactDate + '</td><td contenteditable="true">' + data.note + '</td><td>';
-    return trHTML;
-}
-
-$('#addDelayedPackage').on('click', function ()
-{
+// Delayed Packages
+$('#addDelayedPackage').on('click', function () {
     var formData = $('input').serialize();
     var splitString = formData.split('idshippingdelayedpackages');
     var inputData = 'idshippingdelayedpackages' + splitString[1];
-    inputData += '&carrier=' + $('#carrier').val(); 
+    inputData += '&carrier=' + $('#carrier').val();
     $.ajax({
         url: serviceUrl + 'ResolutionCenter/AddDelayedPackage',
         method: 'POST',
@@ -663,6 +783,7 @@ $('#addDelayedPackage').on('click', function ()
         }
     });
 });
+
 $.ajax({
     url: serviceUrl + 'ResolutionCenter/DelayedPackages',
     method: 'GET',
@@ -726,58 +847,18 @@ $('#updateDelayedPackage').on('click', function () {
         });
     });
 });
+// ---------------------------- Profit Dashboard Controller -------------------------------------------------------------------------- //
 
-$('#addJamoListing').on('click', function () {
-    var adoramaListing = {
-        listingName: $('#jamoListingName').val(),
-        specialPrice: parseFloat($('#jamoSpecialPrice').val()),
-        url: $('#jamoUrl').val(),
-        manufacture: "Jamo",
-        active : 1
-        };
-    $.ajax({
-        url: serviceUrl + 'AdoramaListings/AddJamoListing',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(adoramaListing),
-        success: function (data) {
-        /* Clear all the form data */
-            $('#jamoListingName').val('');
-            $('#jamoSpecialPrice').val('');
-            $('#jamoUrl').val('');
+/* Helper Functions */
 
-        /* Append the new data to the table*/
-            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td> <a href="' + data.specialPrice + '">click me</a></td><td>' + data.url + '</td><td>'
-                + '<input type="checkbox" name="jamoCheckBox' + jamoCheckBox + '"/></td></tr>';
-            $('#jamoListingTable').append(trHTML);
-            jamoCheckBox++;
-        }
-    });
-});
+/* End - Helper Functions */
+// ---------------------------- Adorama Listings Controller -------------------------------------------------------------------------- //
 
-$('#deleteJamoListing').on('click', function () {
-    var jamoListingIds = [];
-    var selector = '#jamoListingTable tr input:checked';
-    $.each($(selector), function (i, listing) {
-        var jamoListingId = $(this).parent().siblings(":first").text();
-        jamoListingIds.push(jamoListingId);
-    });
-    var idList = { ids: jamoListingIds.toString() };
-    
-    $.ajax({
-        url: serviceUrl + 'AdoramaListings/DeleteJamoListing',
-        method: 'DELETE',
-        contentType: 'application/json',
-        data: JSON.stringify(idList),
-        success: function (data) {
-            document.querySelectorAll('#jamoListingTable input:checked').forEach(e => {
-                e.parentNode.parentNode.remove();
-                jamoCheckBox--;
-            });
-        }
-    });
-});
+/* Helper Functions */
 
+/* End - Helper Functions */
+
+// Get All Adorama Listings
 $.ajax({
     url: serviceUrl + 'AdoramaListings/AdoramaListings',
     method: 'GET',
@@ -787,7 +868,7 @@ $.ajax({
         var miscTrHTML = '';
         var inactiveTrHTML = '';
         jamoCount = 1;
-        klipschCount = 1; 
+        klipschCount = 1;
         $.each(data, function (i, item) {
             if (item.active == 1) {
                 switch (item.manufacture) {
@@ -823,11 +904,64 @@ $.ajax({
     }
 });
 
+// Jamo Table
+$('#addJamoListing').on('click', function () {
+    var adoramaListing = {
+        listingName: $('#jamoListingName').val(),
+        specialPrice: parseFloat($('#jamoSpecialPrice').val()),
+        url: $('#jamoUrl').val(),
+        manufacture: "Jamo",
+        active: 1
+    };
+    $.ajax({
+        url: serviceUrl + 'AdoramaListings/AddJamoListing',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(adoramaListing),
+        success: function (data) {
+            /* Clear all the form data */
+            $('#jamoListingName').val('');
+            $('#jamoSpecialPrice').val('');
+            $('#jamoUrl').val('');
+
+            /* Append the new data to the table*/
+            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td> <a href="' + data.specialPrice + '">click me</a></td><td>' + data.url + '</td><td>'
+                + '<input type="checkbox" name="jamoCheckBox' + jamoCheckBox + '"/></td></tr>';
+            $('#jamoListingTable').append(trHTML);
+            jamoCheckBox++;
+        }
+    });
+});
+
+$('#deleteJamoListing').on('click', function () {
+    var jamoListingIds = [];
+    var selector = '#jamoListingTable tr input:checked';
+    $.each($(selector), function (i, listing) {
+        var jamoListingId = $(this).parent().siblings(":first").text();
+        jamoListingIds.push(jamoListingId);
+    });
+    var idList = { ids: jamoListingIds.toString() };
+
+    $.ajax({
+        url: serviceUrl + 'AdoramaListings/DeleteJamoListing',
+        method: 'DELETE',
+        contentType: 'application/json',
+        data: JSON.stringify(idList),
+        success: function (data) {
+            document.querySelectorAll('#jamoListingTable input:checked').forEach(e => {
+                e.parentNode.parentNode.remove();
+                jamoCheckBox--;
+            });
+        }
+    });
+});
+
+// Klipsch Table
 $('#addKlipschListing').on('click', function () {
     var klipschListing = {
         listingName: $('#klipschListingName').val(),
         specialPrice: parseFloat($('#klipschSpecialPrice').val()),
-        url:$('#klipschUrl').val(),
+        url: $('#klipschUrl').val(),
         manufacture: 'Klipsch',
         active: 1
     };
@@ -837,7 +971,7 @@ $('#addKlipschListing').on('click', function () {
         contentType: 'application/json',
         data: JSON.stringify(klipschListing),
         success: function (data) {
-        /* clear the input data forms */
+            /* clear the input data forms */
             $('#klipschListingName').val('');
             $('#klipschSpecialPrice').val('');
             $('#klipschUrl').val('');
@@ -863,17 +997,63 @@ $('#deleteKlipschListing').on('click', function () {
         method: 'DELETE',
         contentType: 'application/json',
         data: JSON.stringify(idList),
-       success: function(data) {
-           if (data) {
-               document.querySelectorAll('#klipschListingTable tr input:checked').forEach(x => {
-                   x.parentNode.parentNode.remove();
-                   klipschCheckBox--;
-               });
-           }
+        success: function (data) {
+            if (data) {
+                document.querySelectorAll('#klipschListingTable tr input:checked').forEach(x => {
+                    x.parentNode.parentNode.remove();
+                    klipschCheckBox--;
+                });
+            }
         }
     });
 });
 
+// Misc Table
+$('#addMiscListing').on('click', function () {
+    var miscListing = {
+        listingName: $('#miscListingName').val(),
+        specialPrice: parseFloat($('#miscSpecialPrice').val()),
+        url: $('#miscUrl').val(),
+        manufacture: "Misc",
+        active: 1
+    }
+    $.ajax({
+        url: serviceUrl + 'AdoramaListings/AddMiscListing',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(miscListing),
+        success: function (data) {
+            $('#miscListingName').val('');
+            $('#miscSpecialPrice').val('');
+            $('#miscUrl').val('');
+            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice + '</td><td><a href="' + data.url + '">click me</a></td><td><input type="checkbox"/></td></tr>';
+            $('#miscListingTable').append(trHTML);
+        }
+    });
+})
+
+$('#deleteMiscListing').on('click', function () {
+    var miscIds = [];
+    var selector = '#miscListingTable tr input:checked';
+    $.each($(selector), function (i, item) {
+        var miscId = $(this).parent().siblings(":first").text();
+        miscIds.push(miscId);
+    });
+    var idList = { ids: miscIds.toString() };
+    $.ajax({
+        url: serviceUrl + 'AdoramaListings/DeleteMiscListing',
+        method: 'DELETE',
+        contentType: 'application/json',
+        data: JSON.stringify(idList),
+        success: function (data) {
+            document.querySelectorAll('#miscListingTable tr input:checked').forEach(x => {
+                x.parentNode.parentNode.remove();
+            })
+        }
+    });
+});
+
+// Inactive Table
 $('#makeListingActive').on('click', function () {
     var adoramaListingIds = [];
     var selector = '#inactiveListingTable tr input:checked';
@@ -913,25 +1093,3 @@ $('#makeListingActive').on('click', function () {
     });
 });
 
-$('#addMiscListing').on('click', function () {
-    var miscListing = {
-        listingName: $('#miscListingName').val(),
-        specialPrice: parseFloat($('#miscSpecialPrice').val()),
-        url: $('#miscUrl').val(),
-        manufacture: "Misc",
-        active: 1
-    }
-    $.ajax({
-        url: serviceUrl + 'AdoramaListings/AddMiscListing',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(miscListing),
-        success: function(data){
-            $('#miscListingName').val('');
-            $('#miscSpecialPrice').val('');
-            $('#miscUrl').val('');
-            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice + '</td><td><a href="' + data.url + '">click me</a></td><td><input type="checkbox"/></td></tr>';
-            $('#miscListingTable').append(trHTML);
-    }
-    });
-})
