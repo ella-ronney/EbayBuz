@@ -550,8 +550,8 @@ function delayedPackageHTMLTableData(data) {
     if (data.lastScanDate != null) {
         lastScanDate = formatDateString(data.lastScanDate);
     }
-    if (data.LastCustomerContactDate != null) {
-        lastCustomerContactDate = formatDateString(data.LastCustomerContactDate);
+    if (data.lastCustomerContactDate != null) {
+        lastCustomerContactDate = formatDateString(data.lastCustomerContactDate);
     }
     var trHTML = '<tr><td hidden>' + data.idshippingdelayedpackages + '</td><td contenteditable="true">' + data.packageName + '</td><td>' + data.ebayOrderNum + '</td><td>' +
         data.carrier + '</td><td>' + data.insuranceVal + '</td><td>' + data.trackingId + '</td><td contenteditable="true">' + '<input type="date" value="' + lastScanDate + '"/></td><td contenteditable="true">' + data.currentLoc + '</td><td>' + data.destination +
