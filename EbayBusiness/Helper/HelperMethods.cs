@@ -26,5 +26,14 @@ namespace EbayBusiness.Helper
             return val.Substring(0, val.Length - 1);
         }
 
+        public static bool NullCheckForIdListIds(IdList idList)
+        {
+            if (idList == null || String.IsNullOrEmpty(idList.ids))
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 }

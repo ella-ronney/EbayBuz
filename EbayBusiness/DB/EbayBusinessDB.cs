@@ -20,11 +20,29 @@ namespace EbayBusiness.DB
         // Current Inventory Requests
         public List<Inventory> GetAllCurrentInventory()
         {
-            return HelperMethods.GetCurrentorIncomingInventory(db.Inventory.ToList(), 1);
+            try
+            {
+                // The database is empty
+                if (!db.Inventory.Any())
+                {
+                    return null;
+                }
+                return HelperMethods.GetCurrentorIncomingInventory(db.Inventory.ToList(), 1);
+            }
+            catch(Exception ex)
+            {
+                // FIXME log the error
+                return null;
+            }
         }
 
         public bool DeleteCurrentInventory(IdList idList)
         {
+            if (!HelperMethods.NullCheckForIdListIds(idList))
+            {
+                return false;
+            }
+
             try
             {
                 int[] currentInventoryIds = idList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
@@ -41,13 +59,20 @@ namespace EbayBusiness.DB
             }
             catch (Exception ex)
             {
-
+                // FIXME log error
+                return false;
             }
             return true;
         }
 
         public List<Inventory> MoveIncomingInvToCurrentInv(IdList incomingInvIdList)
         {
+
+            if (!HelperMethods.NullCheckForIdListIds(incomingInvIdList))
+            {
+                return null;
+            }
+
             List<Inventory> currInvList = new List<Inventory>();
             try
             {
@@ -67,7 +92,8 @@ namespace EbayBusiness.DB
             }
             catch (Exception ex)
             {
-
+                // FIXME log error
+                return null;
             }
             return currInvList;
         }
@@ -109,29 +135,51 @@ namespace EbayBusiness.DB
             }
             catch (Exception ex)
             {
+                // FIXME log error
                 return false;
             }
 
-            // Save DB changes only if all items are successfuly updated
-            //db.SaveChanges();
             return true;
         }
 
         // Incoming Inventory Requests
         public List<Inventory> GetAllIncomingInventory()
         {
-            return HelperMethods.GetCurrentorIncomingInventory(db.Inventory.ToList(), 0);
+            try
+            {
+                if (!db.Inventory.Any())
+                {
+                    return null;
+                }
+
+                return HelperMethods.GetCurrentorIncomingInventory(db.Inventory.ToList(), 0);
+            }
+            catch(Exception ex)
+            {
+                // FIXME log error
+                return null;
+            }
         }
 
         public bool AddIncomingInventory(Inventory inv)
         {
-            db.Inventory.Add(inv);
-            db.SaveChanges();
-            return true;
+            // FIXME add a validator for all of the inv attributes - before adding to the db... do for all add statements
+            if (inv != null)
+            {
+                db.Inventory.Add(inv);
+                db.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
         public bool DeleteIncomingInventory(IdList idList)
         {
+            if (!HelperMethods.NullCheckForIdListIds(idList))
+            {
+                return false;
+            }
+
             try
             {
                 int[] incomingInventoryIds = idList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
@@ -148,7 +196,8 @@ namespace EbayBusiness.DB
             }
             catch (Exception ex)
             {
-
+                // FIXME log error
+                return false;
             }
             return true;
         }
@@ -172,6 +221,7 @@ namespace EbayBusiness.DB
             }
             catch (Exception ex)
             {
+                // FIXME log error
                 return false;
             }
             return true;
@@ -180,24 +230,42 @@ namespace EbayBusiness.DB
         // Top sellers
         public List<TopSellers> GetAllTopSellers()
         {
+            if (!db.TopSellers.Any())
+            {
+                return null;
+            }
+
             return db.TopSellers.ToList();
         }
 
         public List<SoldItems> GetAllBadSellers()
         {
+            if (!db.SoldItems.Any())
+            {
+                return null;
+            }
             return db.SoldItems.ToList();
         }
 
-        // FIXME - error handling
+        // FIXME - error handling + validator
         public bool AddBadSeller(SoldItems badSeller)
         {
-            db.SoldItems.Add(badSeller);
-            db.SaveChanges();
-            return true;
+            if (badSeller != null)
+            {
+                db.SoldItems.Add(badSeller);
+                db.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
         public bool DeleteBadSeller(IdList idList)
         {
+            if (!HelperMethods.NullCheckForIdListIds(idList))
+            {
+                return false;
+            }
+
             try
             {
                 int[] badSellerIds = idList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
@@ -214,34 +282,54 @@ namespace EbayBusiness.DB
             }
             catch (Exception)
             {
-
+                // FIXME log error
+                return false;
             }
+
             return true;
         }
 
         // Business Expenses
         public bool AddExpense(BusinessExpenses expense)
         {
-            db.BusinessExpenses.Add(expense);
-            db.SaveChanges();
-            return true;
+            if (expense != null)
+            {
+                db.BusinessExpenses.Add(expense);
+                db.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
         // Resolution center
         // Returns
         public Returns AddReturns(Returns ret)
         {
-            db.Returns.Add(ret);
-            db.SaveChanges();
-            return ret;
+            if (ret != null)
+            {
+                db.Returns.Add(ret);
+                db.SaveChanges();
+                return ret;
+            }
+            return null;
         }
         public List<Returns> GetAllReturns()
         {
+            if (!db.Returns.Any())
+            {
+                return null;
+            }
+
             return db.Returns.ToList();
         }
 
         public bool DeleteReturn(IdList returnIdList)
         {
+            if (!HelperMethods.NullCheckForIdListIds(returnIdList))
+            {
+                return false;
+            }
+
             try
             {
                 int[] returnIds = returnIdList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
@@ -258,7 +346,8 @@ namespace EbayBusiness.DB
             }
             catch (Exception ex)
             {
-
+                // FIXME log error
+                return false;
             }
             return true;
         }
@@ -295,27 +384,40 @@ namespace EbayBusiness.DB
             }
             catch (Exception ex)
             {
+                // FIXME log error
                 return false;
             }
 
-            // Save DB changes only if all items are successfuly updated
-            //db.SaveChanges();
             return true;
         }
         // Insurance Claims
         public InsuranceClaims AddInsuranceClaim(InsuranceClaims claim)
         {
-            db.InsuranceClaims.Add(claim);
-            db.SaveChanges();
-            return claim;
+            if (claim != null)
+            {
+                db.InsuranceClaims.Add(claim);
+                db.SaveChanges();
+                return claim;
+            }
+            return null;
         }
         public List<InsuranceClaims> GetAllInsuranceClaims()
         {
+            if (!db.InsuranceClaims.Any())
+            {
+                return null;
+            }
+
             return db.InsuranceClaims.ToList();
         }
 
         public bool DeleteInsuranceClaim(IdList insuranceClaimIds)
         {
+            if (!HelperMethods.NullCheckForIdListIds(insuranceClaimIds))
+            {
+                return false;
+            }
+
             try
             {
                 int[] claimIds = insuranceClaimIds.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
@@ -332,7 +434,8 @@ namespace EbayBusiness.DB
             }
             catch (Exception ex)
             {
-
+                // FIXME log error
+                return false;
             }
             return true;
         }
@@ -366,6 +469,7 @@ namespace EbayBusiness.DB
             }
             catch (Exception ex)
             {
+                // FIXME log error
                 return false;
             }
             return true;
@@ -374,16 +478,30 @@ namespace EbayBusiness.DB
         // Delayed shipping
         public ShippingDelayedPackages shippingDelayedPackage(ShippingDelayedPackages delayedPackage)
         {
-            db.ShippingDelayedPackages.Add(delayedPackage);
-            db.SaveChanges();
-            return delayedPackage;
+            if (delayedPackage != null)
+            {
+                db.ShippingDelayedPackages.Add(delayedPackage);
+                db.SaveChanges();
+                return delayedPackage;
+            }
+            return null;
         }
         public List<ShippingDelayedPackages> GetShippingDelayedPackages()
         {
+            if (!db.ShippingDelayedPackages.Any())
+            {
+                return null;
+            }
+
             return db.ShippingDelayedPackages.ToList();
         }
         public bool DeleteDelayedPackage(IdList delayedPackageIdList)
         {
+            if (!HelperMethods.NullCheckForIdListIds(delayedPackageIdList))
+            {
+                return false;
+            }
+
             try
             {
                 int[] delayedPackageIds = delayedPackageIdList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
@@ -400,7 +518,8 @@ namespace EbayBusiness.DB
             }
             catch (Exception ex)
             {
-
+                // FIXMe log error
+                return false;
             }
             return true;
         }
@@ -432,6 +551,7 @@ namespace EbayBusiness.DB
             }
             catch (Exception ex)
             {
+                // FIXME log error
                 return false;
             }
             return true;
@@ -440,13 +560,22 @@ namespace EbayBusiness.DB
         // Adorama Controller
         public AdoramaListings AddJamoListing(AdoramaListings adoramaListing)
         {
-            db.AdoramaListings.Add(adoramaListing);
-            db.SaveChanges();
-            return adoramaListing;
+            if (adoramaListing != null)
+            {
+                db.AdoramaListings.Add(adoramaListing);
+                db.SaveChanges();
+                return adoramaListing;
+            }
+            return null;
         }
 
         public bool DeleteJamoListing(IdList jamoIds)
         {
+            if (!HelperMethods.NullCheckForIdListIds(jamoIds))
+            {
+                return false;
+            }
+
             try
             {
                 int[] jamoListingIds = jamoIds.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
@@ -463,25 +592,41 @@ namespace EbayBusiness.DB
             }
             catch (Exception ex)
             {
-
+                // FIXME log error
+                return false;
             }
+
             return true;
         }
 
         public List<AdoramaListings> GetAllAdoramaListings()
         {
+            if (!db.AdoramaListings.Any())
+            {
+                return null;
+            }
+
             return db.AdoramaListings.ToList();
         }
 
         public AdoramaListings AddKlipschListing(AdoramaListings adoramaListing)
         {
-            db.AdoramaListings.Add(adoramaListing);
-            db.SaveChanges();
-            return adoramaListing;
+            if (adoramaListing != null)
+            {
+                db.AdoramaListings.Add(adoramaListing);
+                db.SaveChanges();
+                return adoramaListing;
+            }
+            return null;
         }
 
         public bool DeleteKlipschListing(IdList klipschIds)
         {
+            if (!HelperMethods.NullCheckForIdListIds(klipschIds))
+            {
+                return false;
+            }
+
             try
             {
                 int[] klipschListingIds = klipschIds.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
@@ -498,6 +643,7 @@ namespace EbayBusiness.DB
             }
             catch (Exception ex)
             {
+                // FIXME log error
                 return false;
             }
             return true;
@@ -505,32 +651,54 @@ namespace EbayBusiness.DB
 
         public List<AdoramaListings> MakeAdoramaListingActive(IdList adoramaListingIds)
         {
+            if (!HelperMethods.NullCheckForIdListIds(adoramaListingIds))
+            {
+                return null;
+            }
+
             int[] adoramaIds = adoramaListingIds.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
             List<AdoramaListings> adoramaListings = new List<AdoramaListings>();
-            foreach (int adoramaId in adoramaIds)
+            try
             {
-                AdoramaListings adoramaListing = db.AdoramaListings.Where(x => x.idadoramalistings == adoramaId).FirstOrDefault();
-                if (adoramaListing == null)
+                foreach (int adoramaId in adoramaIds)
                 {
-                    return null;
+                    AdoramaListings adoramaListing = db.AdoramaListings.Where(x => x.idadoramalistings == adoramaId).FirstOrDefault();
+                    if (adoramaListing == null)
+                    {
+                        return null;
+                    }
+                    adoramaListing.active = 1;
+                    db.AdoramaListings.Update(adoramaListing);
+                    db.SaveChanges();
+                    adoramaListings.Add(adoramaListing);
                 }
-                adoramaListing.active = 1;
-                db.AdoramaListings.Update(adoramaListing);
-                db.SaveChanges();
-                adoramaListings.Add(adoramaListing);
+                return adoramaListings;
             }
-            return adoramaListings;
+            catch(Exception ex)
+            {
+                // FIXME log error
+                return null;
+            }
         }
 
         public AdoramaListings AddMiscListing(AdoramaListings miscListing)
         {
-            db.AdoramaListings.Add(miscListing);
-            db.SaveChanges();
-            return miscListing;
+            if (miscListing != null)
+            {
+                db.AdoramaListings.Add(miscListing);
+                db.SaveChanges();
+                return miscListing;
+            }
+            return null;
         }
 
         public bool DeleteMiscListing(IdList miscIds)
         {
+            if (!HelperMethods.NullCheckForIdListIds(miscIds))
+            {
+                return false;
+            }
+
             try
             {
                 int[] miscListingIds = miscIds.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
@@ -548,6 +716,7 @@ namespace EbayBusiness.DB
             }
             catch (Exception ex)
             {
+                // FIXME log error
                 return false;
             }
             return true;
