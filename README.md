@@ -54,6 +54,9 @@ Delete bad seller
 ```
 
 # Business Expenses Manager
+
+URL: https://localhost:44388/BusinessExpenses
+
 Purpose : Display all my business related expenses.
 
 Implemented Functionality 
@@ -66,6 +69,9 @@ Display the expenses graphically i.e. pie chart broken into the different catego
 ```
 
 # Warranty Manager ** Implement **
+
+URL : https://localhost:44388/Warranty
+
 Purpose : Keep track of the serial numbers for each item within the warranty limit. Automatically delete an item from the MySQL database once the warranty has expired. 
 
 I have implemented the UI but not the backend functionality
@@ -77,6 +83,9 @@ Search for a particular item/s with the name / serial number and display the war
 Purpose : Table with total purchases to date from each vendor 
 
 # Resolution Center
+
+URL : https://localhost:44388/ResolutionCenter
+
 Purpose: Keep track of all problematic orders i.e. open returns to vendors, insurance claims, and packages to buyers delayed in transit
 
 Open Returns table
@@ -104,7 +113,13 @@ Update - certain fields in the table
 ```
 
 # Profit Dashboard ** Implement **
+
+URL: https://localhost:44388/Profit
+
 Purpose: Keep track of my profit after all expenses i.e. shipping supplies, Ebay fees, etc.
 
 # Adorama Listings
+
+URL: https://localhost:44388/AdoramaListings
+
 Purpose: Keep track of supplier special pricing offers
