@@ -1,35 +1,68 @@
-CREATE TABLE `currentinventory` (
-  `idCurrentInventory` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(45) NOT NULL,
-  `Qty` int DEFAULT NULL,
-  `Price` float NOT NULL,
-  `Vendor` varchar(45) NOT NULL,
-  `PurchaseDate` datetime NOT NULL,
-  `Warranty` varchar(45) DEFAULT NULL,
-  `SerialNumbers` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`idCurrentInventory`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `adoramalistings` (
+  `idadoramalistings` int NOT NULL AUTO_INCREMENT,
+  `listingName` varchar(255) DEFAULT NULL,
+  `specialPrice` float DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `manufacture` varchar(255) DEFAULT NULL,
+  `active` tinyint DEFAULT NULL,
+  PRIMARY KEY (`idadoramalistings`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `incominginventory` (
-  `idincominginventory` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(45) NOT NULL,
-  `Qty` int DEFAULT NULL,
-  `Price` float NOT NULL,
-  `Vendor` varchar(45) NOT NULL,
-  `PurchaseDate` datetime NOT NULL,
-  `Warranty` varchar(45) NOT NULL,
-  `SerialNumbers` varchar(45) NOT NULL,
-  `TrackingNumber` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`idincominginventory`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `businessexpenses` (
+  `idbusinessexpenses` int NOT NULL,
+  `expenseName` varchar(255) DEFAULT NULL,
+  `expenseCategory` varchar(255) DEFAULT NULL,
+  `cost` float DEFAULT NULL,
+  `paymentInfo` varchar(255) DEFAULT NULL,
+  `purchaseDate` datetime DEFAULT NULL,
+  `percentTowardTaxReturn` int DEFAULT NULL,
+  PRIMARY KEY (`idbusinessexpenses`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `topsellers` (
-  `idTopSellers` int NOT NULL AUTO_INCREMENT,
-  `tname` varchar(45) NOT NULL,
-  `priceSold` float NOT NULL,
-  `purchasePrice` float NOT NULL,
-  `vendors` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`idTopSellers`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `inventory` (
+  `idinventory` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `qty` int DEFAULT NULL,
+  `pricePerPiece` float DEFAULT NULL,
+  `totalPrice` float DEFAULT NULL,
+  `discountType` varchar(100) DEFAULT NULL,
+  `discount` float DEFAULT NULL,
+  `discountStatus` varchar(100) DEFAULT NULL,
+  `vendor` varchar(255) DEFAULT NULL,
+  `datePurchased` date DEFAULT NULL,
+  `payment` varchar(100) DEFAULT NULL,
+  `returnBy` date DEFAULT NULL,
+  `warranty` varchar(100) DEFAULT NULL,
+  `classification` varchar(100) DEFAULT NULL,
+  `trackingNumber` varchar(100) DEFAULT NULL,
+  `estimatedDelivery` date DEFAULT NULL,
+  `ebayItemId` varchar(45) DEFAULT NULL,
+  `currentInventory` tinyint DEFAULT NULL,
+  PRIMARY KEY (`idinventory`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `returns` (
+  `idreturns` int NOT NULL AUTO_INCREMENT,
+  `returnName` varchar(255) DEFAULT NULL,
+  `quantity` int DEFAULT NULL,
+  `totalPrice` float DEFAULT NULL,
+  `paymentMethod` varchar(255) DEFAULT NULL,
+  `returnVendor` varchar(255) DEFAULT NULL,
+  `returnDate` date DEFAULT NULL,
+  `deliveryDate` date DEFAULT NULL,
+  `estimatedRefundTime` varchar(255) DEFAULT NULL,
+  `trackingNum` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`idreturns`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `solditemclassification` (
+  `idsolditemclassification` int NOT NULL AUTO_INCREMENT,
+  `itemName` varchar(255) DEFAULT NULL,
+  `priceSold` float DEFAULT NULL,
+  `pastVendors` varchar(255) DEFAULT NULL,
+  `classification` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`idsolditemclassification`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 
