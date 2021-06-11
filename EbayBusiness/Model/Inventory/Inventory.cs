@@ -11,7 +11,7 @@ namespace EbayBusiness.Model
         public int idInventory { get; set; }
         public string name { get; set; }
         public int qty { get; set; }
-        public float pricePerPiece {get;set;}
+        public float pricePerPiece { get; set; }
         public float totalPrice { get; set; }
         public string discountType { get; set; }
         public float discount { get; set; }
@@ -22,6 +22,8 @@ namespace EbayBusiness.Model
         public string warranty { get; set; }
         public string classification { get; set; }
         public int currentInventory { get; set; }
+        public float? salesTax { get; set; }
+        public int? salesTaxRefunded { get; set; }
 
         // current inventory only 
         public DateTime returnBy { get; set; }
@@ -30,5 +32,4 @@ namespace EbayBusiness.Model
         // incoming inventory only 
         public DateTime estimatedDelivery { get; set; }
         public string trackingNumber { get; set; }
-    }
-}
+    }}

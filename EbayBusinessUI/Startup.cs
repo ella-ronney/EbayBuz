@@ -28,7 +28,7 @@ namespace EbayBusiness
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IEbayBusinessDB, EbayBusinessDB>();
-            var sqlConnection = "user id=root;Pwd=Admin;server = localhost; user id = root; persistsecurityinfo = True; database = ebay";
+            var sqlConnection = "user id=root;Pwd=Admin;server = localhost;database=ebay;allowuservariables=True;persistsecurityinfo = True;";
             services.AddDbContext<EbayBusinessContext>(options => options.UseMySQL(sqlConnection));
             services.AddControllersWithViews();
         }

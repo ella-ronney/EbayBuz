@@ -23,11 +23,12 @@ namespace EbayBusiness.DB
             try
             {
                 // The database is empty
-                if (!db.Inventory.Any())
+                if (db.Inventory == null)
                 {
                     return null;
                 }
                 return HelperMethods.GetCurrentorIncomingInventory(db.Inventory.ToList(), 1);
+               // return HelperMethods.GetCurrentorIncomingInventory(db.Inventory.ToList(), 1);
             }
             catch(Exception ex)
             {
@@ -147,7 +148,7 @@ namespace EbayBusiness.DB
         {
             try
             {
-                if (!db.Inventory.Any())
+                if (db.Inventory == null)
                 {
                     return null;
                 }
@@ -230,7 +231,7 @@ namespace EbayBusiness.DB
         // Top sellers
         public List<TopSellers> GetAllTopSellers()
         {
-            if (!db.TopSellers.Any())
+            if (db.TopSellers == null)
             {
                 return null;
             }
@@ -240,11 +241,13 @@ namespace EbayBusiness.DB
 
         public List<SoldItems> GetAllBadSellers()
         {
-            if (!db.SoldItems.Any())
+            if (db.SoldItems == null)
             {
                 return null;
             }
-            return db.SoldItems.ToList();
+            //return db.SoldItems.ToList();
+            // FIXME changed the table name
+            return null; 
         }
 
         // FIXME - error handling + validator
@@ -315,7 +318,7 @@ namespace EbayBusiness.DB
         }
         public List<Returns> GetAllReturns()
         {
-            if (!db.Returns.Any())
+            if (db.Returns == null)
             {
                 return null;
             }
@@ -403,12 +406,14 @@ namespace EbayBusiness.DB
         }
         public List<InsuranceClaims> GetAllInsuranceClaims()
         {
-            if (!db.InsuranceClaims.Any())
+            if (db.InsuranceClaims == null)
             {
                 return null;
             }
 
-            return db.InsuranceClaims.ToList();
+            // FIXME moved to a new table
+            //return db.InsuranceClaims.ToList();
+            return null;
         }
 
         public bool DeleteInsuranceClaim(IdList insuranceClaimIds)
@@ -488,12 +493,13 @@ namespace EbayBusiness.DB
         }
         public List<ShippingDelayedPackages> GetShippingDelayedPackages()
         {
-            if (!db.ShippingDelayedPackages.Any())
+            if (db.ShippingDelayedPackages == null)
             {
                 return null;
             }
-
-            return db.ShippingDelayedPackages.ToList();
+            // FIXME moved to a new table
+            //return db.ShippingDelayedPackages.ToList();
+            return null;
         }
         public bool DeleteDelayedPackage(IdList delayedPackageIdList)
         {
@@ -601,7 +607,7 @@ namespace EbayBusiness.DB
 
         public List<AdoramaListings> GetAllAdoramaListings()
         {
-            if (!db.AdoramaListings.Any())
+            if (db.AdoramaListings == null)
             {
                 return null;
             }

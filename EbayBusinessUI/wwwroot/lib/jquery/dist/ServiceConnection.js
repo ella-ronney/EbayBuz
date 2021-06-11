@@ -1,4 +1,6 @@
-﻿/* Attributes */
+﻿
+
+/* Attributes */
 var serviceUrl = 'https://localhost:44388/';
 var checkBoxes = 0;
 var checkBoxesCur = 0;
@@ -23,7 +25,7 @@ function formatDateString(dateString) {
 
 /* Helper Functions */
 function inventoryHtmlTableData(item) {
-    var trHTML = '<tr><td hidden>' + item.idInventory + '</td><td contenteditable="true">' + item.name + '</td><td contenteditable="true">' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td contenteditable="true">' + item.totalPrice + '</td><td>' + item.discountType + '</td><td contenteditable="true">' + item.discount
+    var trHTML = '<tr><td hidden>' + item.idInventory + '</td><td contenteditable="true">' + item.name + '</td><td contenteditable="true">' + item.qty + '</td><td>' + item.pricePerPiece + '</td><td contenteditable="true">' + item.totalPrice + '</td><td>' + item.salesTax + '</td><td>'+ item.salesTaxRefunded + '</td><td>' + item.discountType + '</td><td contenteditable="true">' + item.discount
         + '</td><td contenteditable="true"><select>';
     switch (item.discountStatus) {
         case "Approved":
@@ -41,7 +43,7 @@ function inventoryHtmlTableData(item) {
     return trHTML;
 }
 
-function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased, Payment, ReturnBy, Warranty, Classification, EstimatedDelivery, TrackingNumber, CurrentInventory) {
+function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice, SalesTax, SalesTaxRefunded, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased, Payment, ReturnBy, Warranty, Classification, EstimatedDelivery, TrackingNumber, CurrentInventory) {
     var Inventory = {
         // FIXME - correct formating for dates
         idInventory: Number(IdInventory),
@@ -49,6 +51,8 @@ function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice
         qty: parseFloat(Qty),
         pricePerPiece: parseFloat(PricePerPiece),
         totalPrice: parseFloat(TotalPrice),
+        salesTax: parseFloat(SalesTax),
+        salesTaxRefunded: Number(SalesTaxRefunded),
         discountType: DiscountType,
         discount: parseFloat(Discount),
         discountStatus: DiscountStatus,
@@ -167,10 +171,12 @@ $('#updatecurrinv').on('click', function () {
     var selector = '#currentinvTable tr input:checked';
     $.each($(selector), function (i, item) {
         var toUpdateCurrentInv = $(this).parent().siblings();
-        // Parameters (IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased - not editable, Payment, ReturnBy, Warranty, Classification, EstimatedDelivery - null dne, TrackingNumber - null dne, CurrentInventory) 
+
+        // Parameters (0 IdInventory, 1 Name, 2 Qty, 3 PricePerPiece, 4 TotalPrice, 5 SalesTax, 6 SalesTaxRefunded, 7 DiscountType, 8 Discount, 9 DiscountStatus, 10 Vendor, 11 DatePurchased - not editable, 12 Payment, 13 ReturnBy, 14 Warranty, 15 Classification, 16 EstimatedDelivery - null dne, 17 TrackingNumber - null dne, 18 CurrentInventory - 1 ) 
+        // Editable fields (1 Name, 2 Qty, 4 TotalPrice, 6 SalesTaxRefunded, 8 Discount, 9 DiscountStatus, 13 ReturnBy, 15 Classification  )
         updatedCurrentInvData.push(createInventoryObject(toUpdateCurrentInv[0].innerHTML, toUpdateCurrentInv[1].innerHTML, toUpdateCurrentInv[2].innerHTML, toUpdateCurrentInv[3].innerHTML, toUpdateCurrentInv[4].innerHTML, toUpdateCurrentInv[5].innerHTML,
-            toUpdateCurrentInv[6].innerHTML, toUpdateCurrentInv[7].children[0].value, toUpdateCurrentInv[8].innerHTML, toUpdateCurrentInv[9].innerHTML, toUpdateCurrentInv[10].innerHTML,
-            toUpdateCurrentInv[11].children[0].value, toUpdateCurrentInv[12].innerHTML, toUpdateCurrentInv[13].children[0].value, null, null, 1));
+            toUpdateCurrentInv[6].children[0].value, toUpdateCurrentInv[7].innerHTML, toUpdateCurrentInv[8].innerHTML, toUpdateCurrentInv[9].children[0].value, toUpdateCurrentInv[10].innerHTML,
+            toUpdateCurrentInv[11].innerHTML, toUpdateCurrentInv[12].innerHTML, toUpdateCurrentInv[13].innerHTML, toUpdateCurrentInv[14].innerHTML, toUpdateCurrentInv[15].children[0].value, null, null, 1));
     });
     curInventory = { Inventory: updatedCurrentInvData };
     $.ajax({
@@ -230,7 +236,8 @@ $('#addingincominginv').on('click', function () {
             $("#warranty").val('');
             $("#estimatedDelivery").val('');
             $("#trackingNumber").val('');
-
+            $("#salesTax").val('');
+      
             /*Display the newly added item in the table */
             var classification = formatClassificationsHTMLTag(item.classification);
             var estimatedDelivery = formatDateString(item.estimatedDelivery);
@@ -270,10 +277,11 @@ $('#updateincominginv').on('click', function () {
     $.each($(selector), function (i, item) {
         var toUpdateIncomingInv = $(this).parent().siblings();
 
-        //Parameters (IdInventory, Name, Qty, PricePerPiece, TotalPrice, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased - null bc not editable, Payment, ReturnBy - null dne for incoming inv, Warranty, Classification, EstimatedDelivery, TrackingNumber, CurrentInventory) 
-        updatedIncomingInvData.push(createInventoryObject(toUpdateIncomingInv[0].innerHTML, toUpdateIncomingInv[1].innerHTML, toUpdateIncomingInv[2].innerHTML, toUpdateIncomingInv[3].innerHTML, toUpdateIncomingInv[4].innerHTML, toUpdateIncomingInv[5].innerHTML,
-            toUpdateIncomingInv[6].innerHTML, toUpdateIncomingInv[7].children[0].value, toUpdateIncomingInv[8].innerHTML, null, toUpdateIncomingInv[10].innerHTML, null,
-            toUpdateIncomingInv[11].innerHTML, toUpdateIncomingInv[12].children[0].value, toUpdateIncomingInv[13].children[0].value, toUpdateIncomingInv[14].innerHTML, 0))
+        // Parameters (0 IdInventory, 1 Name, 2 Qty, 3 PricePerPiece, 4 TotalPrice, 5 SalesTax, 6 SalesTaxRefunded, 7 DiscountType, 8 Discount, 9 DiscountStatus, 10 Vendor, 11 DatePurchased - null bc not editable, 12 Payment, 13 ReturnBy - null dne for incoming inv, 14 Warranty, 15 Classification, 16 EstimatedDelivery, 17 TrackingNumber, 18 CurrentInventory) 
+        // Editable Fields (1 Name, 2 Qty, 4 TotalPrice, 6 SalesTaxRefunded, 8 Discount, 9 DiscountStatus, 15 Classification, 16 EstimatedDeliveryDate, 17 Tracking  )
+        updatedIncomingInvData.push(createInventoryObject(toUpdateIncomingInv[0].innerHTML, toUpdateIncomingInv[1].innerHTML, toUpdateIncomingInv[2].innerHTML, toUpdateIncomingInv[3].innerHTML, toUpdateIncomingInv[4].innerHTML, toUpdateIncomingInv[5].innerHTML, toUpdateIncomingInv[6].children[0].value, toUpdateIncomingInv[7].innerHTML,
+            toUpdateIncomingInv[8].innerHTML, toUpdateIncomingInv[9].children[0].value, toUpdateIncomingInv[10].innerHTML, null, toUpdateIncomingInv[12].innerHTML, null,
+            toUpdateIncomingInv[14].innerHTML, toUpdateIncomingInv[15].children[0].value, toUpdateIncomingInv[16].innerHTML, toUpdateIncomingInv[17].innerHTML, 0))
     });
     incomingInv = { Inventory: updatedIncomingInvData };
     $.ajax({

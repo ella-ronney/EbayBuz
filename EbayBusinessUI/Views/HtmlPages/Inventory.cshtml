@@ -16,6 +16,8 @@
                     <th scope="col">Qty</th>
                     <th scope="col">Price/piece</th>
                     <th scope="col">Total Price</th>
+                    <th scope="col">Sales Tax</th>
+                    <th scope="col">Sales Tax Refunded</th>
                     <th scope="col">Discount Type</th>
                     <th scope="col">Discount</th>
                     <th scope="col">Discount Status</th>
@@ -44,6 +46,8 @@
                         <th scope="col">Qty</th>
                         <th scope="col">Price/piece</th>
                         <th scope="col">Total Price</th>
+                        <th scope="col">Sales Tax</th>
+                        <th scope="col">Sales Tax Refunded</th>
                         <th scope="col">Discount Type</th>
                         <th scope="col">Discount</th>
                         <th scope="col">Discount Status</th>
@@ -64,6 +68,13 @@
                         <td><input type="number" name="qty" id="qty" /></td>
                         <td><input type="number" name="pricePerPiece" id="pricePerPiece" /></td>
                         <td><input type="number" name="totalPrice" id="totalPrice" /></td>
+                        <td><input type="number" name="salesTax" id="salesTax" /></td>
+                        <td>
+                            <select name="salesTaxRefunded" id="salesTaxRefunded">
+                                <option>True</option>
+                                <option>False</option>
+                            </select>
+                        </td>
                         <td>
                             <select name="discountType" id="discountType">
                                 <option>Rakuten</option>
@@ -81,13 +92,14 @@
                         </td>
                         <td><input type="text" name="vendor" id="vendor" /></td>
                         <td><input type="date" name="datePurchased" id="datePurchased" /></td>
-                        <td><select id="payment" name="payment">
-                            <option>Wells Fargo</option>
-                            <option>Chase</option>
-                            <option>American Express</option>
-                            <option>Paypal</option>
-                            <option>Adorama Edge</option>
-                        </select>
+                        <td>
+                            <select id="payment" name="payment">
+                                <option>Wells Fargo</option>
+                                <option>Chase</option>
+                                <option>American Express</option>
+                                <option>Paypal</option>
+                                <option>Adorama Edge</option>
+                            </select>
                         </td>
                         <td><input type="text" name="warranty" id="warranty" /></td>
                         <td>
