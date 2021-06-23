@@ -21,7 +21,7 @@ namespace EbayBusiness.Model
         public virtual DbSet<Returns> Returns { get; set; }
         public virtual DbSet<InsuranceClaims> InsuranceClaims { get; set; }
         public virtual DbSet<ShippingDelayedPackages> ShippingDelayedPackages { get; set; }
-        public virtual DbSet<SoldItems> SoldItems { get; set; }
+        public virtual DbSet<SoldItemClassification> SoldItemClassification { get; set; }
         public virtual DbSet<AdoramaListings> AdoramaListings { get; set; }
 
 

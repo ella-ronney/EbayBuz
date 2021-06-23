@@ -37,6 +37,14 @@ namespace EbayBusinessUI.Controllers
             return ebayDBRecords.DeleteJamoListing(jamoIds);
         }
 
+        [HttpPut]
+        [Route("InactivateJamoListing")]
+
+        public bool InactivateJamoListing([FromBody] IdList jamoIds)
+        {
+            return ebayDBRecords.InactivateJamoListing(jamoIds);
+        }
+
         [HttpGet]
         [Route("AdoramaListings")]
         public ActionResult<List<AdoramaListings>> GetAllAdoramaListings()
@@ -59,6 +67,13 @@ namespace EbayBusinessUI.Controllers
         }
 
         [HttpPut]
+        [Route("InactivateKlipschListing")]
+        public ActionResult<List<AdoramaListings>> InactivateKlipschListing([FromBody] IdList klipschIds)
+        {
+            return ebayDBRecords.InactivateKlipschListing(klipschIds);
+        }
+
+        [HttpPut]
         [Route("ActivateAdoramaListing")]
         public ActionResult<List<AdoramaListings>> MakeAdoramaListingActive(IdList adoramaListingIds)
         {
@@ -77,6 +92,13 @@ namespace EbayBusinessUI.Controllers
         public bool DeleteMiscListing([FromBody] IdList miscIds)
         {
             return ebayDBRecords.DeleteMiscListing(miscIds);
+        }
+
+        [HttpPut]
+        [Route("InactivateMiscListing")]
+        public bool InactivateMiscListing([FromBody] IdList miscIds)
+        {
+            return ebayDBRecords.InactivateMiscListing(miscIds);
         }
     }
 }

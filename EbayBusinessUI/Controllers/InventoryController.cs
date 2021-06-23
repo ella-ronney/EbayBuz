@@ -64,7 +64,7 @@ namespace EbayBusiness.Controllers
 
         [HttpPost]
         [Route("AddIncomingInventory")]
-        public ActionResult<Inventory> AddIncomingInventory([FromForm] Inventory inv)
+        public ActionResult<Inventory> AddIncomingInventory([FromBody] Inventory inv)
         {
             if (ebayDBRecords.AddIncomingInventory(inv))
             {

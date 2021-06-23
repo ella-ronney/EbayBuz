@@ -44,7 +44,12 @@ function inventoryHtmlTableData(item) {
 }
 
 function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice, SalesTax, SalesTaxRefunded, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased, Payment, ReturnBy, Warranty, Classification, EstimatedDelivery, TrackingNumber, CurrentInventory) {
-    var Inventory = {
+    var refunded = 0;
+    if (SalesTaxRefunded) {
+        refunded = 1;
+    }
+
+    var inventory = {
         // FIXME - correct formating for dates
         idInventory: Number(IdInventory),
         name: Name,
@@ -52,12 +57,12 @@ function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice
         pricePerPiece: parseFloat(PricePerPiece),
         totalPrice: parseFloat(TotalPrice),
         salesTax: parseFloat(SalesTax),
-        salesTaxRefunded: Number(SalesTaxRefunded),
+        salesTaxRefunded: refunded,
         discountType: DiscountType,
         discount: parseFloat(Discount),
         discountStatus: DiscountStatus,
         vendor: Vendor,
-        //datePurchased: null,
+        datePurchased: new Date(DatePurchased),
         payment: Payment,
         returnBy: new Date(ReturnBy),
         warranty: Warranty,
@@ -67,7 +72,7 @@ function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice
         ebayItemId: null,
         currentInventory: Number(CurrentInventory)
     };
-    return Inventory;
+   return inventory;
 }
 
 function formatClassificationsHTMLTag(classification) {
@@ -175,7 +180,7 @@ $('#updatecurrinv').on('click', function () {
         // Parameters (0 IdInventory, 1 Name, 2 Qty, 3 PricePerPiece, 4 TotalPrice, 5 SalesTax, 6 SalesTaxRefunded, 7 DiscountType, 8 Discount, 9 DiscountStatus, 10 Vendor, 11 DatePurchased - not editable, 12 Payment, 13 ReturnBy, 14 Warranty, 15 Classification, 16 EstimatedDelivery - null dne, 17 TrackingNumber - null dne, 18 CurrentInventory - 1 ) 
         // Editable fields (1 Name, 2 Qty, 4 TotalPrice, 6 SalesTaxRefunded, 8 Discount, 9 DiscountStatus, 13 ReturnBy, 15 Classification  )
         updatedCurrentInvData.push(createInventoryObject(toUpdateCurrentInv[0].innerHTML, toUpdateCurrentInv[1].innerHTML, toUpdateCurrentInv[2].innerHTML, toUpdateCurrentInv[3].innerHTML, toUpdateCurrentInv[4].innerHTML, toUpdateCurrentInv[5].innerHTML,
-            toUpdateCurrentInv[6].children[0].value, toUpdateCurrentInv[7].innerHTML, toUpdateCurrentInv[8].innerHTML, toUpdateCurrentInv[9].children[0].value, toUpdateCurrentInv[10].innerHTML,
+            toUpdateCurrentInv[6].innerHTML, toUpdateCurrentInv[7].innerHTML, toUpdateCurrentInv[8].innerHTML, toUpdateCurrentInv[9].children[0].value, toUpdateCurrentInv[10].innerHTML,
             toUpdateCurrentInv[11].innerHTML, toUpdateCurrentInv[12].innerHTML, toUpdateCurrentInv[13].innerHTML, toUpdateCurrentInv[14].innerHTML, toUpdateCurrentInv[15].children[0].value, null, null, 1));
     });
     curInventory = { Inventory: updatedCurrentInvData };
@@ -217,12 +222,21 @@ $.ajax({
 });
 
 $('#addingincominginv').on('click', function () {
-    var inputData = $('input').serialize();
-    inputData += '&discountType=' + $('#discountType').val() + '&discountStatus=' + $('#discountStatus').val() + '&payment=' + $('#payment').val() + '&classification=' + $('#classification').val();
+
+    /* Parameters
+    *(IdInventory, Name, Qty, PricePerPiece, TotalPrice, SalesTax, SalesTaxRefunded, DiscountType, Discount, DiscountStatus, Vendor, DatePurchased, Payment, ReturnBy, Warranty, Classification, EstimatedDelivery, TrackingNumber, CurrentInventory)
+    */
+    var inventory = {
+        Inventory: createInventoryObject(null, $('#name').val(), $('#qty').val(), $('#pricePerPiece').val(),
+            $('#totalPrice').val(), $('#salesTax').val(), $('#salesTaxRefunded').val(), $('#discountType').val(), $('#discount').val(), $('#discountStatus').val(), $('#vendor').val(), $('#datePurchased').val(),
+            $('#payment').val(), null, $('#warranty').val(), $('#classification').val(), $('#estimatedDelivery').val(), $('#trackingNumber').val(), 0)
+    };
+
     $.ajax({
         url: serviceUrl + 'inventory/AddIncomingInventory',
         method: 'POST',
-        data: JSON.stringify(inputData),
+        contentType: 'application/json',
+        data: JSON.stringify(inventory.Inventory),
         success: function (item) {
 
             /*Clear out the form after submitting the info to db*/
@@ -325,7 +339,7 @@ $('#updateincominginv').on('click', function () {
 $('#addBadSeller').on('click', function () {
     var SoldItem = {
         itemName: $('#itemName').val(),
-        category: 'bad seller'
+        classification: 'bad seller'
     };
     $.ajax({
         url: serviceUrl + 'SellingStats/AddBadSeller',
@@ -334,7 +348,7 @@ $('#addBadSeller').on('click', function () {
         data: JSON.stringify(SoldItem),
         success: function (data) {
             $('#itemName').val('');
-            var trHTML = '<tr><td hidden>' + data.idsolditems + '</td><td>' + data.itemName + '</td><td>' + '<input type="checkbox" name="checkbad' + checkBoxesBadSellers + '"/></td></tr>';
+            var trHTML = '<tr><td hidden>' + data.idsolditemclassification + '</td><td>' + data.itemName + '</td><td>' + '<input type="checkbox" name="checkbad' + checkBoxesBadSellers + '"/></td></tr>';
             $('#badSellerTable').append(trHTML);
             checkBoxesBadSellers++;
         }
@@ -371,7 +385,7 @@ $.ajax({
         var trHTML = '';
         var count = 1;
         $.each(data, function (i, item) {
-            trHTML += '<tr><td hidden>' + item.idsolditems + '</td><td>' + item.itemName + '</td><td>' + '<input type="checkbox" name="checkbad' + count + '"/></td></tr>';
+            trHTML += '<tr><td hidden>' + item.idsolditemclassification + '</td><td>' + item.itemName + '</td><td>' + '<input type="checkbox" name="checkbad' + count + '"/></td></tr>';
             count++;
         });
         checkBoxesBadSellers = count;
@@ -933,7 +947,7 @@ $('#addJamoListing').on('click', function () {
             $('#jamoUrl').val('');
 
             /* Append the new data to the table*/
-            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td> <a href="' + data.specialPrice + '">click me</a></td><td>' + data.url + '</td><td>'
+            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice +'</td><td><a href="' + data.url + '">click me</a></td><td>'
                 + '<input type="checkbox" name="jamoCheckBox' + jamoCheckBox + '"/></td></tr>';
             $('#jamoListingTable').append(trHTML);
             jamoCheckBox++;
@@ -961,6 +975,30 @@ $('#deleteJamoListing').on('click', function () {
                 jamoCheckBox--;
             });
         }
+    });
+});
+
+$('#inactiveJamoListing').on('click', function () {
+    var inactiveJamoListingsIds = [];
+    var selector = '#jamoListingTable tr input:checked';
+    $.each($(selector), function (i, item) {
+        var inactiveJamoListingsId = $(this).parent().siblings(':first').text();
+        inactiveJamoListingIds.push(inactiveJamoListingsId);
+    });
+    var idList = { ids: inactiveJamoListingsIds.toString() };
+
+    $.ajax({
+        url: serviceUrl + 'AdoramaListings/InactivateJamoListing',
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(idList),
+        success: function(data){
+            document.querySelectorAll('#jamoListingTable input:checked').forEach(e => {
+                e.parentNode.parentNode.remove();
+                jamoCheckBox--;
+            });
+        }
+
     });
 });
 
@@ -1016,6 +1054,35 @@ $('#deleteKlipschListing').on('click', function () {
     });
 });
 
+$('#inactiveKlipschListing').on('click', function () {
+    var inactiveKlipschListingIds = [];
+    var selector = '#klipschListingTable tr input:checked';
+    $.each($(selector), function (i, item) {
+        var inactiveKlipschListingsId = $(this).parent().siblings(':first').text();
+        inactiveKlipschListingIds.push(inactiveKlipschListingsId);
+    });
+    var idList = { ids: inactiveKlipschListingIds.toString() };
+
+    $.ajax({
+        url: serviceUrl + 'AdoramaListings/InactivateKlipschListing',
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(idList),
+        success: function (data) {
+            var trHTML = '';
+            document.querySelectorAll('#klipschListingTable input:checked').forEach(e => {
+                e.parentNode.parentNode.remove();
+                klipschCheckBox--;
+            });
+            $.each(data, function (i, item) {
+                trHTML += '<tr><td hidden>' + item.idadoramalistings + '</td><td>' + item.listingName + '</td><td>' + item.specialPrice + '</td><td><a href="' + item.url + '">click me</a></td><td>' + '<input type="checkbox"/></td></tr>';
+            });
+            $('#inactiveListingTable').append(trHTML);
+        }
+
+    });
+});
+
 // Misc Table
 $('#addMiscListing').on('click', function () {
     var miscListing = {
@@ -1058,6 +1125,30 @@ $('#deleteMiscListing').on('click', function () {
                 x.parentNode.parentNode.remove();
             })
         }
+    });
+});
+
+$('#inactiveMiscListing').on('click', function () {
+    var inactiveMiscListingsIds = [];
+    var selector = '#miscListingTable tr input:checked';
+    $.each($(selector), function (i, item) {
+        var inactiveMiscListingsId = $(this).parent().siblings(':first').text();
+        inactiveMiscListingIds.push(inactiveMiscListingsId);
+    });
+    var idList = { ids: inactiveMiscListingsIds.toString() };
+
+    $.ajax({
+        url: serviceUrl + 'AdoramaListings/InactivateMiscListing',
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(idList),
+        success: function (data) {
+            document.querySelectorAll('#miscListingTable input:checked').forEach(e => {
+                e.parentNode.parentNode.remove();
+                jamoCheckBox--;
+            });
+        }
+
     });
 });
 

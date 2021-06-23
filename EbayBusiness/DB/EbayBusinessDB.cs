@@ -239,23 +239,22 @@ namespace EbayBusiness.DB
             return db.TopSellers.ToList();
         }
 
-        public List<SoldItems> GetAllBadSellers()
+        public List<SoldItemClassification> GetAllBadSellers()
         {
-            if (db.SoldItems == null)
+            if (db.SoldItemClassification == null)
             {
                 return null;
             }
-            //return db.SoldItems.ToList();
-            // FIXME changed the table name
-            return null; 
+            return db.SoldItemClassification.ToList();
+         
         }
 
         // FIXME - error handling + validator
-        public bool AddBadSeller(SoldItems badSeller)
+        public bool AddBadSeller(SoldItemClassification badSeller)
         {
             if (badSeller != null)
             {
-                db.SoldItems.Add(badSeller);
+                db.SoldItemClassification.Add(badSeller);
                 db.SaveChanges();
                 return true;
             }
@@ -274,12 +273,12 @@ namespace EbayBusiness.DB
                 int[] badSellerIds = idList.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
                 foreach (int id in badSellerIds)
                 {
-                    var badSeller = db.SoldItems.Where(x => x.idsolditems == id).FirstOrDefault();
+                    var badSeller = db.SoldItemClassification.Where(x => x.idsolditemclassification == id).FirstOrDefault();
                     if (badSeller == null)
                     {
                         return false;
                     }
-                    db.SoldItems.Remove(badSeller);
+                    db.SoldItemClassification.Remove(badSeller);
                     db.SaveChanges();
                 }
             }
@@ -605,6 +604,37 @@ namespace EbayBusiness.DB
             return true;
         }
 
+        public bool InactivateJamoListing(IdList jamoIds)
+        {
+            if (!HelperMethods.NullCheckForIdListIds(jamoIds))
+            {
+                return false;
+            }
+
+            try
+            {
+                int[] jamoListingIds = jamoIds.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+                foreach (int id in jamoListingIds)
+                {
+                    var jamoListing = db.AdoramaListings.Where(x => x.idadoramalistings == id).FirstOrDefault();
+                    if (jamoListing == null)
+                    {
+                        return false;
+                    }
+                    jamoListing.active = 0;
+                    db.AdoramaListings.Update(jamoListing);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                // FIXME log error
+                return false;
+            }
+
+            return true;
+        }
+
         public List<AdoramaListings> GetAllAdoramaListings()
         {
             if (db.AdoramaListings == null)
@@ -653,6 +683,38 @@ namespace EbayBusiness.DB
                 return false;
             }
             return true;
+        }
+
+        public List<AdoramaListings> InactivateKlipschListing(IdList klipschIds)
+        {
+            List<AdoramaListings> inactiveKlipschListings = new List<AdoramaListings>();
+            if (!HelperMethods.NullCheckForIdListIds(klipschIds))
+            {
+                return null;
+            }
+
+            try
+            {
+                int[] klipschListingIds = klipschIds.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+                foreach (int klipschId in klipschListingIds)
+                {
+                    AdoramaListings klipschListing = db.AdoramaListings.Where(x => x.idadoramalistings == klipschId).FirstOrDefault();
+                    if (klipschListing == null)
+                    {
+                        return null;
+                    }
+                    klipschListing.active = 0;
+                    inactiveKlipschListings.Add(klipschListing);
+                    db.Update(klipschListing);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                // FIXME log error
+                return null;
+            }
+            return inactiveKlipschListings;
         }
 
         public List<AdoramaListings> MakeAdoramaListingActive(IdList adoramaListingIds)
@@ -717,6 +779,37 @@ namespace EbayBusiness.DB
                         return false;
                     }
                     db.AdoramaListings.Remove(miscListing);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                // FIXME log error
+                return false;
+            }
+            return true;
+        }
+
+        public bool InactivateMiscListing(IdList miscIds)
+        {
+            if (!HelperMethods.NullCheckForIdListIds(miscIds))
+            {
+                return false;
+            }
+
+            try
+            {
+                int[] miscListingIds = miscIds.ids.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+
+                foreach (int id in miscListingIds)
+                {
+                    var miscListing = db.AdoramaListings.Where(x => x.idadoramalistings == id).FirstOrDefault();
+                    if (miscListing == null)
+                    {
+                        return false;
+                    }
+                    miscListing.active = 0;
+                    db.AdoramaListings.Update(miscListing);
                     db.SaveChanges();
                 }
             }

@@ -5,13 +5,13 @@ using System.Text;
 
 namespace EbayBusiness.Model
 {
-    public class SoldItems
+    public class SoldItemClassification
     {
         [Key]
-        public int idsolditems { get; set; }
+        public int idsolditemclassification { get; set; }
         public string itemName { get; set; }
         public string priceSold { get; set; }
         public string pastVendors { get; set; }
-        public string category { get; set; }
+        public string classification { get; set; }
     }
 }

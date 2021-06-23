@@ -18,8 +18,8 @@ namespace EbayBusiness.DB
         public bool DeleteIncomingInventory(IdList idList);
         public bool UpdateIncomingInventory(List<Inventory> incInv);
         public List<TopSellers> GetAllTopSellers();
-        public List<SoldItems> GetAllBadSellers();
-        public bool AddBadSeller(SoldItems badSeller);
+        public List<SoldItemClassification> GetAllBadSellers();
+        public bool AddBadSeller(SoldItemClassification badSeller);
         public bool DeleteBadSeller(IdList idList);
         public bool AddExpense(BusinessExpenses expense);
         public Returns AddReturns(Returns ret);
@@ -36,11 +36,14 @@ namespace EbayBusiness.DB
         public bool UpdateDelayedPackage(List<ShippingDelayedPackages> updatedPackages);
         public AdoramaListings AddJamoListing(AdoramaListings adoramaListing);
         public bool DeleteJamoListing(IdList jamoIds);
+        public bool InactivateJamoListing(IdList jamoIds);
         public List<AdoramaListings> GetAllAdoramaListings();
         public AdoramaListings AddKlipschListing(AdoramaListings adoramaListing);
         public bool DeleteKlipschListing(IdList klipschIds);
+        public List<AdoramaListings> InactivateKlipschListing(IdList klipschIds);
         public List<AdoramaListings> MakeAdoramaListingActive(IdList adoramaListingIds);
         public AdoramaListings AddMiscListing(AdoramaListings miscListing);
         public bool DeleteMiscListing(IdList miscIds);
+        public bool InactivateMiscListing(IdList miscIds);
     }
 }

@@ -33,14 +33,14 @@ namespace EbayBusinessUI.Controllers
 
         [HttpGet]
         [Route("GetBadSellers")]
-        public ActionResult<List<SoldItems>> GetAllBadSellers()
+        public ActionResult<List<SoldItemClassification>> GetAllBadSellers()
         {
             return ebayDBRecords.GetAllBadSellers();
         }
 
         [HttpPost]
         [Route("AddBadSeller")]
-        public ActionResult<SoldItems> AddBadSeller([FromBody] SoldItems badSeller)
+        public ActionResult<SoldItemClassification> AddBadSeller([FromBody] SoldItemClassification badSeller)
         {
           if (ebayDBRecords.AddBadSeller(badSeller))
             {
