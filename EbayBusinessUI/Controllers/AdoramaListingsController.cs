@@ -40,7 +40,7 @@ namespace EbayBusinessUI.Controllers
         [HttpPut]
         [Route("InactivateJamoListing")]
 
-        public bool InactivateJamoListing([FromBody] IdList jamoIds)
+        public ActionResult<List<AdoramaListings>> InactivateJamoListing([FromBody] IdList jamoIds)
         {
             return ebayDBRecords.InactivateJamoListing(jamoIds);
         }
@@ -96,7 +96,7 @@ namespace EbayBusinessUI.Controllers
 
         [HttpPut]
         [Route("InactivateMiscListing")]
-        public bool InactivateMiscListing([FromBody] IdList miscIds)
+        public ActionResult<List<AdoramaListings>> InactivateMiscListing([FromBody] IdList miscIds)
         {
             return ebayDBRecords.InactivateMiscListing(miscIds);
         }

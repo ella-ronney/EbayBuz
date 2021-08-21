@@ -2,15 +2,6 @@
 
 /* Attributes */
 var serviceUrl = 'https://localhost:44388/';
-var checkBoxes = 0;
-var checkBoxesCur = 0;
-var checkBoxesTop = 0; 
-var checkBoxesReturns = 0;
-var checkBoxesClaims = 0;
-var checkBoxesDelays = 0;
-var checkBoxesBadSellers = 0;
-var jamoCheckBox = 0;
-var klipschCheckBox = 0;
 
 /* General Helper Functions */
 function formatDateString(dateString) {
@@ -50,7 +41,6 @@ function createInventoryObject(IdInventory, Name, Qty, PricePerPiece, TotalPrice
     }
 
     var inventory = {
-        // FIXME - correct formating for dates
         idInventory: Number(IdInventory),
         name: Name,
         qty: parseFloat(Qty),
@@ -104,17 +94,15 @@ $.ajax({
     method: 'GET',
     success: function (data) {
         var trHTML = '';
-        var count = 1;
         $.each(data, function (i, item) {
             var date = formatDateString(item.returnBy);
             var classification = formatClassificationsHTMLTag(item.classification);
-            trHTML += inventoryHtmlTableData(item) + '</td><td contenteditable="true">' + '<input type="date" value="' + date + '"/>' + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"/></td></tr>';
-            count++;
+            trHTML += inventoryHtmlTableData(item) + '</td><td contenteditable="true">' + '<input type="date" value="' + date + '"/>' + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td>' + '<input type="checkbox"/></td></tr>';
         });
-        checkBoxesCur = count;
         $('#currentinvTable').append(trHTML);
     }
 });
+
 
 $('#deletecurrentinv').on('click', function () {
     var currentInventoryIds = [];
@@ -132,7 +120,6 @@ $('#deletecurrentinv').on('click', function () {
         success: function (data) {
             document.querySelectorAll('#currentinvTable input:checked').forEach(e => {
                 e.parentNode.parentNode.remove();
-                checkBoxesCur--;
             });
         }
     });
@@ -160,10 +147,9 @@ $('#movetocurrentinv').on('click', function () {
             $.each(data, function (i, item) {
                 var date = formatDateString(item.returnBy);
                 var classification = formatClassificationsHTMLTag(item.classification);
-                trHTML += inventoryHtmlTableData(item) + '</td><td contenteditable="true">' + '<input type="date" value="' + date + '"/>' + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td>' + '<input type="checkbox" name="checkcur' + count + '"/></td></tr>';
-                count++;
+                trHTML += inventoryHtmlTableData(item) + '</td><td contenteditable="true">' + '<input type="date" value="' + date + '"/>' + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td>' + '<input type="checkbox"/></td></tr>';
+               
             });
-            checkBoxesCur = count;
             $('#currentinvTable').append(trHTML);
 
         }
@@ -209,14 +195,11 @@ $.ajax({
     method: 'GET',
     success: function (data) {
         var trHTML = '';
-        var count = 1;
         $.each(data, function (i, item) {
             var classification = formatClassificationsHTMLTag(item.classification);
             var estimatedDelivery = formatDateString(item.estimatedDelivery);
-            trHTML += inventoryHtmlTableData(item) + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td contenteditable="true">' + '<input type="date" value="' + estimatedDelivery + '"/>' + '</td><td contenteditable="true">' + item.trackingNumber + '</td><td>' + '<input type="checkbox" name="check' + count + '"/></td></tr>';
-            count++;
+            trHTML += inventoryHtmlTableData(item) + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td contenteditable="true">' + '<input type="date" value="' + estimatedDelivery + '"/>' + '</td><td contenteditable="true">' + item.trackingNumber + '</td><td>' + '<input type="checkbox"/></td></tr>';
         });
-        checkBoxes = count;
         $('#incominginvTable').append(trHTML);
     }
 });
@@ -255,9 +238,8 @@ $('#addingincominginv').on('click', function () {
             /*Display the newly added item in the table */
             var classification = formatClassificationsHTMLTag(item.classification);
             var estimatedDelivery = formatDateString(item.estimatedDelivery);
-            var trHTML = inventoryHtmlTableData(item) + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td contenteditable="true">' + '<input type="date" value="' + estimatedDelivery + '"/>' + '</td><td contenteditable="true">' + item.trackingNumber + '</td><td>' + '<input type="checkbox" name="check' + checkBoxes + '"/></td></tr>';
+            var trHTML = inventoryHtmlTableData(item) + '</td><td>' + item.warranty + '</td><td contenteditable="true">' + classification + '</td><td contenteditable="true">' + '<input type="date" value="' + estimatedDelivery + '"/>' + '</td><td contenteditable="true">' + item.trackingNumber + '</td><td>' + '<input type="checkbox"/></td></tr>';
             $('#incominginvTable').append(trHTML);
-            checkBoxes++;
         }
     });
 });
@@ -278,7 +260,6 @@ $('#deleteincominginv').on('click', function () {
         success: function (data) {
             document.querySelectorAll('#incominginvTable input:checked').forEach(e => {
                 e.parentNode.parentNode.remove();
-                checkBoxes--;
             });
         }
     });
@@ -348,9 +329,8 @@ $('#addBadSeller').on('click', function () {
         data: JSON.stringify(SoldItem),
         success: function (data) {
             $('#itemName').val('');
-            var trHTML = '<tr><td hidden>' + data.idsolditemclassification + '</td><td>' + data.itemName + '</td><td>' + '<input type="checkbox" name="checkbad' + checkBoxesBadSellers + '"/></td></tr>';
+            var trHTML = '<tr><td hidden>' + data.idsolditemclassification + '</td><td>' + data.itemName + '</td><td>' + '<input type="checkbox"/></td></tr>';
             $('#badSellerTable').append(trHTML);
-            checkBoxesBadSellers++;
         }
     });
 });
@@ -372,7 +352,7 @@ $('#deleteBadSeller').on('click', function () {
             document.querySelectorAll('#badSellerTable input:checked').forEach(x => {
                 x.parentNode.parentNode.remove();
                 // FIXME implement for the rest
-                checkBoxesBadSellers--;
+                
             });
         }
     });
@@ -383,12 +363,9 @@ $.ajax({
     method: 'GET',
     success: function (data) {
         var trHTML = '';
-        var count = 1;
         $.each(data, function (i, item) {
-            trHTML += '<tr><td hidden>' + item.idsolditemclassification + '</td><td>' + item.itemName + '</td><td>' + '<input type="checkbox" name="checkbad' + count + '"/></td></tr>';
-            count++;
+            trHTML += '<tr><td hidden>' + item.idsolditemclassification + '</td><td>' + item.itemName + '</td><td>' + '<input type="checkbox"/></td></tr>';
         });
-        checkBoxesBadSellers = count;
         $('#badSellerTable').append(trHTML);
     }
 });
@@ -604,9 +581,8 @@ $('#addReturn').on('click', function () {
             $("#trackingNum").val('');
 
             /*Display the newly added item in the table */
-            var trHTML = returnHtmlTableData(data) + '<input type="checkbox" name="checkBoxesReturns' + checkBoxesReturns + '"/></td></tr>';
+            var trHTML = returnHtmlTableData(data) + '<input type="checkbox"/></td></tr>';
             $('#returnTable').append(trHTML);
-            checkBoxesReturns++;
         }
     });
 });
@@ -618,10 +594,9 @@ $.ajax({
         var trHTML = '';
         var count = 1;
         $.each(data, function (i, data) {
-            trHTML += returnHtmlTableData(data) + '<input type="checkbox" name="checkBoxesReturns' + count + '"/></td></tr>';
+            trHTML += returnHtmlTableData(data) + '<input type="checkbox"/></td></tr>';
             count++;
         });
-        checkBoxesReturns = count;
         $('#returnTable').append(trHTML);
     }
 });
@@ -642,7 +617,6 @@ $('#deleteReturn').on('click', function () {
         success: function (data) {
             document.querySelectorAll('#returnTable input:checked').forEach(e => {
                 e.parentNode.parentNode.remove();
-                checkBoxesReturns--;
             });
         }
     });
@@ -703,9 +677,8 @@ $('#addInsuranceClaim').on('click', function () {
             $("#shippingCost").val('');
 
             /*Display the newly added item in the table */
-            var trHTML = InsuranceClaimHTMLData(data) + '<input type="checkbox" name="checkBoxesClaims' + checkBoxesClaims + '"/></td></tr>';
+            var trHTML = InsuranceClaimHTMLData(data) + '<input type="checkbox"/></td></tr>';
             $('#insuranceClaims').append(trHTML);
-            checkBoxesClaims++;
         }
     });
 });
@@ -715,12 +688,9 @@ $.ajax({
     method: 'GET',
     success: function (data) {
         var trHTML = '';
-        var count = 1;
         $.each(data, function (i, data) {
-            trHTML += InsuranceClaimHTMLData(data) + '<input type="checkbox" name="checkBoxesClaims' + count + '"/></td></tr>';
-            count++;
+            trHTML += InsuranceClaimHTMLData(data) + '<input type="checkbox"/></td></tr>';
         });
-        checkBoxesClaims = count;
         $('#insuranceClaims').append(trHTML);
     }
 });
@@ -741,7 +711,6 @@ $('#deleteInsuranceClaim').on('click', function () {
         success: function (data) {
             document.querySelectorAll('#insuranceClaims input:checked').forEach(e => {
                 e.parentNode.parentNode.remove();
-                checkBoxesClaims--;
             });
         }
     });
@@ -799,9 +768,8 @@ $('#addDelayedPackage').on('click', function () {
             $("#note").val('');
 
             /*Display the newly added item in the table */
-            var trHTML = delayedPackageHTMLTableData(data) + '<input type="checkbox" name="checkBoxesDelays' + checkBoxesDelays + '"/></td></tr>';
+            var trHTML = delayedPackageHTMLTableData(data) + '<input type="checkbox"/></td></tr>';
             $('#delayedPackages').append(trHTML);
-            checkBoxesDelays++;
         }
     });
 });
@@ -811,12 +779,9 @@ $.ajax({
     method: 'GET',
     success: function (data) {
         var trHTML = '';
-        var count = 1;
         $.each(data, function (i, data) {
-            trHTML += delayedPackageHTMLTableData(data) + '<input type="checkbox" name="checkBoxesDelays' + count + '"/></td></tr>';
-            count++;
+            trHTML += delayedPackageHTMLTableData(data) + '<input type="checkbox"/></td></tr>';
         });
-        checkBoxesDelays = count;
         $('#delayedPackages').append(trHTML);
     }
 });
@@ -836,7 +801,6 @@ $('#deleteDelayedPackage').on('click', function () {
         success: function (data) {
             document.querySelectorAll('#delayedPackages input:checked').forEach(e => {
                 e.parentNode.parentNode.remove();
-                checkBoxesDelays--;
             });
         }
     });
@@ -889,19 +853,17 @@ $.ajax({
         var klipschTrHTML = '';
         var miscTrHTML = '';
         var inactiveTrHTML = '';
-        jamoCount = 1;
-        klipschCount = 1;
         $.each(data, function (i, item) {
             if (item.active == 1) {
                 switch (item.manufacture) {
                     case "Jamo":
                         jamoTrHTML += '<tr><td hidden>' + item.idadoramalistings + '</td><td>' + item.listingName + '</td><td>' + item.specialPrice + '</td><td><a href="' + item.url + '">click me</a></td><td>'
-                            + '<input type="checkbox" name="jamoCheckBox' + jamoCount + '"/></td></tr>';
+                            + '<input type="checkbox"/></td></tr>';
                         jamoCount++;
                         break;
                     case "Klipsch":
                         klipschTrHTML += '<tr><td hidden>' + item.idadoramalistings + '</td><td>' + item.listingName + '</td><td>' + item.specialPrice + '</td><td><a href="' + item.url + '">click me</a></td><td>'
-                            + '<input type="checkbox" name="klipschCheckBox' + klipschCount + '"/></td></tr>';
+                            + '<input type="checkbox"/></td></tr>';
                         klipschCount++;
                         break;
                     case "Misc":
@@ -917,8 +879,6 @@ $.ajax({
                     + '<input type="checkbox"/></td></tr>';
             }
         });
-        jamoCheckBox = jamoCount;
-        klipschCheckBox = klipschCount;
         $('#jamoListingTable').append(jamoTrHTML);
         $('#klipschListingTable').append(klipschTrHTML);
         $('#miscListingTable').append(miscTrHTML);
@@ -948,9 +908,8 @@ $('#addJamoListing').on('click', function () {
 
             /* Append the new data to the table*/
             var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice +'</td><td><a href="' + data.url + '">click me</a></td><td>'
-                + '<input type="checkbox" name="jamoCheckBox' + jamoCheckBox + '"/></td></tr>';
+                + '<input type="checkbox"/></td></tr>';
             $('#jamoListingTable').append(trHTML);
-            jamoCheckBox++;
         }
     });
 });
@@ -972,31 +931,35 @@ $('#deleteJamoListing').on('click', function () {
         success: function (data) {
             document.querySelectorAll('#jamoListingTable input:checked').forEach(e => {
                 e.parentNode.parentNode.remove();
-                jamoCheckBox--;
             });
         }
     });
 });
 
 $('#inactiveJamoListing').on('click', function () {
-    var inactiveJamoListingsIds = [];
+    var inactiveJamoListingIds = [];
     var selector = '#jamoListingTable tr input:checked';
     $.each($(selector), function (i, item) {
         var inactiveJamoListingsId = $(this).parent().siblings(':first').text();
         inactiveJamoListingIds.push(inactiveJamoListingsId);
     });
-    var idList = { ids: inactiveJamoListingsIds.toString() };
+    var idList = { ids: inactiveJamoListingIds.toString() };
 
     $.ajax({
         url: serviceUrl + 'AdoramaListings/InactivateJamoListing',
         method: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify(idList),
-        success: function(data){
+        success: function (data) {
+            var trHTML = '';
             document.querySelectorAll('#jamoListingTable input:checked').forEach(e => {
                 e.parentNode.parentNode.remove();
-                jamoCheckBox--;
             });
+            $.each(data, function (i, item) {
+                trHTML += '<tr><td hidden>' + item.idadoramalistings + '</td><td>' + item.listingName + '</td><td>' + item.specialPrice + '</td><td><a href="' + item.url + '">click me</a></td><td>' + '<input type="checkbox"/></td></tr>';
+            });
+            $('#inactiveListingTable').append(trHTML);
+
         }
 
     });
@@ -1023,9 +986,8 @@ $('#addKlipschListing').on('click', function () {
             $('#klipschUrl').val('');
 
             /* display the newly added data to the table */
-            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice + '</td><td><a href="' + data.url + '">click me</a></td><td>' + '<input type="checkbox" name="klipschCheckBox' + klipschCheckBox + '"/></td></tr>';
+            var trHTML = '<tr><td hidden>' + data.idadoramalistings + '</td><td>' + data.listingName + '</td><td>' + data.specialPrice + '</td><td><a href="' + data.url + '">click me</a></td><td>' + '<input type="checkbox"/></td></tr>';
             $('#klipschListingTable').append(trHTML);
-            klipschCheckBox++;
         }
     });
 });
@@ -1047,7 +1009,6 @@ $('#deleteKlipschListing').on('click', function () {
             if (data) {
                 document.querySelectorAll('#klipschListingTable tr input:checked').forEach(x => {
                     x.parentNode.parentNode.remove();
-                    klipschCheckBox--;
                 });
             }
         }
@@ -1072,7 +1033,6 @@ $('#inactiveKlipschListing').on('click', function () {
             var trHTML = '';
             document.querySelectorAll('#klipschListingTable input:checked').forEach(e => {
                 e.parentNode.parentNode.remove();
-                klipschCheckBox--;
             });
             $.each(data, function (i, item) {
                 trHTML += '<tr><td hidden>' + item.idadoramalistings + '</td><td>' + item.listingName + '</td><td>' + item.specialPrice + '</td><td><a href="' + item.url + '">click me</a></td><td>' + '<input type="checkbox"/></td></tr>';
@@ -1129,13 +1089,13 @@ $('#deleteMiscListing').on('click', function () {
 });
 
 $('#inactiveMiscListing').on('click', function () {
-    var inactiveMiscListingsIds = [];
+    var inactiveMiscListingIds = [];
     var selector = '#miscListingTable tr input:checked';
     $.each($(selector), function (i, item) {
         var inactiveMiscListingsId = $(this).parent().siblings(':first').text();
         inactiveMiscListingIds.push(inactiveMiscListingsId);
     });
-    var idList = { ids: inactiveMiscListingsIds.toString() };
+    var idList = { ids: inactiveMiscListingIds.toString() };
 
     $.ajax({
         url: serviceUrl + 'AdoramaListings/InactivateMiscListing',
@@ -1143,10 +1103,14 @@ $('#inactiveMiscListing').on('click', function () {
         contentType: 'application/json',
         data: JSON.stringify(idList),
         success: function (data) {
+            var trHTML = '';
             document.querySelectorAll('#miscListingTable input:checked').forEach(e => {
                 e.parentNode.parentNode.remove();
-                jamoCheckBox--;
             });
+            $.each(data, function (i, item) {
+                trHTML += '<tr><td hidden>' + item.idadoramalistings + '</td><td>' + item.listingName + '</td><td>' + item.specialPrice + '</td><td><a href="' + item.url + '">click me</a></td><td>' + '<input type="checkbox"/></td></tr>';
+            });
+            $('#inactiveListingTable').append(trHTML);
         }
 
     });

@@ -36,7 +36,7 @@ namespace EbayBusiness.DB
         public bool UpdateDelayedPackage(List<ShippingDelayedPackages> updatedPackages);
         public AdoramaListings AddJamoListing(AdoramaListings adoramaListing);
         public bool DeleteJamoListing(IdList jamoIds);
-        public bool InactivateJamoListing(IdList jamoIds);
+        public List<AdoramaListings> InactivateJamoListing(IdList jamoIds);
         public List<AdoramaListings> GetAllAdoramaListings();
         public AdoramaListings AddKlipschListing(AdoramaListings adoramaListing);
         public bool DeleteKlipschListing(IdList klipschIds);
@@ -44,6 +44,6 @@ namespace EbayBusiness.DB
         public List<AdoramaListings> MakeAdoramaListingActive(IdList adoramaListingIds);
         public AdoramaListings AddMiscListing(AdoramaListings miscListing);
         public bool DeleteMiscListing(IdList miscIds);
-        public bool InactivateMiscListing(IdList miscIds);
+        public List<AdoramaListings> InactivateMiscListing(IdList miscIds);
     }
 }

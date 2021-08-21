@@ -301,7 +301,7 @@ namespace EbayBusiness.DB
                 return true;
             }
             return false;
-        }
+        } 
 
         // Resolution center
         // Returns
@@ -604,11 +604,12 @@ namespace EbayBusiness.DB
             return true;
         }
 
-        public bool InactivateJamoListing(IdList jamoIds)
+        public List<AdoramaListings> InactivateJamoListing(IdList jamoIds)
         {
+            List<AdoramaListings> jamoInactiveListings = new List<AdoramaListings>();
             if (!HelperMethods.NullCheckForIdListIds(jamoIds))
             {
-                return false;
+                return null;
             }
 
             try
@@ -619,9 +620,10 @@ namespace EbayBusiness.DB
                     var jamoListing = db.AdoramaListings.Where(x => x.idadoramalistings == id).FirstOrDefault();
                     if (jamoListing == null)
                     {
-                        return false;
+                        return null;
                     }
                     jamoListing.active = 0;
+                    jamoInactiveListings.Add(jamoListing);
                     db.AdoramaListings.Update(jamoListing);
                     db.SaveChanges();
                 }
@@ -629,10 +631,10 @@ namespace EbayBusiness.DB
             catch (Exception ex)
             {
                 // FIXME log error
-                return false;
+                return null;
             }
 
-            return true;
+            return jamoInactiveListings;
         }
 
         public List<AdoramaListings> GetAllAdoramaListings()
@@ -790,11 +792,12 @@ namespace EbayBusiness.DB
             return true;
         }
 
-        public bool InactivateMiscListing(IdList miscIds)
+        public List<AdoramaListings> InactivateMiscListing(IdList miscIds)
         {
+            List<AdoramaListings> miscInactiveListing = new List<AdoramaListings>();
             if (!HelperMethods.NullCheckForIdListIds(miscIds))
             {
-                return false;
+                return null;
             }
 
             try
@@ -806,9 +809,10 @@ namespace EbayBusiness.DB
                     var miscListing = db.AdoramaListings.Where(x => x.idadoramalistings == id).FirstOrDefault();
                     if (miscListing == null)
                     {
-                        return false;
+                        return null;
                     }
                     miscListing.active = 0;
+                    miscInactiveListing.Add(miscListing);
                     db.AdoramaListings.Update(miscListing);
                     db.SaveChanges();
                 }
@@ -816,9 +820,9 @@ namespace EbayBusiness.DB
             catch (Exception ex)
             {
                 // FIXME log error
-                return false;
+                return null;
             }
-            return true;
+            return miscInactiveListing;
         }
     }
 }

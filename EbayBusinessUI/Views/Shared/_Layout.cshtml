@@ -6,6 +6,10 @@
     <title>@ViewData["Title"] - EbayBusiness UI</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+
+
+
 </head>
 <body>
     <header>
@@ -37,7 +41,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Profit" asp-action="Profit">Profit Dashboard</a>
                         </li>
                         <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="AdoramaListings" asp-action="AdoramaListings">Adorama Listings</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="AdoramaListings" asp-action="AdoramaListings">Adorama Listings</a>
                         </li>
                     </ul>
                 </div>
@@ -56,9 +60,11 @@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/jquery/dist/ServiceConnection.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
